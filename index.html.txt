@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1b2b" />
+  <title>WalkCut</title>
+  <style>
+    :root{
+      --bg:#0b1118;
+      --card:#121a24;
+      --card2:#0f1722;
+      --text:#e8eef6;
+      --muted:#a6b3c2;
+      --line:#223043;
+      --good:#3ddc97;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --accent:#3aa0ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --r:16px;
+      --pad:14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 900px at 20% -10%, rgba(58,160,255,.18), transparent 60%),
+                  radial-gradient(1000px 800px at 110% 10%, rgba(61,220,151,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(14px);
+      background: rgba(11,17,24,.7);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      padding: 12px 14px 10px;
+    }
+    header .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    h1{
+      font-size:18px; margin:0; letter-spacing:.2px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .pill{
+      font-size:12px; color:var(--muted);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding:5px 10px; border-radius:999px;
+    }
+    main{padding: 12px 14px 90px; max-width: 860px; margin: 0 auto;}
+    .grid{
+      display:grid; gap:12px;
+    }
+    @media(min-width:720px){
+      .grid.two{grid-template-columns:1fr 1fr}
+      .grid.three{grid-template-columns:1fr 1fr 1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--r);
+      padding: var(--pad);
+      box-shadow: var(--shadow);
+    }
+    .card h2{font-size:14px; margin:0 0 10px; color:var(--muted); font-weight:650; letter-spacing:.2px}
+    .row{display:flex; gap:10px; align-items:center; justify-content:space-between}
+    .kpi{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .kpi .box{
+      flex:1 1 120px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-width: 120px;
+    }
+    .kpi .label{font-size:12px; color:var(--muted); margin-bottom:4px}
+    .kpi .value{font-size:18px; font-weight:750}
+    .small{font-size:12px; color:var(--muted)}
+    .muted{color:var(--muted)}
+    .btnbar{display:flex; gap:10px; flex-wrap:wrap}
+    button, .btn{
+      -webkit-tap-highlight-color: transparent;
+      appearance:none; border:none;
+      background: rgba(58,160,255,.18);
+      color: var(--text);
+      border: 1px solid rgba(58,160,255,.35);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 650;
+      letter-spacing:.2px;
+      cursor:pointer;
+    }
+    button.secondary{
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+    }
+    button.danger{
+      background: rgba(255,107,107,.14);
+      border: 1px solid rgba(255,107,107,.35);
+    }
+    button:active{transform: translateY(1px)}
+    input, select{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      font-size: 14px;
+      outline:none;
+    }
+    input::placeholder{color: rgba(166,179,194,.7)}
+    label{font-size:12px; color:var(--muted); display:block; margin: 10px 0 6px}
+    .tabs{
+      position:fixed; left:0; right:0; bottom:0; z-index:10;
+      display:flex; justify-content:space-around;
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(11,17,24,.85);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .tab{
+      flex:1;
+      text-align:center;
+      padding: 8px 6px;
+      border-radius: 12px;
+      color: var(--muted);
+      font-weight:650;
+      font-size:12px;
+    }
+    .tab.active{
+      color: var(--text);
+      background: rgba(58,160,255,.14);
+      border: 1px solid rgba(58,160,255,.22);
+    }
+    .progress{
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(61,220,151,.9), rgba(58,160,255,.9));
+    }
+    table{width:100%; border-collapse:collapse}
+    td,th{padding:10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); font-size:13px}
+    th{color:var(--muted); text-align:left; font-weight:650}
+    .right{text-align:right}
+    .badge{
+      display:inline-block; padding:4px 8px; border-radius:999px;
+      font-size:12px; border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05); color: var(--muted);
+    }
+    .warn{color:var(--warn)}
+    .good{color:var(--good)}
+    .bad{color:var(--bad)}
+    .mono{font-family:var(--mono)}
+    .divider{height:1px; background: rgba(255,255,255,.08); margin: 12px 0}
+    canvas{width:100%; height:220px; background: rgba(0,0,0,.16); border:1px solid rgba(255,255,255,.08); border-radius: 12px}
+    .hint{
+      border-left: 3px solid rgba(58,160,255,.55);
+      padding: 10px 12px;
+      background: rgba(58,160,255,.08);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>WalkCut <span class="pill" id="todayPill"></span></h1>
+    <span class="pill" id="streakPill">Streaks: —</span>
+  </div>
+</header>
+
+<main>
+  <!-- DASH -->
+  <section id="view-dash" class="grid">
+    <div class="card">
+      <h2>Today’s Targets</h2>
+      <div class="kpi" id="walkTargets"></div>
+      <div class="divider"></div>
+      <div class="row">
+        <div class="small">Walking progress (manual log)</div>
+        <div class="small mono" id="walkProgressText">—</div>
+      </div>
+      <div class="progress" aria-label="walk progress"><div id="walkProgressBar"></div></div>
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button id="btnQuickLogWalk">Quick log walk</button>
+        <button class="secondary" id="btnGoSetup">Edit plan</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Macros Today (displayed in oz)</h2>
+      <div class="kpi" id="macroKPIs"></div>
+      <div class="divider"></div>
+      <div class="row">
+        <div class="small">Calories</div>
+        <div class="small mono" id="calorieLine">—</div>
+      </div>
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button id="btnQuickAddFood">Add food entry</button>
+        <button class="secondary" id="btnGoMacros">View macros</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Weight Trend</h2>
+      <canvas id="weightChart" width="900" height="320"></canvas>
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button id="btnLogWeight">Log weight</button>
+        <button class="secondary" id="btnGoWeight">View weight</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>iPhone-only notes</h2>
+      <div class="hint">
+        • This is a single-file “Home Screen app”. It saves data on your iPhone (local storage).<br>
+        • iOS web apps can’t read Apple Health steps reliably like native apps. If you want that later, you’ll need the Mac/Xcode build.<br>
+        • “Macros in oz” means protein/carb/fat targets are shown in ounces (converted from grams).
+      </div>
+    </div>
+  </section>
+
+  <!-- WALK LOG -->
+  <section id="view-walk" class="grid" style="display:none">
+    <div class="card">
+      <h2>Log Walking</h2>
+      <label>Date</label>
+      <input type="date" id="walkDate">
+      <div class="grid two">
+        <div>
+          <label>Miles</label>
+          <input inputmode="decimal" placeholder="e.g., 3.2" id="walkMiles">
+        </div>
+        <div>
+          <label>Minutes</label>
+          <input inputmode="numeric" placeholder="e.g., 55" id="walkMinutes">
+        </div>
+      </div>
+      <div class="btnbar" style="margin-top:12px">
+        <button id="saveWalk">Save</button>
+        <button class="secondary" id="backFromWalk">Back</button>
+      </div>
+      <div class="divider"></div>
+      <div class="small muted">Tip: If you only know minutes, enter minutes and leave miles blank. The app can estimate miles from your pace.</div>
+    </div>
+
+    <div class="card">
+      <h2>Recent Walk Logs</h2>
+      <div id="walkHistory"></div>
+    </div>
+  </section>
+
+  <!-- MACROS -->
+  <section id="view-macros" class="grid" style="display:none">
+    <div class="card">
+      <h2>Today Macros</h2>
+      <div class="kpi" id="macroKPIs2"></div>
+      <div class="divider"></div>
+      <div class="row">
+        <div class="small">Calories (target / eaten)</div>
+        <div class="small mono" id="calorieLine2">—</div>
+      </div>
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button id="btnAddEntry2">Add Entry</button>
+        <button class="secondary" id="btnAddFood2">Add Food</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Add Food Entry (oz of food)</h2>
+      <label>Meal</label>
+      <select id="mealSel">
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+        <option value="snack">Snack</option>
+      </select>
+
+      <label>Food</label>
+      <select id="foodSel"></select>
+
+      <label>Ounces of food eaten</label>
+      <input inputmode="decimal" placeholder="e.g., 6" id="entryOz">
+
+      <div class="btnbar" style="margin-top:12px">
+        <button id="saveEntry">Save Entry</button>
+        <button class="secondary" id="clearEntry">Clear</button>
+      </div>
+      <div class="divider"></div>
+      <div class="small muted">Foods store macros “per 1 oz of that food”. If you eat 6 oz chicken, the app multiplies by 6.</div>
+    </div>
+
+    <div class="card">
+      <h2>Today’s Food Log</h2>
+      <div id="todayFoodLog"></div>
+    </div>
+
+    <div class="card">
+      <h2>Foods (macros per 1 oz food)</h2>
+      <div class="btnbar" style="margin-bottom:10px">
+        <button id="btnShowAddFood">Add Food</button>
+      </div>
+      <div id="foodsList"></div>
+    </div>
+
+    <div class="card" id="addFoodCard" style="display:none">
+      <h2>Add Food</h2>
+      <label>Name</label>
+      <input placeholder="e.g., Chicken breast (cooked)" id="foodName">
+
+      <label>Protein grams per 1 oz food</label>
+      <input inputmode="decimal" placeholder="e.g., 8.8" id="foodP">
+
+      <label>Carb grams per 1 oz food</label>
+      <input inputmode="decimal" placeholder="e.g., 0" id="foodC">
+
+      <label>Fat grams per 1 oz food</label>
+      <input inputmode="decimal" placeholder="e.g., 1.0" id="foodF">
+
+      <div class="btnbar" style="margin-top:12px">
+        <button id="saveFood">Save Food</button>
+        <button class="secondary" id="hideAddFood">Close</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEIGHT -->
+  <section id="view-weight" class="grid" style="display:none">
+    <div class="card">
+      <h2>Log Weight</h2>
+      <label>Date</label>
+      <input type="date" id="wDate">
+      <label>Weight (lb)</label>
+      <input inputmode="decimal" placeholder="e.g., 225.0" id="wLb">
+      <div class="btnbar" style="margin-top:12px">
+        <button id="saveWeight">Save</button>
+        <button class="secondary" id="backFromWeight">Back</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Trend</h2>
+      <canvas id="weightChart2" width="900" height="320"></canvas>
+      <div class="divider"></div>
+      <div class="small muted">Chart shows your last ~90 entries (or fewer).</div>
+    </div>
+
+    <div class="card">
+      <h2>Entries</h2>
+      <div id="weightList"></div>
+    </div>
+  </section>
+
+  <!-- SETUP -->
+  <section id="view-setup" class="grid" style="display:none">
+    <div class="card">
+      <h2>Profile</h2>
+      <div class="grid two">
+        <div>
+          <label>Age</label>
+          <input inputmode="numeric" id="pAge" placeholder="44">
+        </div>
+        <div>
+          <label>Height (inches)</label>
+          <input inputmode="numeric" id="pHeight" placeholder="73">
+          <div class="small muted">6'1" = 73 inches</div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div>
+          <label>Weight (lb)</label>
+          <input inputmode="decimal" id="pWeight" placeholder="225">
+        </div>
+        <div>
+          <label>Goal loss (lb)</label>
+          <input inputmode="decimal" id="pGoalLoss" placeholder="30">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Walking Plan</h2>
+      <label>Loss rate</label>
+      <select id="lossRate">
+        <option value="0.5">0.5 lb/week (easy)</option>
+        <option value="1.0" selected>1.0 lb/week (steady)</option>
+        <option value="1.5">1.5 lb/week (aggressive)</option>
+      </select>
+
+      <label>Walking pace</label>
+      <select id="pace">
+        <option value="3.0">Easy (3.0 mph)</option>
+        <option value="3.5" selected>Brisk (3.5 mph)</option>
+        <option value="4.0">Fast (4.0 mph)</option>
+      </select>
+
+      <label>Walking share of deficit (%)</label>
+      <input type="range" id="walkShare" min="0" max="100" step="5" value="70">
+      <div class="row">
+        <div class="small muted">0% = diet only</div>
+        <div class="small mono" id="walkShareLabel">70%</div>
+        <div class="small muted">100% = walking only</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nutrition Plan</h2>
+      <label>Macro display unit</label>
+      <select id="macroUnit">
+        <option value="oz" selected>Ounces (oz)</option>
+        <option value="g">Grams (g)</option>
+      </select>
+
+      <label><input type="checkbox" id="autoTargets" checked> Auto macro targets</label>
+      <div class="grid two" id="autoTargetsBox">
+        <div>
+          <label>Protein per lb of goal weight</label>
+          <input inputmode="decimal" id="protPerLb" placeholder="0.8">
+        </div>
+        <div>
+          <label>Fat per lb of goal weight</label>
+          <input inputmode="decimal" id="fatPerLb" placeholder="0.30">
+        </div>
+      </div>
+
+      <div id="customTargetsBox" style="display:none">
+        <div class="grid three">
+          <div>
+            <label>Protein (g)</label>
+            <input inputmode="decimal" id="custP" placeholder="180">
+          </div>
+          <div>
+            <label>Carbs (g)</label>
+            <input inputmode="decimal" id="custC" placeholder="180">
+          </div>
+          <div>
+            <label>Fat (g)</label>
+            <input inputmode="decimal" id="custF" placeholder="60">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="small muted" id="macroPreview">—</div>
+    </div>
+
+    <div class="card">
+      <h2>Reminder (7:00 PM)</h2>
+      <div class="hint">
+        iPhone Home Screen web apps can show notifications only if you allow them. This reminder triggers when the app is opened near the reminder time.
+      </div>
+      <label><input type="checkbox" id="remEnabled"> Enable reminder</label>
+      <div class="grid two">
+        <div>
+          <label>Hour (0–23)</label>
+          <input inputmode="numeric" id="remHour" placeholder="19">
+        </div>
+        <div>
+          <label>Minute (0–59)</label>
+          <input inputmode="numeric" id="remMin" placeholder="0">
+        </div>
+      </div>
+      <div class="btnbar" style="margin-top:12px">
+        <button id="btnEnableNotifs">Allow notifications</button>
+        <button class="secondary" id="testNotif">Test reminder</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Save</h2>
+      <div class="btnbar">
+        <button id="saveSetup">Save Setup</button>
+        <button class="secondary" id="backFromSetup">Back</button>
+        <button class="danger" id="resetAll">Reset all data</button>
+      </div>
+      <div class="divider"></div>
+      <div class="small muted">Reset wipes everything stored on this iPhone for WalkCut.</div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <div class="tab active" data-tab="dash">Dashboard</div>
+  <div class="tab" data-tab="walk">Walk</div>
+  <div class="tab" data-tab="macros">Macros</div>
+  <div class="tab" data-tab="weight">Weight</div>
+  <div class="tab" data-tab="setup">Setup</div>
+</nav>
+
+<script>
+/* -----------------------------
+   WalkCut — single HTML app
+   Data stored in localStorage
+-------------------------------- */
+
+const LS_KEY = "walkcut_v1";
+
+const defaults = {
+  profile: { age: 44, heightIn: 73, weightLb: 225, goalLossLb: 30 },
+  plan: { lossRateLbWk: 1.0, paceMph: 3.5, walkShare: 0.70 },
+  nutrition: {
+    macroUnit: "oz",          // display unit for P/C/F
+    autoTargets: true,
+    protPerLbGoal: 0.8,
+    fatPerLbGoal: 0.30,
+    custom: { p:180, c:180, f:60 }, // grams
+    reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
+  },
+  foods: [
+    // macros PER 1 oz of FOOD, stored as grams for each macro
+    { id: uid(), name: "Chicken breast (cooked)", p: 8.8, c: 0.0, f: 1.0 },
+    { id: uid(), name: "Rice (cooked)", p: 0.9, c: 8.9, f: 0.1 },
+    { id: uid(), name: "Greek yogurt (plain)", p: 2.8, c: 1.5, f: 0.1 }
+  ],
+  foodEntries: [],
+  walkLogs: [],
+  weights: []
+};
+
+let state = loadState();
+
+/* ---------- Utilities ---------- */
+function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+function round(n, d=1){ const p=Math.pow(10,d); return Math.round(n*p)/p; }
+function todayISO(d=new Date()){
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return x.toISOString().slice(0,10);
+}
+function parseNum(v){
+  if (v==null) return 0;
+  const s = (""+v).trim().replace(",",".");
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
+function caloriesFromMacros(pG,cG,fG){ return (pG*4)+(cG*4)+(fG*9); }
+function gramsPerUnit(unit){ return unit==="oz" ? 28.349523125 : 1.0; }
+function fmtUnit(unit){ return unit==="oz" ? "oz" : "g"; }
+
+/* ---------- Persistence ---------- */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return structuredClone(defaults);
+    const s = JSON.parse(raw);
+
+    // merge defaults to handle upgrades
+    const merged = structuredClone(defaults);
+    deepMerge(merged, s);
+
+    // ensure ids exist
+    if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = structuredClone(defaults.foods);
+    merged.foods = merged.foods.map(f => ({...f, id: f.id || uid()}));
+
+    return merged;
+  }catch(e){
+    return structuredClone(defaults);
+  }
+}
+function deepMerge(target, src){
+  for(const k in src){
+    if(src[k] && typeof src[k]==="object" && !Array.isArray(src[k])){
+      if(!target[k] || typeof target[k]!=="object") target[k]={};
+      deepMerge(target[k], src[k]);
+    }else{
+      target[k]=src[k];
+    }
+  }
+}
+function saveState(){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+  renderAll();
+}
+
+/* ---------- Calculations ---------- */
+function stepsPerMile(heightIn){
+  // 2100 steps/mile around 73" with a small adjustment
+  return clamp(2100 + (73 - heightIn) * 15, 1700, 2600);
+}
+function kcalPerMile(weightLb, paceMph){
+  // Rough baseline at 225 lb; scaled by weight
+  const baseByPace = paceMph <= 3.05 ? 118 : (paceMph <= 3.75 ? 150 : 170);
+  return baseByPace * (weightLb / 225.0);
+}
+function walkTargets(){
+  const p = state.profile, plan = state.plan;
+  const dailyDeficit = (plan.lossRateLbWk * 3500) / 7;
+  const walkKcal = dailyDeficit * plan.walkShare;
+  const kpm = kcalPerMile(p.weightLb, plan.paceMph);
+  const miles = walkKcal / Math.max(1, kpm);
+  const minutes = (miles / plan.paceMph) * 60;
+  const steps = miles * stepsPerMile(p.heightIn);
+  const weeks = Math.ceil((p.goalLossLb * 3500) / Math.max(1, dailyDeficit) / 7);
+  return {
+    dailyDeficit, walkKcal, kpm,
+    miles, minutes, steps,
+    weeks
+  };
+}
+function tdeeEstimate(){
+  // Male Mifflin-St Jeor + light activity multiplier (heuristic)
+  const p = state.profile;
+  const kg = p.weightLb * 0.45359237;
+  const cm = p.heightIn * 2.54;
+  const age = p.age;
+  const bmr = (10*kg) + (6.25*cm) - (5*age) + 5;
+  return bmr * 1.35;
+}
+function macroTargets(){
+  const p = state.profile, plan = state.plan, n = state.nutrition;
+  if(!n.autoTargets){
+    return { pG: n.custom.p, cG: n.custom.c, fG: n.custom.f, kcal: caloriesFromMacros(n.custom.p,n.custom.c,n.custom.f) };
+  }
+  const goalWeight = Math.max(120, p.weightLb - p.goalLossLb);
+  const proteinG = goalWeight * n.protPerLbGoal;
+  const fatG = goalWeight * n.fatPerLbGoal;
+
+  const dailyDeficit = (plan.lossRateLbWk * 3500) / 7;
+  const deficitFromFood = dailyDeficit * (1 - plan.walkShare);
+
+  const calTarget = Math.max(1500, tdeeEstimate() - deficitFromFood);
+  const used = proteinG*4 + fatG*9;
+  const carbsG = Math.max(0, (calTarget - used) / 4);
+
+  return { pG: proteinG, cG: carbsG, fG: fatG, kcal: caloriesFromMacros(proteinG,carbsG,fatG) };
+}
+function entriesForDay(dayISO){
+  return state.foodEntries.filter(e => e.day === dayISO);
+}
+function walkLogForDay(dayISO){
+  return state.walkLogs.find(w => w.day === dayISO) || null;
+}
+function weightForDay(dayISO){
+  return state.weights.find(w => w.day === dayISO) || null;
+}
+function macroConsumed(dayISO){
+  let pG=0,cG=0,fG=0;
+  for(const e of entriesForDay(dayISO)){
+    const food = state.foods.find(f=>f.id===e.foodId);
+    if(!food) continue;
+    const oz = e.oz;
+    pG += food.p * oz;
+    cG += food.c * oz;
+    fG += food.f * oz;
+  }
+  return { pG, cG, fG, kcal: caloriesFromMacros(pG,cG,fG) };
+}
+function toDisplayOzFromGrams(g){
+  return g / 28.349523125;
+}
+function fromDisplayToGrams(val, unit){
+  return val * gramsPerUnit(unit);
+}
+
+/* ---------- Streaks ---------- */
+function computeStreaks(){
+  // Walk streak: >=90% of target miles (manual log)
+  // Macro streak: protein >=90% target AND calories between 70% and 110%
+  const t = walkTargets();
+  const mt = macroTargets();
+  const cal = mt.kcal;
+
+  let walkStreak=0, macroStreak=0;
+
+  for(let i=0;i<365;i++){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const iso = todayISO(d);
+
+    const wl = walkLogForDay(iso);
+    const walkOK = wl && (wl.miles >= t.miles*0.90);
+
+    const mc = macroConsumed(iso);
+    const proteinOK = mc.pG >= mt.pG*0.90;
+    const calOK = (mc.kcal >= cal*0.70) && (mc.kcal <= cal*1.10);
+    const macroOK = proteinOK && calOK;
+
+    if(i===0){
+      walkStreak = walkOK ? 1 : 0;
+      macroStreak = macroOK ? 1 : 0;
+    }else{
+      if(walkStreak === i && walkOK) walkStreak++;
+      if(macroStreak === i && macroOK) macroStreak++;
+    }
+    // stop early if both broken and at least a few days checked
+    if(i>14 && walkStreak<i && macroStreak<i) break;
+  }
+  return { walkStreak, macroStreak };
+}
+
+/* ---------- Reminder (web) ---------- */
+async function ensureNotifPermission(){
+  if(!("Notification" in window)) return false;
+  if(Notification.permission === "granted") return true;
+  if(Notification.permission === "denied") return false;
+  const p = await Notification.requestPermission();
+  return p === "granted";
+}
+function maybeFireReminder(){
+  const r = state.nutrition.reminder;
+  if(!r.enabled) return;
+
+  if(!("Notification" in window)) return;
+  if(Notification.permission !== "granted") return;
+
+  const now = new Date();
+  const iso = todayISO(now);
+  const minsNow = now.getHours()*60 + now.getMinutes();
+  const minsTarget = clamp(parseInt(r.hour,10)||19,0,23)*60 + clamp(parseInt(r.minute,10)||0,0,59);
+
+  // fire if app opened within 30 minutes AFTER target, once per day
+  if(minsNow >= minsTarget && minsNow <= minsTarget + 30){
+    if(r.lastFired !== iso){
+      new Notification("WalkCut", { body: "Time to hit your walk + macros goals." });
+      r.lastFired = iso;
+      saveState(); // persist lastFired
+    }
+  }
+}
+
+/* ---------- Rendering ---------- */
+function setActiveTab(name){
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.tab===name);
+  });
+  document.querySelectorAll("main section").forEach(s=>s.style.display="none");
+
+  const map = {
+    dash: "view-dash",
+    walk: "view-walk",
+    macros: "view-macros",
+    weight: "view-weight",
+    setup: "view-setup"
+  };
+  document.getElementById(map[name]).style.display = "";
+  renderAll();
+  // reminder check when opening any view
+  maybeFireReminder();
+}
+
+function renderHeader(){
+  document.getElementById("todayPill").textContent = new Date().toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
+  const s = computeStreaks();
+  document.getElementById("streakPill").textContent = `Streaks: Walk ${s.walkStreak} • Macros ${s.macroStreak}`;
+}
+
+function renderWalkTargets(){
+  const t = walkTargets();
+  const el = document.getElementById("walkTargets");
+  el.innerHTML = "";
+  el.appendChild(kpiBox("Miles", round(t.miles,1)));
+  el.appendChild(kpiBox("Minutes", Math.round(t.minutes)));
+  el.appendChild(kpiBox("Steps", Math.round(t.steps)));
+
+  // progress
+  const iso = todayISO();
+  let wl = walkLogForDay(iso);
+  const loggedMiles = wl ? wl.miles : 0;
+  const pct = clamp((loggedMiles / Math.max(0.01,t.miles))*100, 0, 130);
+  document.getElementById("walkProgressBar").style.width = `${Math.min(100,pct)}%`;
+  document.getElementById("walkProgressText").textContent = `${round(loggedMiles,1)} / ${round(t.miles,1)} mi (${Math.round(pct)}%)`;
+}
+
+function renderMacrosCards(){
+  const unit = state.nutrition.macroUnit;
+  const mt = macroTargets();
+  const mc = macroConsumed(todayISO());
+
+  const targetsDisp = {
+    p: mt.pG / gramsPerUnit(unit),
+    c: mt.cG / gramsPerUnit(unit),
+    f: mt.fG / gramsPerUnit(unit)
+  };
+  const consumedDisp = {
+    p: mc.pG / gramsPerUnit(unit),
+    c: mc.cG / gramsPerUnit(unit),
+    f: mc.fG / gramsPerUnit(unit)
+  };
+  const remainingDisp = {
+    p: Math.max(0, targetsDisp.p - consumedDisp.p),
+    c: Math.max(0, targetsDisp.c - consumedDisp.c),
+    f: Math.max(0, targetsDisp.f - consumedDisp.f)
+  };
+
+  const kpi1 = document.getElementById("macroKPIs");
+  const kpi2 = document.getElementById("macroKPIs2");
+  kpi1.innerHTML = ""; kpi2.innerHTML = "";
+
+  // show targets and remaining in dashboard compact
+  kpi1.appendChild(kpiBox(`P (${fmtUnit(unit)})`, round(remainingDisp.p,1)));
+  kpi1.appendChild(kpiBox(`C (${fmtUnit(unit)})`, round(remainingDisp.c,1)));
+  kpi1.appendChild(kpiBox(`F (${fmtUnit(unit)})`, round(remainingDisp.f,1)));
+
+  // full in macros view: targets & consumed
+  kpi2.appendChild(kpiBox(`Target P (${fmtUnit(unit)})`, round(targetsDisp.p,1)));
+  kpi2.appendChild(kpiBox(`Eaten P (${fmtUnit(unit)})`, round(consumedDisp.p,1)));
+  kpi2.appendChild(kpiBox(`Remain P (${fmtUnit(unit)})`, round(remainingDisp.p,1)));
+
+  document.getElementById("calorieLine").textContent = `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
+  document.getElementById("calorieLine2").textContent = `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
+
+  // additional KPIs in macros view for C and F under the hood (add to list below)
+  // We'll also render a second row-like section as a table inside todayFoodLog header (keeps UI lean)
+}
+
+function renderFoodSelect(){
+  const sel = document.getElementById("foodSel");
+  sel.innerHTML = "";
+  for(const f of state.foods){
+    const opt = document.createElement("option");
+    opt.value = f.id;
+    opt.textContent = f.name;
+    sel.appendChild(opt);
+  }
+}
+
+function renderFoodsList(){
+  const unit = state.nutrition.macroUnit;
+  const out = document.getElementById("foodsList");
+  out.innerHTML = "";
+  if(state.foods.length===0){
+    out.innerHTML = `<div class="small muted">No foods yet.</div>`;
+    return;
+  }
+  const rows = state.foods.map(f=>{
+    const p = f.p / gramsPerUnit(unit);
+    const c = f.c / gramsPerUnit(unit);
+    const fat = f.f / gramsPerUnit(unit);
+    const kcal = caloriesFromMacros(f.p,f.c,f.f);
+    return `
+      <div class="card" style="margin:10px 0; box-shadow:none; background:rgba(0,0,0,.12)">
+        <div class="row">
+          <div>
+            <div style="font-weight:750">${escapeHtml(f.name)}</div>
+            <div class="small muted">per 1 oz food → P ${round(p,2)} ${fmtUnit(unit)} • C ${round(c,2)} ${fmtUnit(unit)} • F ${round(fat,2)} ${fmtUnit(unit)} • ${Math.round(kcal)} kcal</div>
+          </div>
+          <button class="danger" onclick="deleteFood('${f.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  out.innerHTML = rows;
+}
+
+function renderTodayFoodLog(){
+  const out = document.getElementById("todayFoodLog");
+  const iso = todayISO();
+  const entries = entriesForDay(iso).slice().sort((a,b)=> (b.ts||0)-(a.ts||0));
+  if(entries.length===0){
+    out.innerHTML = `<div class="small muted">No entries yet.</div>`;
+    return;
+  }
+  const rows = entries.map(e=>{
+    const food = state.foods.find(f=>f.id===e.foodId);
+    const name = food ? food.name : "Unknown";
+    return `
+      <div class="row" style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08)">
+        <div>
+          <div style="font-weight:750">${escapeHtml(name)}</div>
+          <div class="small muted">${capitalize(e.meal)}</div>
+        </div>
+        <div class="row" style="gap:8px">
+          <span class="badge mono">${round(e.oz,1)} oz</span>
+          <button class="danger" onclick="deleteEntry('${e.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  out.innerHTML = rows;
+}
+
+function renderWalkHistory(){
+  const out = document.getElementById("walkHistory");
+  const logs = state.walkLogs.slice().sort((a,b)=> (b.day.localeCompare(a.day)));
+  if(logs.length===0){
+    out.innerHTML = `<div class="small muted">No walk logs yet.</div>`;
+    return;
+  }
+  out.innerHTML = `
+    <table>
+      <thead><tr><th>Date</th><th class="right">Miles</th><th class="right">Min</th><th class="right"> </th></tr></thead>
+      <tbody>
+        ${logs.slice(0,14).map(w=>`
+          <tr>
+            <td>${w.day}</td>
+            <td class="right mono">${round(w.miles,1)}</td>
+            <td class="right mono">${Math.round(w.minutes)}</td>
+            <td class="right"><button class="danger" onclick="deleteWalk('${w.day}')">Delete</button></td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderWeightList(){
+  const out = document.getElementById("weightList");
+  const rows = state.weights.slice().sort((a,b)=> b.day.localeCompare(a.day));
+  if(rows.length===0){
+    out.innerHTML = `<div class="small muted">No weight entries yet.</div>`;
+    return;
+  }
+  out.innerHTML = `
+    <table>
+      <thead><tr><th>Date</th><th class="right">Weight (lb)</th><th class="right"> </th></tr></thead>
+      <tbody>
+        ${rows.slice(0,30).map(w=>`
+          <tr>
+            <td>${w.day}</td>
+            <td class="right mono">${round(w.lb,1)}</td>
+            <td class="right"><button class="danger" onclick="deleteWeight('${w.day}')">Delete</button></td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderSetup(){
+  // profile
+  pAge.value = state.profile.age;
+  pHeight.value = state.profile.heightIn;
+  pWeight.value = state.profile.weightLb;
+  pGoalLoss.value = state.profile.goalLossLb;
+
+  // plan
+  lossRate.value = String(state.plan.lossRateLbWk);
+  pace.value = String(state.plan.paceMph);
+  walkShare.value = String(Math.round(state.plan.walkShare*100/5)*5);
+  walkShareLabel.textContent = `${walkShare.value}%`;
+
+  // nutrition
+  macroUnit.value = state.nutrition.macroUnit;
+  autoTargets.checked = !!state.nutrition.autoTargets;
+  protPerLb.value = state.nutrition.protPerLbGoal;
+  fatPerLb.value = state.nutrition.fatPerLbGoal;
+  custP.value = state.nutrition.custom.p;
+  custC.value = state.nutrition.custom.c;
+  custF.value = state.nutrition.custom.f;
+
+  // reminder
+  remEnabled.checked = !!state.nutrition.reminder.enabled;
+  remHour.value = state.nutrition.reminder.hour;
+  remMin.value = state.nutrition.reminder.minute;
+
+  toggleAutoTargetsUI();
+  renderMacroPreview();
+}
+
+function renderMacroPreview(){
+  const mt = macroTargets();
+  const unit = state.nutrition.macroUnit;
+  const pDisp = mt.pG / gramsPerUnit(unit);
+  const cDisp = mt.cG / gramsPerUnit(unit);
+  const fDisp = mt.fG / gramsPerUnit(unit);
+  macroPreview.textContent = `Targets preview: P ${round(pDisp,1)} ${fmtUnit(unit)} • C ${round(cDisp,1)} ${fmtUnit(unit)} • F ${round(fDisp,1)} ${fmtUnit(unit)} • ${Math.round(mt.kcal)} kcal`;
+}
+
+function renderAll(){
+  renderHeader();
+  renderWalkTargets();
+  renderMacrosCards();
+  renderFoodSelect();
+  renderFoodsList();
+  renderTodayFoodLog();
+  renderWalkHistory();
+  renderWeightList();
+  drawWeightChart("weightChart");
+  drawWeightChart("weightChart2");
+}
+
+/* ---------- Chart ---------- */
+function drawWeightChart(canvasId){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width, h = canvas.height;
+
+  // clear
+  ctx.clearRect(0,0,w,h);
+
+  const data = state.weights.slice().sort((a,b)=> a.day.localeCompare(b.day)).slice(-90);
+  // background grid
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "rgba(0,0,0,0)";
+  ctx.fillRect(0,0,w,h);
+
+  // no data
+  if(data.length < 2){
+    ctx.fillStyle = "rgba(166,179,194,.8)";
+    ctx.font = "24px " + getComputedStyle(document.body).fontFamily;
+    ctx.fillText("Add weight entries to see a trend.", 26, 60);
+    return;
+  }
+
+  const vals = data.map(d=>d.lb);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if(max - min < 2){ max += 1; min -= 1; }
+
+  const pad = 40;
+  const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
+
+  // grid lines
+  ctx.strokeStyle = "rgba(255,255,255,.10)";
+  ctx.lineWidth = 1;
+  for(let i=0;i<=4;i++){
+    const y = y0 + (y1-y0)*(i/4);
+    ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+  }
+
+  // axes labels
+  ctx.fillStyle = "rgba(166,179,194,.9)";
+  ctx.font = "18px var(--mono)";
+  ctx.fillText(round(max,1) + " lb", x0, y0-10);
+  ctx.fillText(round(min,1) + " lb", x0, y1+24);
+
+  // plot line
+  function x(i){ return x0 + (x1-x0) * (i/(data.length-1)); }
+  function y(v){ return y1 - (y1-y0) * ((v-min)/(max-min)); }
+
+  // line
+  ctx.strokeStyle = "rgba(58,160,255,.95)";
+  ctx.lineWidth = 4;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  data.forEach((d,i)=>{
+    const xi = x(i), yi = y(d.lb);
+    if(i===0) ctx.moveTo(xi,yi);
+    else ctx.lineTo(xi,yi);
+  });
+  ctx.stroke();
+
+  // last point
+  const last = data[data.length-1];
+  ctx.fillStyle = "rgba(61,220,151,.95)";
+  ctx.beginPath();
+  ctx.arc(x(data.length-1), y(last.lb), 6, 0, Math.PI*2);
+  ctx.fill();
+
+  // title
+  ctx.fillStyle = "rgba(232,238,246,.9)";
+  ctx.font = "22px " + getComputedStyle(document.body).fontFamily;
+  ctx.fillText("Weight Trend", x0, pad-12);
+
+  // last value label
+  ctx.fillStyle = "rgba(166,179,194,.95)";
+  ctx.font = "18px var(--mono)";
+  ctx.fillText(`${round(last.lb,1)} lb • ${last.day}`, x0, h-12);
+}
+
+/* ---------- DOM helpers ---------- */
+function kpiBox(label, value){
+  const d = document.createElement("div");
+  d.className = "box";
+  d.innerHTML = `<div class="label">${label}</div><div class="value mono">${value}</div>`;
+  return d;
+}
+function escapeHtml(s){
+  return (""+s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
+function capitalize(s){ return (""+s).charAt(0).toUpperCase() + (""+s).slice(1); }
+
+/* ---------- Actions ---------- */
+function deleteFood(id){
+  // remove food + entries referencing it
+  state.foods = state.foods.filter(f=>f.id!==id);
+  state.foodEntries = state.foodEntries.filter(e=>e.foodId!==id);
+  saveState();
+}
+function deleteEntry(id){
+  state.foodEntries = state.foodEntries.filter(e=>e.id!==id);
+  saveState();
+}
+function deleteWalk(day){
+  state.walkLogs = state.walkLogs.filter(w=>w.day!==day);
+  saveState();
+}
+function deleteWeight(day){
+  state.weights = state.weights.filter(w=>w.day!==day);
+  saveState();
+}
+
+/* ---------- Event wiring ---------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click", ()=> setActiveTab(t.dataset.tab));
+});
+
+// dashboard quick buttons
+btnGoSetup.onclick = ()=> setActiveTab("setup");
+btnGoMacros.onclick = ()=> setActiveTab("macros");
+btnGoWeight.onclick = ()=> setActiveTab("weight");
+
+btnQuickLogWalk.onclick = ()=>{
+  // prefill walk form for today
+  setActiveTab("walk");
+  walkDate.value = todayISO();
+  const existing = walkLogForDay(todayISO());
+  walkMiles.value = existing ? existing.miles : "";
+  walkMinutes.value = existing ? existing.minutes : "";
+};
+
+btnQuickAddFood.onclick = ()=> setActiveTab("macros");
+btnLogWeight.onclick = ()=>{
+  setActiveTab("weight");
+  wDate.value = todayISO();
+  wLb.value = "";
+};
+
+// walk view buttons
+backFromWalk.onclick = ()=> setActiveTab("dash");
+saveWalk.onclick = ()=>{
+  const day = walkDate.value || todayISO();
+  let miles = parseNum(walkMiles.value);
+  let minutes = parseNum(walkMinutes.value);
+
+  // if user entered minutes only, estimate miles using pace
+  if(miles<=0 && minutes>0){
+    miles = (minutes/60) * state.plan.paceMph;
+  }
+  // if user entered miles only, estimate minutes using pace
+  if(minutes<=0 && miles>0){
+    minutes = (miles / state.plan.paceMph) * 60;
+  }
+  if(miles<=0 && minutes<=0) return alert("Enter miles and/or minutes.");
+
+  // upsert
+  const idx = state.walkLogs.findIndex(w=>w.day===day);
+  const rec = { day, miles, minutes: Math.round(minutes) };
+  if(idx>=0) state.walkLogs[idx]=rec;
+  else state.walkLogs.push(rec);
+
+  // sort
+  state.walkLogs.sort((a,b)=> b.day.localeCompare(a.day));
+  saveState();
+  alert("Saved walk.");
+};
+
+// macros view actions
+btnShowAddFood.onclick = ()=> { addFoodCard.style.display = ""; };
+hideAddFood.onclick = ()=> { addFoodCard.style.display = "none"; };
+btnAddFood2.onclick = ()=> { addFoodCard.style.display = ""; window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"}); };
+btnAddEntry2.onclick = ()=> { document.getElementById("entryOz").focus(); };
+
+saveFood.onclick = ()=>{
+  const name = (foodName.value||"").trim();
+  const p = parseNum(foodP.value);
+  const c = parseNum(foodC.value);
+  const f = parseNum(foodF.value);
+  if(!name) return alert("Enter a food name.");
+  state.foods.unshift({ id: uid(), name, p, c, f });
+  foodName.value=""; foodP.value=""; foodC.value=""; foodF.value="";
+  addFoodCard.style.display="none";
+  saveState();
+  alert("Saved food.");
+};
+
+saveEntry.onclick = ()=>{
+  const foodId = foodSel.value;
+  const meal = mealSel.value;
+  const oz = parseNum(entryOz.value);
+  if(!foodId) return alert("Pick a food.");
+  if(oz<=0) return alert("Enter ounces (e.g., 6).");
+  state.foodEntries.push({ id: uid(), day: todayISO(), meal, foodId, oz, ts: Date.now() });
+  state.foodEntries.sort((a,b)=> (b.day.localeCompare(a.day)) || ((b.ts||0)-(a.ts||0)));
+  entryOz.value = "";
+  saveState();
+  alert("Saved entry.");
+};
+
+clearEntry.onclick = ()=> { entryOz.value=""; };
+
+// weight view actions
+backFromWeight.onclick = ()=> setActiveTab("dash");
+saveWeight.onclick = ()=>{
+  const day = wDate.value || todayISO();
+  const lb = parseNum(wLb.value);
+  if(lb<=0) return alert("Enter weight in lb.");
+  const idx = state.weights.findIndex(w=>w.day===day);
+  const rec = { day, lb };
+  if(idx>=0) state.weights[idx]=rec;
+  else state.weights.push(rec);
+  state.weights.sort((a,b)=> b.day.localeCompare(a.day));
+  wLb.value="";
+  saveState();
+  alert("Saved weight.");
+};
+
+// setup dynamic controls
+walkShare.oninput = ()=> { walkShareLabel.textContent = `${walkShare.value}%`; };
+autoTargets.onchange = ()=> { toggleAutoTargetsUI(); };
+macroUnit.onchange = ()=> { state.nutrition.macroUnit = macroUnit.value; saveState(); };
+protPerLb.oninput = fatPerLb.oninput = ()=> { renderMacroPreview(); };
+custP.oninput = custC.oninput = custF.oninput = ()=> { renderMacroPreview(); };
+
+function toggleAutoTargetsUI(){
+  const on = autoTargets.checked;
+  autoTargetsBox.style.display = on ? "" : "none";
+  customTargetsBox.style.display = on ? "none" : "";
+  renderMacroPreview();
+}
+
+saveSetup.onclick = ()=>{
+  state.profile.age = clamp(parseInt(pAge.value||"44",10)||44, 18, 90);
+  state.profile.heightIn = clamp(parseInt(pHeight.value||"73",10)||73, 48, 90);
+  state.profile.weightLb = clamp(parseNum(pWeight.value||"225"), 90, 600);
+  state.profile.goalLossLb = clamp(parseNum(pGoalLoss.value||"30"), 1, 200);
+
+  state.plan.lossRateLbWk = clamp(parseNum(lossRate.value||"1.0"), 0.25, 2.5);
+  state.plan.paceMph = clamp(parseNum(pace.value||"3.5"), 2.0, 6.0);
+  state.plan.walkShare = clamp(parseNum(walkShare.value||"70")/100, 0, 1);
+
+  state.nutrition.macroUnit = macroUnit.value;
+  state.nutrition.autoTargets = !!autoTargets.checked;
+  state.nutrition.protPerLbGoal = clamp(parseNum(protPerLb.value||"0.8"), 0.4, 1.4);
+  state.nutrition.fatPerLbGoal = clamp(parseNum(fatPerLb.value||"0.30"), 0.15, 0.6);
+
+  state.nutrition.custom = {
+    p: clamp(parseNum(custP.value||"180"), 50, 350),
+    c: clamp(parseNum(custC.value||"180"), 0, 500),
+    f: clamp(parseNum(custF.value||"60"), 10, 200)
+  };
+
+  state.nutrition.reminder.enabled = !!remEnabled.checked;
+  state.nutrition.reminder.hour = clamp(parseInt(remHour.value||"19",10)||19, 0, 23);
+  state.nutrition.reminder.minute = clamp(parseInt(remMin.value||"0",10)||0, 0, 59);
+
+  saveState();
+  alert("Saved setup.");
+  setActiveTab("dash");
+};
+
+backFromSetup.onclick = ()=> setActiveTab("dash");
+
+resetAll.onclick = ()=>{
+  if(confirm("Reset ALL WalkCut data on this iPhone?")){
+    localStorage.removeItem(LS_KEY);
+    state = loadState();
+    renderAll();
+    alert("Reset complete.");
+    setActiveTab("dash");
+  }
+};
+
+btnEnableNotifs.onclick = async ()=>{
+  const ok = await ensureNotifPermission();
+  alert(ok ? "Notifications enabled." : "Notifications not enabled. You may need to allow them in iPhone settings for Safari/Home Screen.");
+};
+testNotif.onclick = async ()=>{
+  const ok = await ensureNotifPermission();
+  if(!ok) return alert("Notifications not enabled.");
+  new Notification("WalkCut", { body: "Test notification ✅" });
+};
+
+// initialize date inputs
+(function init(){
+  // set dates to today
+  walkDate.value = todayISO();
+  wDate.value = todayISO();
+
+  // setup fields
+  renderSetup();
+
+  // tabs start on dashboard
+  setActiveTab("dash");
+
+  // periodic reminder check while app open
+  setInterval(maybeFireReminder, 60*1000);
+})();
+
+/* Expose delete for inline onclick */
+window.deleteFood = deleteFood;
+window.deleteEntry = deleteEntry;
+window.deleteWalk = deleteWalk;
+window.deleteWeight = deleteWeight;
+</script>
+</body>
+</html>
