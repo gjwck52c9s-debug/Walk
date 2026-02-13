@@ -207,6 +207,31 @@
       letter-spacing: .15px;
     }
     #toast .sub{display:block; margin-top:4px; font-weight:600; color: var(--muted); font-size:12px}
+
+    /* ===== Macro tracker bars ===== */
+    .trackWrap{display:grid; gap:8px; margin-top:10px;}
+    .trackRow{display:grid; grid-template-columns: 60px 1fr 74px; gap:10px; align-items:center;}
+    .trackLabel{font-size:12px; color: var(--muted); font-weight:800;}
+    .trackBar{
+      height:12px; border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      position:relative;
+    }
+    .trackFill{height:100%; width:0%;}
+    .trackVal{font-size:12px; color: var(--muted); text-align:right; font-family: var(--mono);}
+
+    .fillBlue{ background: rgba(58,160,255,.95); }
+    .fillGreen{ background: rgba(61,220,151,.95); }
+    .fillRed{ background: rgba(255,107,107,.95); }
+
+    .miniCard{
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(201,162,77,.14);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
   </style>
 </head>
 
@@ -240,6 +265,9 @@
     <div class="card">
       <h2>Macros Today</h2>
       <div class="kpi" id="macroKPIs"></div>
+
+      <div class="trackWrap" id="macroTrackDash"></div>
+
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories</div>
@@ -256,7 +284,7 @@
       <h2>Weekly Walks (Last 7 Days)</h2>
       <canvas id="weeklyWalkBars"></canvas>
       <div class="divider"></div>
-      <div class="small muted">Bars show miles per day (Sun–Sat rolling).</div>
+      <div class="small muted">Bars show miles per day.</div>
     </div>
 
     <div class="card">
@@ -331,6 +359,9 @@
     <div class="card">
       <h2>Macros Today</h2>
       <div class="kpi" id="macroKPIs2"></div>
+
+      <div class="trackWrap" id="macroTrackMacros"></div>
+
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories (target / eaten)</div>
@@ -339,7 +370,7 @@
       <div class="divider"></div>
       <div class="btnbar">
         <button id="btnAddEntry2" type="button">Add Entry</button>
-        <button class="secondary" id="btnAddFood2" type="button">Add Food</button>
+        <button class="secondary" id="btnToggleAddFood" type="button">Add Food</button>
       </div>
     </div>
 
@@ -374,16 +405,45 @@
       <div id="todayFoodLog"></div>
     </div>
 
+    <!-- ✅ Foods list as ONE box with 3 dropdowns -->
     <div class="card">
-      <h2>Foods (macros per 4 oz food)</h2>
-      <div class="btnbar" style="margin-bottom:10px">
-        <button id="btnShowAddFood" type="button">Add Food</button>
+      <h2>Foods</h2>
+      <div class="small muted" style="margin-bottom:10px">Select a food to view macros (per 4 oz) and delete it.</div>
+
+      <div class="miniCard">
+        <label>Fruits & Vegetables</label>
+        <select id="catFruitVeg"></select>
+
+        <label>Grains</label>
+        <select id="catGrains"></select>
+
+        <label>Protein</label>
+        <select id="catProtein"></select>
+
+        <div class="divider"></div>
+        <div id="selectedFoodDetails" class="small muted">Select a food above.</div>
+        <div class="btnbar" style="margin-top:10px">
+          <button class="danger" id="deleteSelectedFood" type="button" disabled>Delete Selected</button>
+        </div>
       </div>
-      <div id="foodsList"></div>
+
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button id="btnToggleAddFood2" type="button">Add Food</button>
+      </div>
     </div>
 
+    <!-- ✅ Add Food is hidden until button -->
     <div class="card" id="addFoodCard" style="display:none">
       <h2>Add Food</h2>
+
+      <label>Category</label>
+      <select id="foodCat">
+        <option value="fruitveg">Fruits & Vegetables</option>
+        <option value="grains">Grains</option>
+        <option value="protein" selected>Protein</option>
+      </select>
+
       <label>Name</label>
       <input placeholder="e.g., Chicken breast (cooked)" id="foodName">
 
@@ -547,7 +607,7 @@
         <button class="danger" id="resetAll" type="button">Reset all data</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Reset wipes everything stored on this iPhone for WalkCut.</div>
+      <div class="small muted">Reset wipes everything stored on this device for WalkCut.</div>
     </div>
   </section>
 </main>
@@ -563,7 +623,8 @@
 </nav>
 
 <script>
-const LS_KEY = "walkcut_v2_4oz";
+/* ===== Versioned localStorage key ===== */
+const LS_KEY = "walkcut_v3_trackbars_categories";
 
 /* Safe clone for older iOS */
 function safeClone(obj){
@@ -602,7 +663,7 @@ function toast(msg, sub=""){
   toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 4500);
 }
 
-/* ===== Reliable tap binding (click + touchstart) ===== */
+/* Reliable tap binding */
 function bindTap(elOrId, fn){
   const el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
   if(!el) return;
@@ -617,18 +678,18 @@ const defaults = {
   plan: { lossRateLbWk: 1.0, paceMph: 3.5, walkShare: 0.70 },
   nutrition: {
     autoTargets: true,
-    protPerLbGoal: 1.01,          // ✅ defaulted
+    protPerLbGoal: 1.01,
     fatPerLbGoal: 0.30,
     custom: { p:180, c:180, f:60 },
     reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
   },
-  // ✅ foods are PER 4 OZ (macros in grams)
+  /* Foods are PER 4 OZ (macros in grams) + category */
   foods: [
-    { id: uid(), name: "Chicken breast (cooked)", p: 35.2, c: 0.0, f: 4.0 },
-    { id: uid(), name: "Rice (cooked)", p: 3.6, c: 35.6, f: 0.4 },
-    { id: uid(), name: "Greek yogurt (plain)", p: 11.2, c: 6.0, f: 0.4 }
+    { id: uid(), cat:"protein", name: "Chicken breast (cooked)", p: 35.2, c: 0.0, f: 4.0 },
+    { id: uid(), cat:"grains",  name: "Rice (cooked)",            p: 3.6,  c: 35.6, f: 0.4 },
+    { id: uid(), cat:"fruitveg",name: "Broccoli",                 p: 3.0,  c: 7.0,  f: 0.3 }
   ],
-  foodEntries: [], // entries store oz eaten
+  foodEntries: [],   // entries store oz eaten
   walkLogs: [],
   weights: []
 };
@@ -656,7 +717,11 @@ function loadState(){
     deepMerge(merged, s);
 
     if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = safeClone(defaults.foods);
-    merged.foods = merged.foods.map(f => ({...f, id: f.id || uid()}));
+    merged.foods = merged.foods.map(f => ({
+      ...f,
+      id: f.id || uid(),
+      cat: f.cat || "protein"
+    }));
 
     if(!merged.nutrition) merged.nutrition = safeClone(defaults.nutrition);
     if(!merged.nutrition.reminder) merged.nutrition.reminder = safeClone(defaults.nutrition.reminder);
@@ -717,7 +782,7 @@ function macroTargets(){
 function entriesForDay(dayISO){ return state.foodEntries.filter(e => e.day === dayISO); }
 function walkLogForDay(dayISO){ return state.walkLogs.find(w => w.day === dayISO) || null; }
 
-/* ✅ Foods are per 4 oz; entries scale by (oz/4) */
+/* Foods are per 4 oz; entries scale by (oz/4) */
 function macroConsumed(dayISO){
   let pG=0,cG=0,fG=0;
   for(const e of entriesForDay(dayISO)){
@@ -797,10 +862,10 @@ function resizeCanvasForHiDPI(canvas){
     canvas.width = needW;
     canvas.height = needH;
   }
-  return { w: canvas.width, h: canvas.height, dpr };
+  return { w: canvas.width, h: canvas.height };
 }
 
-/* Simple line chart (weight + on-target) */
+/* Simple line chart */
 function drawSimpleLineChart(canvasId, series, opts){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -834,11 +899,6 @@ function drawSimpleLineChart(canvasId, series, opts){
     ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
   }
 
-  ctx.fillStyle = "rgba(143,163,184,.95)";
-  ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
-  ctx.fillText(`${round(max,1)}${unit}`, x0, y0 - Math.round(h*0.02));
-  ctx.fillText(`${round(min,1)}${unit}`, x0, y1 + Math.round(h*0.08));
-
   function x(i){ return x0 + (x1-x0) * (i/(series.length-1)); }
   function y(v){ return y1 - (y1-y0) * ((v-min)/(max-min)); }
 
@@ -854,12 +914,6 @@ function drawSimpleLineChart(canvasId, series, opts){
   });
   ctx.stroke();
 
-  const last = series[series.length-1];
-  ctx.fillStyle = "rgba(58,160,255,.95)";
-  ctx.beginPath();
-  ctx.arc(x(series.length-1), y(last.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
-  ctx.fill();
-
   if(title){
     ctx.fillStyle = "rgba(232,238,246,.95)";
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
@@ -867,7 +921,7 @@ function drawSimpleLineChart(canvasId, series, opts){
   }
 }
 
-/* ✅ Bar chart */
+/* Bar chart */
 function drawBarChart(canvasId, labels, values, opts){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -891,7 +945,6 @@ function drawBarChart(canvasId, labels, values, opts){
   const pad = Math.round(w*0.07);
   const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
 
-  // grid
   ctx.strokeStyle = "rgba(255,255,255,.10)";
   ctx.lineWidth = Math.max(1, Math.round(w*0.0015));
   for(let i=0;i<=4;i++){
@@ -899,14 +952,12 @@ function drawBarChart(canvasId, labels, values, opts){
     ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
   }
 
-  // title
   if(title){
     ctx.fillStyle = "rgba(232,238,246,.95)";
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(title, x0, y0 - Math.round(h*0.04));
   }
 
-  // bars
   const n = values.length;
   const gap = Math.round(w*0.012);
   const barW = Math.max(6, Math.floor((x1-x0 - gap*(n-1)) / n));
@@ -921,16 +972,13 @@ function drawBarChart(canvasId, labels, values, opts){
     ctx.fillStyle = "rgba(201,162,77,.90)";
     ctx.fillRect(bx, by, barW, bh);
 
-    // value label
-    ctx.fillStyle = "rgba(232,238,246,.90)";
-    ctx.font = `${Math.round(h*0.05)}px ${getComputedStyle(document.body).fontFamily}`;
-    const t = `${round(v,1)}${unit}`;
-    ctx.fillText(t, bx, Math.max(y0+12, by-6));
-
-    // x label
     ctx.fillStyle = "rgba(143,163,184,.95)";
     ctx.font = `${Math.round(h*0.05)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(labels[i]||"", bx, y1 + Math.round(h*0.07));
+
+    ctx.fillStyle = "rgba(232,238,246,.90)";
+    ctx.font = `${Math.round(h*0.05)}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.fillText(`${round(v,1)}${unit}`, bx, Math.max(y0+12, by-6));
   }
 }
 
@@ -964,8 +1012,6 @@ function buildWeeklyOnTargetScoreSeries(weeksBack=8){
   }
   return out;
 }
-
-/* ✅ last 7 days walk bars */
 function buildLast7WalkBars(){
   const labels = [];
   const values = [];
@@ -980,12 +1026,48 @@ function buildLast7WalkBars(){
   return { labels, values };
 }
 
-/* DOM helper */
+/* KPI helper */
 function kpiBox(label, value){
   const d = document.createElement("div");
   d.className = "box";
   d.innerHTML = `<div class="label">${label}</div><div class="value mono">${value}</div>`;
   return d;
+}
+
+/* ===== Macro tracker bars logic =====
+   Blue if <80%
+   Green if 80%-100%
+   Red if >100%
+*/
+function fillClassForRatio(r){
+  if(r > 1.0) return "fillRed";
+  if(r >= 0.80) return "fillGreen";
+  return "fillBlue";
+}
+function renderMacroTrackBars(containerId, mt, mc){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+
+  const items = [
+    { key:"P", eaten: mc.pG, target: mt.pG },
+    { key:"C", eaten: mc.cG, target: mt.cG },
+    { key:"F", eaten: mc.fG, target: mt.fG }
+  ];
+
+  el.innerHTML = items.map(it=>{
+    const ratio = it.target > 0 ? (it.eaten/it.target) : 0;
+    const pct = clamp(ratio*100, 0, 200); // cap display at 200%
+    const cls = fillClassForRatio(ratio);
+    return `
+      <div class="trackRow">
+        <div class="trackLabel">${it.key}</div>
+        <div class="trackBar">
+          <div class="trackFill ${cls}" style="width:${pct}%"></div>
+        </div>
+        <div class="trackVal">${Math.round(it.eaten)} / ${Math.round(it.target)}g</div>
+      </div>
+    `;
+  }).join("");
 }
 
 /* Rendering */
@@ -1015,32 +1097,30 @@ function renderWalkTargets(){
     `${round(loggedMiles,1)} / ${round(t.miles,1)} mi (${Math.round(pct)}%)`;
 }
 
-/* ✅ Macros today (grams) on BOTH dashboard + macros page */
+/* ✅ Macro boxes are Protein/Carbs/Fat + tracker bars underneath */
 function renderMacrosCards(){
   const mt = macroTargets();
   const mc = macroConsumed(todayISO());
 
-  const remainG = {
-    p: Math.max(0, mt.pG - mc.pG),
-    c: Math.max(0, mt.cG - mc.cG),
-    f: Math.max(0, mt.fG - mc.fG)
-  };
+  // Boxes show EATEN / TARGET (grams)
+  const dash = document.getElementById("macroKPIs");
+  dash.innerHTML = "";
+  dash.appendChild(kpiBox("Protein", `${Math.round(mc.pG)} / ${Math.round(mt.pG)}g`));
+  dash.appendChild(kpiBox("Carbs",   `${Math.round(mc.cG)} / ${Math.round(mt.cG)}g`));
+  dash.appendChild(kpiBox("Fat",     `${Math.round(mc.fG)} / ${Math.round(mt.fG)}g`));
 
-  // Dashboard
-  const kpiDash = document.getElementById("macroKPIs");
-  kpiDash.innerHTML = "";
-  kpiDash.appendChild(kpiBox("P (g)", round(remainG.p,0)));
-  kpiDash.appendChild(kpiBox("C (g)", round(remainG.c,0)));
-  kpiDash.appendChild(kpiBox("F (g)", round(remainG.f,0)));
+  const macros = document.getElementById("macroKPIs2");
+  macros.innerHTML = "";
+  macros.appendChild(kpiBox("Protein", `${Math.round(mc.pG)} / ${Math.round(mt.pG)}g`));
+  macros.appendChild(kpiBox("Carbs",   `${Math.round(mc.cG)} / ${Math.round(mt.cG)}g`));
+  macros.appendChild(kpiBox("Fat",     `${Math.round(mc.fG)} / ${Math.round(mt.fG)}g`));
+
+  // Tracker bars
+  renderMacroTrackBars("macroTrackDash", mt, mc);
+  renderMacroTrackBars("macroTrackMacros", mt, mc);
+
   document.getElementById("calorieLine").textContent =
     `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
-
-  // Macros page
-  const kpi2 = document.getElementById("macroKPIs2");
-  kpi2.innerHTML = "";
-  kpi2.appendChild(kpiBox("Target P (g)", round(mt.pG,0)));
-  kpi2.appendChild(kpiBox("Eaten P (g)", round(mc.pG,0)));
-  kpi2.appendChild(kpiBox("Remain P (g)", round(remainG.p,0)));
   document.getElementById("calorieLine2").textContent =
     `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
 }
@@ -1055,34 +1135,58 @@ function renderFoodSelect(){
     sel.appendChild(opt);
   }
 }
-function renderFoodsList(){
-  const out = document.getElementById("foodsList");
-  out.innerHTML = "";
-  if(state.foods.length===0){
-    out.innerHTML = `<div class="small muted">No foods yet.</div>`;
+
+/* ✅ Categories dropdowns */
+let selectedFoodIdForManage = "";
+function buildCatSelect(selectId, cat, placeholder){
+  const sel = document.getElementById(selectId);
+  if(!sel) return;
+  const items = state.foods.filter(f => (f.cat||"protein") === cat)
+                           .sort((a,b)=> (a.name||"").localeCompare(b.name||""));
+  sel.innerHTML = "";
+  const ph = document.createElement("option");
+  ph.value = "";
+  ph.textContent = placeholder;
+  sel.appendChild(ph);
+  for(const f of items){
+    const opt = document.createElement("option");
+    opt.value = f.id;
+    opt.textContent = f.name;
+    sel.appendChild(opt);
+  }
+}
+
+function renderFoodsCategoriesBox(){
+  buildCatSelect("catFruitVeg", "fruitveg", "Select fruit/veg…");
+  buildCatSelect("catGrains", "grains", "Select grain…");
+  buildCatSelect("catProtein", "protein", "Select protein…");
+
+  // clear selection display
+  selectedFoodIdForManage = "";
+  const det = document.getElementById("selectedFoodDetails");
+  const delBtn = document.getElementById("deleteSelectedFood");
+  if(det) det.textContent = "Select a food above.";
+  if(delBtn){ delBtn.disabled = true; }
+}
+
+function showSelectedFoodDetails(foodId){
+  const det = document.getElementById("selectedFoodDetails");
+  const delBtn = document.getElementById("deleteSelectedFood");
+  const food = state.foods.find(f=>f.id===foodId);
+  if(!food){
+    selectedFoodIdForManage = "";
+    if(det) det.textContent = "Select a food above.";
+    if(delBtn){ delBtn.disabled = true; }
     return;
   }
-  out.innerHTML = state.foods.map(f=>{
-    const kcal = caloriesFromMacros(f.p,f.c,f.f);
-    return `
-      <div class="card" style="margin:10px 0; box-shadow:none; background:rgba(0,0,0,.12)">
-        <div class="row">
-          <div>
-            <div style="font-weight:850">${escapeHtml(f.name)}</div>
-            <div class="small muted">
-              per 4 oz → P ${round(f.p,1)} g • C ${round(f.c,1)} g • F ${round(f.f,1)} g • ${Math.round(kcal)} kcal
-            </div>
-          </div>
-          <button class="danger" type="button" data-del-food="${f.id}">Delete</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  out.querySelectorAll("[data-del-food]").forEach(btn=>{
-    bindTap(btn, () => deleteFood(btn.getAttribute("data-del-food")));
-  });
+  selectedFoodIdForManage = foodId;
+  const kcal = caloriesFromMacros(food.p, food.c, food.f);
+  if(det){
+    det.innerHTML = `Per 4 oz → P <b>${round(food.p,1)}g</b> • C <b>${round(food.c,1)}g</b> • F <b>${round(food.f,1)}g</b> • ${Math.round(kcal)} kcal`;
+  }
+  if(delBtn){ delBtn.disabled = false; }
 }
+
 function renderTodayFoodLog(){
   const out = document.getElementById("todayFoodLog");
   const iso = todayISO();
@@ -1114,6 +1218,7 @@ function renderTodayFoodLog(){
     bindTap(btn, () => deleteEntry(btn.getAttribute("data-del-entry")));
   });
 }
+
 function renderWalkHistory(){
   const out = document.getElementById("walkHistory");
   const logs = state.walkLogs.slice().sort((a,b)=> (b.day.localeCompare(a.day)));
@@ -1140,6 +1245,7 @@ function renderWalkHistory(){
     bindTap(btn, () => deleteWalk(btn.getAttribute("data-del-walk")));
   });
 }
+
 function renderWeightList(){
   const out = document.getElementById("weightList");
   const rows = state.weights.slice().sort((a,b)=> b.day.localeCompare(a.day));
@@ -1206,18 +1312,14 @@ function toggleAutoTargetsUI(){
 }
 
 function renderCharts(){
-  // weight charts
   drawSimpleLineChart("weightChart", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
   drawSimpleLineChart("weightChart2", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
 
-  // on-target
   drawSimpleLineChart("weeklyMacrosChart", buildWeeklyOnTargetScoreSeries(8), { title:"Weekly On-Target Score (Last 8 Weeks)", unit:"%", emptyText:"Log food for multiple days to see weekly scores." });
 
-  // ✅ weekly walk bars
   const wk = buildLast7WalkBars();
   drawBarChart("weeklyWalkBars", wk.labels, wk.values, { title:"", unit:" mi", emptyText:"Log walks to see weekly bars." });
 
-  // ✅ today vs goal bars (walk tab)
   const t = walkTargets();
   const wl = walkLogForDay(todayISO());
   const actual = wl ? wl.miles : 0;
@@ -1234,7 +1336,7 @@ function renderAll(){
   renderWalkTargets();
   renderMacrosCards();
   renderFoodSelect();
-  renderFoodsList();
+  renderFoodsCategoriesBox();
   renderTodayFoodLog();
   renderWalkHistory();
   renderWeightList();
@@ -1268,7 +1370,7 @@ function wireAll(){
     bindTap(btn, () => setActiveTab(btn.dataset.tab));
   });
 
-  // Dashboard
+  // Dashboard navigation
   bindTap("btnGoSetup", () => setActiveTab("setup"));
   bindTap("btnGoMacros", () => setActiveTab("macros"));
   bindTap("btnGoWeight", () => setActiveTab("weight"));
@@ -1308,22 +1410,28 @@ function wireAll(){
     toast("Saved walk", `${round(miles,1)} mi • ${Math.round(minutes)} min`);
   });
 
-  // Macros
-  bindTap("btnShowAddFood", () => { document.getElementById("addFoodCard").style.display = ""; });
+  // Macros - Add Food toggle buttons
+  const toggleAddFood = () => {
+    const card = document.getElementById("addFoodCard");
+    card.style.display = (card.style.display === "none" || !card.style.display) ? "" : "none";
+    if(card.style.display !== "none") window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
+  };
+  bindTap("btnToggleAddFood", toggleAddFood);
+  bindTap("btnToggleAddFood2", toggleAddFood);
   bindTap("hideAddFood", () => { document.getElementById("addFoodCard").style.display = "none"; });
-  bindTap("btnAddFood2", () => {
-    document.getElementById("addFoodCard").style.display = "";
-    window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
-  });
+
   bindTap("btnAddEntry2", () => document.getElementById("entryOz").focus());
 
+  // Save food
   bindTap("saveFood", () => {
+    const cat = document.getElementById("foodCat").value;
     const name = (document.getElementById("foodName").value||"").trim();
     const p = parseNum(document.getElementById("foodP").value);
     const c = parseNum(document.getElementById("foodC").value);
     const f = parseNum(document.getElementById("foodF").value);
     if(!name) return toast("Missing food name", "Enter a food name.");
-    state.foods.unshift({ id: uid(), name, p, c, f }); // per 4 oz
+
+    state.foods.unshift({ id: uid(), cat, name, p, c, f }); // per 4 oz
     document.getElementById("foodName").value="";
     document.getElementById("foodP").value="";
     document.getElementById("foodC").value="";
@@ -1333,6 +1441,7 @@ function wireAll(){
     toast("Saved food", name);
   });
 
+  // Save entry
   bindTap("saveEntry", () => {
     const foodId = document.getElementById("foodSel").value;
     const meal = document.getElementById("mealSel").value;
@@ -1348,6 +1457,34 @@ function wireAll(){
   });
 
   bindTap("clearEntry", () => { document.getElementById("entryOz").value=""; });
+
+  // Category selects: selecting one clears the others, then shows details
+  const wireCat = (id, other1, other2) => {
+    const sel = document.getElementById(id);
+    if(!sel) return;
+    sel.addEventListener("change", ()=>{
+      const v = sel.value || "";
+      if(v){
+        const o1 = document.getElementById(other1); if(o1) o1.value = "";
+        const o2 = document.getElementById(other2); if(o2) o2.value = "";
+        showSelectedFoodDetails(v);
+      }else{
+        showSelectedFoodDetails("");
+      }
+    });
+  };
+  wireCat("catFruitVeg","catGrains","catProtein");
+  wireCat("catGrains","catFruitVeg","catProtein");
+  wireCat("catProtein","catFruitVeg","catGrains");
+
+  // Delete selected food
+  bindTap("deleteSelectedFood", () => {
+    if(!selectedFoodIdForManage) return;
+    if(confirm("Delete this food? This also removes any entries using it.")){
+      deleteFood(selectedFoodIdForManage);
+      selectedFoodIdForManage = "";
+    }
+  });
 
   // Weight
   bindTap("backFromWeight", () => setActiveTab("dash"));
