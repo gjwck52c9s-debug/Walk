@@ -9,22 +9,23 @@
 
   <title>WalkCut</title>
 
-  <!-- Single-file iOS icon (simple armored-vehicle silhouette SVG, embedded) -->
+  <!-- Embedded iOS icon (armored-vehicle silhouette SVG) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='20%25' r='80%25'%3E%3Cstop offset='0' stop-color='%233aa0ff' stop-opacity='.25'/%3E%3Cstop offset='1' stop-color='%230B1B2B'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23g)'/%3E%3Crect x='10' y='10' width='160' height='160' rx='30' fill='%230b1118' opacity='.55'/%3E%3Cpath d='M40 104h86l8 12H32l8-12Zm8-20h70l6 12H42l6-12Zm10-16h44l8 8H50l8-8Zm38-6 18 10H80l16-10Zm-57 56h94v10H39v-10Zm8 16h10v8H47v-8Zm18 0h10v8H65v-8Zm18 0h10v8H83v-8Zm18 0h10v8h-10v-8Zm18 0h10v8h-10v-8Z' fill='%23C9A24D'/%3E%3Ctext x='90' y='52' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial' font-size='18' fill='%23EAF0F6'%3EWALKCUT%3C/text%3E%3C/svg%3E" />
 
   <style>
     :root{
-      /* Highlander-style palette */
       --navy:#0B1B2B;
       --bg:#0b1118;
       --card:#121a24;
       --text:#e8eef6;
       --muted:#8FA3B8;
-      --good:#3ddc97;
-      --warn:#ffcc66;
-      --bad:#ff6b6b;
+
+      --good:#3ddc97; /* green */
+      --warn:#ffcc66; /* amber */
+      --bad:#ff6b6b;  /* red */
       --accent:#C9A24D; /* brass */
-      --blue:#3aa0ff;
+      --blue:#3aa0ff;   /* blue */
+
       --shadow: 0 14px 34px rgba(0,0,0,.45);
       --r:16px;
       --pad:14px;
@@ -67,9 +68,11 @@
       padding:5px 10px; border-radius:999px;
       white-space:nowrap;
     }
+
     main{padding: 12px 14px 94px; max-width: 860px; margin: 0 auto;}
     .grid{display:grid; gap:12px;}
     @media(min-width:720px){ .grid.two{grid-template-columns:1fr 1fr} .grid.three{grid-template-columns:1fr 1fr 1fr} }
+
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
       border: 1px solid rgba(201,162,77,.18);
@@ -98,6 +101,7 @@
     .muted{color:var(--muted)}
     .mono{font-family:var(--mono)}
     .btnbar{display:flex; gap:10px; flex-wrap:wrap}
+
     button{
       -webkit-tap-highlight-color: transparent;
       appearance:none;
@@ -122,6 +126,7 @@
       border: 1px solid rgba(255,107,107,.32);
     }
     button:active{transform: translateY(1px)}
+
     input, select{
       width:100%;
       padding: 10px 12px;
@@ -134,6 +139,7 @@
     }
     input::placeholder{color: rgba(143,163,184,.75)}
     label{font-size:12px; color:var(--muted); display:block; margin: 10px 0 6px}
+
     .tabs{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       display:flex; justify-content:space-around;
@@ -160,6 +166,28 @@
       border: 1px solid rgba(201,162,77,.22);
       box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
     }
+
+    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
+
+    canvas{
+      width:100%;
+      height:220px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(201,162,77,.16);
+      border-radius: 12px;
+    }
+
+    .hint{
+      border-left: 3px solid rgba(201,162,77,.65);
+      padding: 10px 12px;
+      background: rgba(201,162,77,.07);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* progress */
     .progress{
       height:10px;
       border-radius:999px;
@@ -172,34 +200,31 @@
       width:0%;
       background: linear-gradient(90deg, rgba(61,220,151,.92), rgba(201,162,77,.85));
     }
+
+    /* macro bars */
+    .macroBars{display:grid; gap:10px; margin-top:10px}
+    .mrow{display:grid; gap:6px}
+    .mrowTop{display:flex; justify-content:space-between; gap:10px; align-items:center}
+    .mname{font-size:12px; color:var(--muted); font-weight:750}
+    .mval{font-size:12px; color:rgba(232,238,246,.92); font-family:var(--mono)}
+    .bar{height:12px; border-radius:999px; background: rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.08); overflow:hidden}
+    .bar > div{height:100%; width:0%;}
+    .bar.under > div{background: rgba(58,160,255,.85);}
+    .bar.within > div{background: rgba(61,220,151,.88);}
+    .bar.over > div{background: rgba(255,107,107,.88);}
+
     table{width:100%; border-collapse:collapse}
     td,th{padding:10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); font-size:13px}
     th{color:var(--muted); text-align:left; font-weight:750}
     .right{text-align:right}
+
     .badge{
       display:inline-block; padding:4px 8px; border-radius:999px;
       font-size:12px; border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06); color: var(--muted);
     }
-    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
-    canvas{
-      width:100%;
-      height:220px;
-      background: rgba(0,0,0,.16);
-      border:1px solid rgba(201,162,77,.16);
-      border-radius: 12px;
-    }
-    .hint{
-      border-left: 3px solid rgba(201,162,77,.65);
-      padding: 10px 12px;
-      background: rgba(201,162,77,.07);
-      border-radius: 12px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
 
-    /* lightweight in-app toast */
+    /* toast */
     #toast{
       position:fixed;
       left:14px; right:14px;
@@ -222,7 +247,12 @@
 <body>
 <header>
   <div class="top">
-    <h1><span class="brandDot"></span>WalkCut <span class="pill" id="todayPill"></span></h1>
+    <h1>
+      <span class="brandDot"></span>
+      WalkCut
+      <span class="pill" id="todayPill"></span>
+      <span class="pill" id="verPill"></span>
+    </h1>
     <span class="pill" id="streakPill">Streaks: —</span>
   </div>
 </header>
@@ -290,14 +320,14 @@
     <div class="card">
       <h2>iPhone-only notes</h2>
       <div class="hint">
-        • This is a single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
-        • iOS web apps can’t reliably read Apple Health steps like native apps.<br>
-        • Daily reminder is in-app only: it shows when the app is open near your chosen time.
+        • Single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
+        • Daily reminder is in-app only: it shows when the app is open near your chosen time.<br>
+        • Tip: Use <span class="mono">?reset=1</span> one time to wipe app data on this device.
       </div>
     </div>
   </section>
 
-  <!-- WALK LOG -->
+  <!-- WALK -->
   <section id="view-walk" class="grid" style="display:none">
     <div class="card">
       <h2>Log Walking</h2>
@@ -332,6 +362,31 @@
     <div class="card">
       <h2>Today Macros</h2>
       <div class="kpi" id="macroKPIs2"></div>
+
+      <div class="macroBars" aria-label="macro bars">
+        <div class="mrow">
+          <div class="mrowTop">
+            <div class="mname">Protein (g)</div>
+            <div class="mval" id="barLabelP">—</div>
+          </div>
+          <div class="bar" id="barP"><div></div></div>
+        </div>
+        <div class="mrow">
+          <div class="mrowTop">
+            <div class="mname">Carbs (g)</div>
+            <div class="mval" id="barLabelC">—</div>
+          </div>
+          <div class="bar" id="barC"><div></div></div>
+        </div>
+        <div class="mrow">
+          <div class="mrowTop">
+            <div class="mname">Fat (g)</div>
+            <div class="mval" id="barLabelF">—</div>
+          </div>
+          <div class="bar" id="barF"><div></div></div>
+        </div>
+      </div>
+
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories (target / eaten)</div>
@@ -365,7 +420,7 @@
         <button class="secondary" id="clearEntry" type="button">Clear</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Foods store macros per 1 oz of that food (grams of macro). Entries multiply by ounces eaten.</div>
+      <div class="small muted">Foods store macros per 1 oz of that food (macros recorded in grams). Entries multiply by ounces eaten.</div>
     </div>
 
     <div class="card">
@@ -377,6 +432,7 @@
       <h2>Foods (macros per 1 oz food)</h2>
       <div class="btnbar" style="margin-bottom:10px">
         <button id="btnShowAddFood" type="button">Add Food</button>
+        <button class="secondary" id="btnToggleFoods" type="button">Hide/Show list</button>
       </div>
       <div id="foodsList"></div>
     </div>
@@ -483,7 +539,7 @@
 
     <div class="card">
       <h2>Nutrition Plan</h2>
-      <label>Macro display unit</label>
+      <label>Macro display unit (KPIs only)</label>
       <select id="macroUnit">
         <option value="oz" selected>Ounces (oz)</option>
         <option value="g">Grams (g)</option>
@@ -525,7 +581,7 @@
     <div class="card">
       <h2>Daily Reminder</h2>
       <div class="hint">
-        This is an in-app daily reminder: if you open WalkCut near your selected time, it will remind you once per day.
+        In-app reminder only: if you open WalkCut near your selected time, it reminds you once per day.
       </div>
       <label><input type="checkbox" id="remEnabled"> Enable reminder</label>
       <div class="grid two">
@@ -551,14 +607,13 @@
         <button class="danger" id="resetAll" type="button">Reset all data</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Reset wipes everything stored on this iPhone for WalkCut.</div>
+      <div class="small muted">Reset wipes everything stored on this device for WalkCut.</div>
     </div>
   </section>
 </main>
 
 <div id="toast" role="status" aria-live="polite"></div>
 
-<!-- Tabs are BUTTONS (fixes iPhone/Home Screen tap issues) -->
 <nav class="tabs" aria-label="navigation">
   <button class="tab active" type="button" data-tab="dash">Dashboard</button>
   <button class="tab" type="button" data-tab="walk">Walk</button>
@@ -570,14 +625,32 @@
 <script>
 /* -------------------------------------------------
    WalkCut — single HTML app (Highlander-themed)
-   FIXES:
-   - iOS/Home Screen reliability: no structuredClone crash, better tap binding
-   - Reminder is in-app only (no push/Notification API)
+   Button fixes:
+   - Uses Pointer Events when available (iOS Safari supports them now)
+   - No click/touch double-fire bugs
+   - No Notification API (in-app reminder only)
+   Extras:
+   - ?reset=1 wipes local data ONCE (then cleans URL)
+   - Macro bars: blue under, green within, red over (grams)
 -------------------------------------------------- */
 
 const LS_KEY = "walkcut_v1";
+const APP_VER = "v1.2.0";
 
-/* ===== Safe clone for older iOS ===== */
+/* ---------- One-time URL reset: /Walk/?reset=1 ---------- */
+(function maybeForceReset(){
+  try{
+    const params = new URLSearchParams(location.search);
+    if(params.get("reset") === "1"){
+      localStorage.removeItem(LS_KEY);
+      params.delete("reset");
+      const clean = location.pathname + (params.toString() ? "?" + params.toString() : "") + location.hash;
+      history.replaceState({}, "", clean);
+    }
+  }catch(e){}
+})();
+
+/* ---------- Safe clone for older iOS ---------- */
 function safeClone(obj){
   if (typeof structuredClone === "function") return structuredClone(obj);
   return JSON.parse(JSON.stringify(obj));
@@ -629,6 +702,7 @@ const defaults = {
     reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
   },
   foods: [
+    // per 1 oz FOOD (macros in grams)
     { id: uid(), name: "Chicken breast (cooked)", p: 8.8, c: 0.0, f: 1.0 },
     { id: uid(), name: "Rice (cooked)", p: 0.9, c: 8.9, f: 0.1 },
     { id: uid(), name: "Greek yogurt (plain)", p: 2.8, c: 1.5, f: 0.1 }
@@ -655,7 +729,6 @@ function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return safeClone(defaults);
-
     const s = JSON.parse(raw);
     const merged = safeClone(defaults);
     deepMerge(merged, s);
@@ -663,13 +736,11 @@ function loadState(){
     if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = safeClone(defaults.foods);
     merged.foods = merged.foods.map(f => ({...f, id: f.id || uid()}));
 
-    // ensure reminder object exists
     if(!merged.nutrition) merged.nutrition = safeClone(defaults.nutrition);
     if(!merged.nutrition.reminder) merged.nutrition.reminder = safeClone(defaults.nutrition.reminder);
 
     return merged;
   }catch(e){
-    // If localStorage contains bad JSON, reset
     return safeClone(defaults);
   }
 }
@@ -758,7 +829,6 @@ function computeStreaks(){
 
     const wl = walkLogForDay(iso);
     const walkOK = wl && (wl.miles >= t.miles*0.90);
-
     const macroOK = isMacroDayOnTarget(iso);
 
     if(i===0){
@@ -786,7 +856,7 @@ function maybeFireReminder(){
   const minute = clamp(parseInt(r.minute,10)||0,0,59);
   const minsTarget = hour*60 + minute;
 
-  // fire if app open within 30 minutes AFTER target, once per day
+  // within 30 minutes AFTER target, once per day
   if(minsNow >= minsTarget && minsNow <= minsTarget + 30){
     if(r.lastFired !== iso){
       toast("WalkCut reminder", "Time to hit your walk + macros goals.");
@@ -835,7 +905,6 @@ function drawSimpleLineChart(canvasId, series, opts){
   const pad = Math.round(w*0.07);
   const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
 
-  // grid
   ctx.strokeStyle = "rgba(255,255,255,.10)";
   ctx.lineWidth = Math.max(1, Math.round(w*0.0015));
   for(let i=0;i<=4;i++){
@@ -843,7 +912,6 @@ function drawSimpleLineChart(canvasId, series, opts){
     ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
   }
 
-  // labels
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
   ctx.fillText(`${round(max,1)}${unit}`, x0, y0 - Math.round(h*0.02));
@@ -852,7 +920,6 @@ function drawSimpleLineChart(canvasId, series, opts){
   function x(i){ return x0 + (x1-x0) * (i/(series.length-1)); }
   function y(v){ return y1 - (y1-y0) * ((v-min)/(max-min)); }
 
-  // line
   ctx.strokeStyle = "rgba(201,162,77,.95)";
   ctx.lineWidth = Math.max(3, Math.round(w*0.004));
   ctx.lineJoin = "round";
@@ -865,21 +932,18 @@ function drawSimpleLineChart(canvasId, series, opts){
   });
   ctx.stroke();
 
-  // last point
   const last = series[series.length-1];
   ctx.fillStyle = "rgba(58,160,255,.95)";
   ctx.beginPath();
   ctx.arc(x(series.length-1), y(last.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
   ctx.fill();
 
-  // title
   if(title){
     ctx.fillStyle = "rgba(232,238,246,.95)";
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(title, x0, y0 - Math.round(h*0.04));
   }
 
-  // last label
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
   const lastLabel = last.label ? ` • ${last.label}` : "";
@@ -935,15 +999,40 @@ function kpiBox(label, value){
   return d;
 }
 
+/* ---------- Macro bar helpers (grams) ---------- */
+function macroClass(pct){
+  // blue under, green within 95–105%, red over
+  if(pct > 1.05) return "over";
+  if(pct >= 0.95) return "within";
+  return "under";
+}
+function setMacroBar(elBarId, elLabelId, eatenG, targetG){
+  const bar = document.getElementById(elBarId);
+  const fill = bar?.querySelector("div");
+  const label = document.getElementById(elLabelId);
+  if(!bar || !fill || !label) return;
+
+  const pct = targetG > 0 ? (eatenG / targetG) : 0;
+  const widthPct = clamp(pct*100, 0, 130);
+
+  bar.classList.remove("under","within","over");
+  bar.classList.add(macroClass(pct));
+  fill.style.width = `${Math.min(100, widthPct)}%`;
+
+  label.textContent = `${Math.round(eatenG)} / ${Math.round(targetG)} g (${Math.round(pct*100)}%)`;
+}
+
 /* ---------- Rendering ---------- */
 function renderHeader(){
   document.getElementById("todayPill").textContent =
     new Date().toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
+  document.getElementById("verPill").textContent = APP_VER;
 
   const s = computeStreaks();
   document.getElementById("streakPill").textContent =
     `Streaks: Walk ${s.walkStreak} • Macros ${s.macroStreak}`;
 }
+
 function renderWalkTargets(){
   const t = walkTargets();
   const el = document.getElementById("walkTargets");
@@ -961,11 +1050,18 @@ function renderWalkTargets(){
   document.getElementById("walkProgressText").textContent =
     `${round(loggedMiles,1)} / ${round(t.miles,1)} mi (${Math.round(pct)}%)`;
 }
+
 function renderMacrosCards(){
   const unit = state.nutrition.macroUnit;
   const mt = macroTargets();
   const mc = macroConsumed(todayISO());
 
+  // bars are ALWAYS grams
+  setMacroBar("barP","barLabelP", mc.pG, mt.pG);
+  setMacroBar("barC","barLabelC", mc.cG, mt.cG);
+  setMacroBar("barF","barLabelF", mc.fG, mt.fG);
+
+  // KPI tiles can be oz or grams (display preference)
   const targetsDisp = { p: mt.pG / gramsPerUnit(unit), c: mt.cG / gramsPerUnit(unit), f: mt.fG / gramsPerUnit(unit) };
   const consumedDisp = { p: mc.pG / gramsPerUnit(unit), c: mc.cG / gramsPerUnit(unit), f: mc.fG / gramsPerUnit(unit) };
   const remainingDisp = {
@@ -989,6 +1085,7 @@ function renderMacrosCards(){
   document.getElementById("calorieLine").textContent = `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
   document.getElementById("calorieLine2").textContent = `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
 }
+
 function renderFoodSelect(){
   const sel = document.getElementById("foodSel");
   sel.innerHTML = "";
@@ -999,6 +1096,7 @@ function renderFoodSelect(){
     sel.appendChild(opt);
   }
 }
+
 function renderFoodsList(){
   const unit = state.nutrition.macroUnit;
   const out = document.getElementById("foodsList");
@@ -1029,6 +1127,7 @@ function renderFoodsList(){
     bindTap(btn, () => deleteFood(btn.getAttribute("data-del-food")));
   });
 }
+
 function renderTodayFoodLog(){
   const out = document.getElementById("todayFoodLog");
   const iso = todayISO();
@@ -1058,6 +1157,7 @@ function renderTodayFoodLog(){
     bindTap(btn, () => deleteEntry(btn.getAttribute("data-del-entry")));
   });
 }
+
 function renderWalkHistory(){
   const out = document.getElementById("walkHistory");
   const logs = state.walkLogs.slice().sort((a,b)=> (b.day.localeCompare(a.day)));
@@ -1084,6 +1184,7 @@ function renderWalkHistory(){
     bindTap(btn, () => deleteWalk(btn.getAttribute("data-del-walk")));
   });
 }
+
 function renderWeightList(){
   const out = document.getElementById("weightList");
   const rows = state.weights.slice().sort((a,b)=> b.day.localeCompare(a.day));
@@ -1109,6 +1210,7 @@ function renderWeightList(){
     bindTap(btn, () => deleteWeight(btn.getAttribute("data-del-weight")));
   });
 }
+
 function renderSetup(){
   document.getElementById("pAge").value = state.profile.age;
   document.getElementById("pHeight").value = state.profile.heightIn;
@@ -1137,21 +1239,20 @@ function renderSetup(){
   toggleAutoTargetsUI();
   renderMacroPreview();
 }
+
 function renderMacroPreview(){
   const mt = macroTargets();
-  const unit = state.nutrition.macroUnit;
-  const pDisp = mt.pG / gramsPerUnit(unit);
-  const cDisp = mt.cG / gramsPerUnit(unit);
-  const fDisp = mt.fG / gramsPerUnit(unit);
   document.getElementById("macroPreview").textContent =
-    `Targets preview: P ${round(pDisp,1)} ${fmtUnit(unit)} • C ${round(cDisp,1)} ${fmtUnit(unit)} • F ${round(fDisp,1)} ${fmtUnit(unit)} • ${Math.round(mt.kcal)} kcal`;
+    `Targets preview: P ${Math.round(mt.pG)} g • C ${Math.round(mt.cG)} g • F ${Math.round(mt.fG)} g • ${Math.round(mt.kcal)} kcal`;
 }
+
 function renderCharts(){
   drawSimpleLineChart("weightChart", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
   drawSimpleLineChart("weightChart2", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
   drawSimpleLineChart("walkChart", buildWalkDailySeries(30), { title:"Daily Miles (Last 30 Days)", unit:" mi", emptyText:"Log 2+ walks to see a trend." });
   drawSimpleLineChart("weeklyMacrosChart", buildWeeklyOnTargetScoreSeries(8), { title:"Weekly On-Target Score (Last 8 Weeks)", unit:"%", emptyText:"Log food for multiple days to see weekly scores." });
 }
+
 function renderAll(){
   renderHeader();
   renderWalkTargets();
@@ -1185,14 +1286,26 @@ function setActiveTab(name){
   maybeFireReminder();
 }
 
-/* ===== Reliable tap binding (click + touchstart) ===== */
+/* ---------- Reliable tap binding ---------- */
 function bindTap(elOrId, fn){
   const el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
   if(!el) return;
-  const go = (e) => { if(e) e.preventDefault(); fn(); };
 
-  el.addEventListener("click", go);
-  el.addEventListener("touchstart", go, { passive:false });
+  let fired = false;
+  const go = (e) => {
+    // prevent double-fire (pointer + click)
+    if(fired) return;
+    fired = true;
+    setTimeout(()=>{ fired = false; }, 250);
+    try { fn(); } catch(err){ console.error(err); toast("Error", String(err)); }
+  };
+
+  if(window.PointerEvent){
+    el.addEventListener("pointerup", go);
+  }else{
+    el.addEventListener("touchend", (e)=>{ e.preventDefault(); go(e); }, { passive:false });
+    el.addEventListener("click", go);
+  }
 }
 
 /* ---------- Setup dynamic controls ---------- */
@@ -1260,6 +1373,13 @@ function wireAll(){
   });
   bindTap("btnAddEntry2", () => document.getElementById("entryOz").focus());
 
+  bindTap("btnToggleFoods", () => {
+    const el = document.getElementById("foodsList");
+    const isHidden = el.style.display === "none";
+    el.style.display = isHidden ? "" : "none";
+    toast(isHidden ? "Foods list shown" : "Foods list hidden");
+  });
+
   bindTap("saveFood", () => {
     const name = (document.getElementById("foodName").value||"").trim();
     const p = parseNum(document.getElementById("foodP").value);
@@ -1308,7 +1428,7 @@ function wireAll(){
     toast("Saved weight", `${round(lb,1)} lb`);
   });
 
-  // Setup - live controls
+  // Setup live controls
   document.getElementById("walkShare").addEventListener("input", ()=>{
     document.getElementById("walkShareLabel").textContent = `${document.getElementById("walkShare").value}%`;
   });
@@ -1360,7 +1480,7 @@ function wireAll(){
   bindTap("backFromSetup", () => setActiveTab("dash"));
 
   bindTap("resetAll", () => {
-    if(confirm("Reset ALL WalkCut data on this iPhone?")){
+    if(confirm("Reset ALL WalkCut data on this device?")){
       localStorage.removeItem(LS_KEY);
       state = loadState();
       renderSetup();
@@ -1373,23 +1493,23 @@ function wireAll(){
 
 /* ---------- Init ---------- */
 (function init(){
-  // Initialize date inputs
+  // date inputs
   document.getElementById("walkDate").value = todayISO();
   document.getElementById("wDate").value = todayISO();
 
-  // Setup fields
+  // fields
   renderSetup();
 
-  // Wire everything once (fixes “buttons dead”)
+  // wire once
   wireAll();
 
-  // Start view
+  // start
   setActiveTab("dash");
 
-  // Reminder check while open
+  // reminder check while open
   setInterval(maybeFireReminder, 60*1000);
 
-  // Redraw charts on resize/orientation
+  // redraw charts on resize
   window.addEventListener("resize", ()=> renderCharts());
 })();
 </script>
