@@ -90,6 +90,28 @@
     td,th{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}
     th{color:var(--muted);text-align:left;font-weight:900}
     .right{text-align:right}
+  
+    details.dropdown{border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(0,0,0,.14);overflow:hidden}
+    summary.dropdownSummary{list-style:none;cursor:pointer;padding:10px 12px;font-weight:950;letter-spacing:.2px;
+      background:linear-gradient(180deg,rgba(201,162,77,.18),rgba(201,162,77,.10));border-bottom:1px solid rgba(255,255,255,.08)}
+    summary.dropdownSummary::-webkit-details-marker{display:none}
+    .dropdownBody{padding:10px 12px}
+
+    /* ===== calendar views (Walk + Weight) ===== */
+    .calTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .calTop .small{margin:0}
+    .calGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .calDow{font-size:11px;color:rgba(143,163,184,.95);font-weight:950;text-align:center;padding:6px 0}
+    .calCell{position:relative;min-height:56px;border-radius:12px;
+      background:rgba(0,0,0,.14);border:1px solid rgba(255,255,255,.10);
+      padding:8px 8px 10px;cursor:pointer;overflow:hidden}
+    .calCell.off{opacity:.45}
+    .calDay{font-family:var(--mono);font-size:12px;color:rgba(232,238,246,.92);font-weight:950}
+    .calVal{margin-top:6px;font-size:11px;color:rgba(201,162,77,.95);font-weight:900}
+    .calSub{margin-top:2px;font-size:11px;color:rgba(143,163,184,.92)}
+    .calDel{position:absolute;top:6px;right:6px;border-radius:10px;padding:4px 7px;font-size:11px;line-height:1;
+      background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.35);color:rgba(232,238,246,.95)}
+
   </style>
 </head>
 
@@ -115,31 +137,33 @@
       </div>
       <div class="progress"><div id="walkProgressBar"></div></div>
 
+      
       <div class="divider"></div>
-      <div class="row">
-        <div class="small">Today compliance</div>
-        <div class="small mono" id="todayCompliance">—</div>
-      </div>
+      <details class="dropdown" id="nonComplianceDropdown">
+        <summary class="dropdownSummary">Compliance</summary>
+        <div class="dropdownBody">
+          <div class="row">
+            <div class="small">Compliance (today)</div>
+            <select id="complianceSel" style="max-width:140px">
+              <option value="">—</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
 
-      <div class="divider"></div>
-      <div class="btnbar">
-        <button id="btnQuickLogWalk" type="button">Quick log walk</button>
-        <button class="secondary" id="btnGoSetup" type="button">Edit plan</button>
-      </div>
+          <div class="small mono" id="todayCompliance" style="margin-top:8px">—</div>
 
-      <div class="divider"></div>
-      <div class="mini">
-        <div class="row">
-          <div class="small">Reason (today if not compliant)</div>
-          <span class="pill mono" id="reasonBadge">—</span>
+          <div id="reasonWrap" style="display:none">
+            <div class="divider"></div>
+            <label style="margin-top:10px">Reason (if No)</label>
+            <textarea id="reasonText" placeholder="Example: travel day, sick, shift ran late, etc."></textarea>
+            <div class="btnbar" style="margin-top:10px">
+              <button id="saveReason" type="button">Save reason</button>
+              <button class="secondary" id="clearReason" type="button">Clear</button>
+            </div>
+          </div>
         </div>
-        <label style="margin-top:10px">Log reason</label>
-        <textarea id="reasonText" placeholder="Example: travel day, sick, shift ran late, etc."></textarea>
-        <div class="btnbar" style="margin-top:10px">
-          <button id="saveReason" type="button">Save reason</button>
-          <button class="secondary" id="clearReason" type="button">Clear</button>
-        </div>
-      </div>
+      </details>
     </div>
 
     <div class="card">
@@ -171,10 +195,7 @@
       </div>
 
       <div class="divider"></div>
-      <div class="btnbar">
-        <button id="btnQuickAddFood" type="button">Add food entry</button>
-        <button class="secondary" id="btnGoMacros" type="button">View macros</button>
-      </div>
+      <div class="small"></div>
     </div>
 
     <div class="card">
@@ -188,27 +209,21 @@
       <h2>Weight Trend</h2>
       <canvas id="weightChart"></canvas>
       <div class="divider"></div>
-      <div class="btnbar">
-        <button id="btnLogWeight" type="button">Log weight</button>
-        <button class="secondary" id="btnGoWeight" type="button">View weight</button>
-      </div>
+      <div class="small"></div>
     </div>
 
     <div class="card">
-      <h2>Weekly Compliance % (Last 8 Weeks)</h2>
+      <h2>Compliance</h2>
+      <div class="row" style="margin-bottom:8px">
+        <div class="small">View</div>
+        <select id="compViewSel" style="max-width:180px">
+          <option value="weekly">Weekly (8 weeks)</option>
+          <option value="daily">Daily (last 21 days)</option>
+        </select>
+      </div>
       <canvas id="weeklyComplianceChart"></canvas>
       <div class="divider"></div>
       <div class="small">A day counts as compliant only if Walk + Macros are both ≥90%.</div>
-    </div>
-
-    <div class="card">
-      <h2>Notes</h2>
-      <div class="small">
-        • Single-file Home Screen app (localStorage).<br>
-        • Reminder is in-app only (no push).<br>
-        • Foods store macros per <b>4 oz</b> of food (grams). Entries log ounces and scale by (oz/4).<br>
-        • Barcode/camera scan is <b>not reliable</b> in this format without a backend API, so this build is manual + dropdowns.
-      </div>
     </div>
   </section>
 
@@ -237,8 +252,13 @@
     </div>
 
     <div class="card">
-      <h2>Recent Walk Logs</h2>
-      <div id="walkHistory"></div>
+      <h2>Walk Logs (Calendar)</h2>
+      <div class="calTop">
+        <div class="small">Tap a day to load it into the form. Use ✕ to delete.</div>
+        <select id="walkMonthSel" style="max-width:220px"></select>
+      </div>
+      <div class="calGrid" id="walkCalDow"></div>
+      <div class="calGrid" id="walkCal"></div>
     </div>
   </section>
 
@@ -252,6 +272,23 @@
         <div class="mrow"><div class="mname">Protein</div><div class="mbar"><div id="barP2"></div></div><div class="mpct mono" id="pctP2">—</div></div>
         <div class="mrow"><div class="mname">Carbs</div><div class="mbar"><div id="barC2"></div></div><div class="mpct mono" id="pctC2">—</div></div>
         <div class="mrow"><div class="mname">Fat</div><div class="mbar"><div id="barF2"></div></div><div class="mpct mono" id="pctF2">—</div></div>
+<div class="divider"></div>
+<h2 style="margin-top:0">Carbs ⇄ Fat (daily balance)</h2>
+<div class="small">Slide to trade carbs for fat while keeping <b>protein + total calories</b> the same. Center = <b>200g carbs / 69g fat</b>.</div>
+
+<div class="mini" style="margin-top:10px">
+  <div class="row">
+    <div class="small">more fat / less carb</div>
+    <div class="small mono" id="cfBalanceLabel">0g</div>
+    <div class="small">less fat / more carb</div>
+  </div>
+  <input type="range" id="cfBalance" min="-150" max="150" step="1" value="0">
+  <div class="row" style="margin-top:8px">
+    <div class="small mono" id="cfTargetsLine">—</div>
+    <button class="secondary" id="resetBalance" type="button">Reset</button>
+  </div>
+</div>
+
       </div>
 
       <div class="divider"></div>
@@ -357,15 +394,13 @@
     </div>
 
     <div class="card">
-      <h2>Trend</h2>
-      <canvas id="weightChart2"></canvas>
-      <div class="divider"></div>
-      <div class="small">Shows last ~90 entries.</div>
-    </div>
-
-    <div class="card">
-      <h2>Entries</h2>
-      <div id="weightList"></div>
+      <h2>Weight Entries (Calendar)</h2>
+      <div class="calTop">
+        <div class="small">Tap a day to load it into the form. Use ✕ to delete.</div>
+        <select id="weightMonthSel" style="max-width:220px"></select>
+      </div>
+      <div class="calGrid" id="weightCalDow"></div>
+      <div class="calGrid" id="weightCal"></div>
     </div>
   </section>
 
@@ -429,31 +464,12 @@
       <div id="customTargetsBox" style="display:none">
         <div class="grid three">
           <div><label>Protein (g)</label><input inputmode="decimal" id="custP" placeholder="180"></div>
-          <div><label>Carbs (g)</label><input inputmode="decimal" id="custC" placeholder="180"></div>
-          <div><label>Fat (g)</label><input inputmode="decimal" id="custF" placeholder="60"></div>
+          <div><label>Carbs (g)</label><input inputmode="decimal" id="custC" placeholder="200"></div>
+          <div><label>Fat (g)</label><input inputmode="decimal" id="custF" placeholder="69"></div>
         </div>
       </div>
 
       <div class="divider"></div>
-
-      <h2 style="margin-top:0">Macro tuning (carb/fat proportional)</h2>
-      <div class="small">Set an override for carbs or fat; the other adjusts to keep calories consistent (protein stays fixed).</div>
-
-      <label>Adjust mode</label>
-      <select id="tuneMode">
-        <option value="carbs">I will change carbs (fat auto-adjusts)</option>
-        <option value="fat">I will change fat (carbs auto-adjusts)</option>
-      </select>
-
-      <div class="grid two">
-        <div><label>Carbs override (g)</label><input inputmode="decimal" id="carbOverride" placeholder="optional"></div>
-        <div><label>Fat override (g)</label><input inputmode="decimal" id="fatOverride" placeholder="optional"></div>
-      </div>
-
-      <div class="btnbar" style="margin-top:10px">
-        <button id="applyTune" type="button">Apply tune</button>
-        <button class="secondary" id="resetTune" type="button">Reset overrides</button>
-      </div>
 
       <div class="divider"></div>
       <div class="small mono" id="macroPreview">—</div>
@@ -541,6 +557,40 @@ function startOfWeekMonday(d){
   return x;
 }
 
+
+function ymFromISO(iso){ return (iso||"").slice(0,7); }
+function monthLabel(ym){
+  if(!ym || ym.length<7) return ym || "";
+  const y=parseInt(ym.slice(0,4),10);
+  const m=parseInt(ym.slice(5,7),10)-1;
+  const d=new Date(y,m,1);
+  return d.toLocaleDateString(undefined,{ month:"long", year:"numeric" });
+}
+function mondayIndex(jsDay){ return (jsDay + 6) % 7; } // Mon=0..Sun=6
+function buildMonthGrid(ym){
+  const y=parseInt(ym.slice(0,4),10);
+  const m=parseInt(ym.slice(5,7),10)-1;
+  const first=new Date(y,m,1);
+  const offset=mondayIndex(first.getDay());
+  const start=new Date(y,m,1-offset);
+  const cells=[];
+  for(let i=0;i<42;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    cells.push({
+      iso: todayISO(d),
+      day: d.getDate(),
+      inMonth: d.getMonth()===m,
+    });
+  }
+  return cells;
+}
+function renderDowGrid(el){
+  if(!el) return;
+  el.innerHTML = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<div class="calDow">${x}</div>`).join("");
+}
+
+
+
 /* ===== toast ===== */
 let toastTimer=null;
 function toast(msg, sub=""){
@@ -560,8 +610,8 @@ const defaults = {
     autoTargets:true,
     protPerLbGoal:1.01,     // requested default
     fatPerLbGoal:0.30,
-    custom:{ p:180, c:180, f:60 }, // grams
-    overrides:{ carbs:null, fat:null, mode:"carbs" }, // carb/fat tuning
+    custom:{ p:180, c:200, f:69 }, // grams
+    overrides:{ carbs:200, fat:null, mode:"carbs", balance:0 }, // carb/fat tuning (balance slider)
     calAdjustFactor:1.00,   // auto-adjust multiplier (tightens cals)
     reminder:{ enabled:false, hour:19, minute:0, lastFired:"" }
   },
@@ -574,10 +624,14 @@ const defaults = {
   foodEntries: [], // {id, day, meal, foodId, oz, ts}
   walkLogs: [],    // {day, miles, minutes}
   weights: [],     // {day, lb}
+  ui: { complianceView:"weekly" },
   reasons: {}      // { "YYYY-MM-DD": "text" }
 };
 
 let state = loadState();
+
+let compliancePts=[];
+
 
 /* ===== persistence ===== */
 function deepMerge(target, src){
@@ -603,7 +657,14 @@ function loadState(){
 
     merged.nutrition = merged.nutrition || safeClone(defaults.nutrition);
     merged.nutrition.overrides = merged.nutrition.overrides || safeClone(defaults.nutrition.overrides);
+    if(merged.nutrition.overrides.cfBalance == null) merged.nutrition.overrides.cfBalance = 0;
+    if(merged.nutrition.overrides.carbs == null) merged.nutrition.overrides.carbs = 200;
+    if(!merged.nutrition.overrides.mode) merged.nutrition.overrides.mode = "carbs";
     merged.nutrition.reminder = merged.nutrition.reminder || safeClone(defaults.nutrition.reminder);
+    if(!merged.ui) merged.ui = safeClone(defaults.ui);
+    if(!merged.ui.complianceView) merged.ui.complianceView = "weekly";
+    if(!merged.ui.weightMonth) merged.ui.weightMonth = todayISO().slice(0,7);
+    if(!merged.ui.walkMonth) merged.ui.walkMonth = todayISO().slice(0,7);
     if(!merged.reasons) merged.reasons = {};
 
     return merged;
@@ -666,35 +727,53 @@ function baseMacroTargets(){
   return { pG:proteinG, cG:carbsG, fG:fatG, kcal: caloriesFromMacros(proteinG, carbsG, fatG) };
 }
 function macroTargets(){
-  // apply carb/fat tuning overrides while keeping calories stable (protein fixed)
-  const n=state.nutrition;
-  const base=baseMacroTargets();
-  const mode = n.overrides?.mode || "carbs";
-  const carbO = parseNum(n.overrides?.carbs);
-  const fatO  = parseNum(n.overrides?.fat);
+  // Carbs ⇄ Fat balance slider takes precedence when set.
+  // It trades carbs for fat while keeping protein + total calories constant.
+  const n = state.nutrition;
+  const base = baseMacroTargets();
 
   const P = base.pG;
-  const kcalTarget = base.kcal;
 
+  const hasBalance = n.overrides && n.overrides.cfBalance != null && n.overrides.cfBalance !== "";
+  if(hasBalance){
+    const BAL_CARBS_CENTER = 200;
+    const BAL_FAT_CENTER   = 69;
+    const delta = clamp(parseNum(n.overrides.cfBalance), -150, 150);
+
+    const kcalTarget = (P*4) + (BAL_CARBS_CENTER*4) + (BAL_FAT_CENTER*9);
+
+    const C = Math.max(0, BAL_CARBS_CENTER + delta);
+    const F = Math.max(0, (kcalTarget - (P*4) - (C*4)) / 9);
+
+    return { pG:P, cG:C, fG:F, kcal: caloriesFromMacros(P,C,F) };
+  }
+
+  // Otherwise, use classic carb/fat overrides while keeping calories stable (protein fixed).
+  const mode = n.overrides?.mode || "carbs";
+  const hasCarbOverride = n.overrides && n.overrides.carbs != null && n.overrides.carbs !== "";
+  const hasFatOverride  = n.overrides && n.overrides.fat  != null && n.overrides.fat  !== "";
+  const carbO = hasCarbOverride ? parseNum(n.overrides.carbs) : null;
+  const fatO  = hasFatOverride  ? parseNum(n.overrides.fat)  : null;
+
+  const kcalTarget = base.kcal;
   let C = base.cG;
   let F = base.fG;
 
   const remainingKcal = Math.max(0, kcalTarget - P*4);
 
-  if(mode === "carbs" && carbO > 0){
-    C = carbO;
+  if(mode === "carbs" && carbO != null){
+    C = Math.max(0, carbO);
     const kcalLeftForFat = Math.max(0, remainingKcal - C*4);
     F = kcalLeftForFat / 9;
-  }else if(mode === "fat" && fatO > 0){
-    F = fatO;
+  }else if(mode === "fat" && fatO != null){
+    F = Math.max(0, fatO);
     const kcalLeftForCarbs = Math.max(0, remainingKcal - F*9);
     C = kcalLeftForCarbs / 4;
-  }else{
-    // if user filled the other override but mode doesn't match, still respect the matching one only
   }
 
   return { pG:P, cG:Math.max(0,C), fG:Math.max(0,F), kcal: caloriesFromMacros(P,Math.max(0,C),Math.max(0,F)) };
 }
+
 
 /* ===== logs ===== */
 function entriesForDay(dayISO){ return state.foodEntries.filter(e=>e.day===dayISO); }
@@ -875,7 +954,7 @@ function resizeCanvasForHiDPI(canvas){
 }
 function drawLine(canvasId, series, opts){
   const canvas=document.getElementById(canvasId);
-  if(!canvas) return;
+  if(!canvas) return [];
   const ctx=canvas.getContext("2d");
   const {w,h}=resizeCanvasForHiDPI(canvas);
   ctx.clearRect(0,0,w,h);
@@ -884,10 +963,18 @@ function drawLine(canvasId, series, opts){
     ctx.fillStyle="rgba(143,163,184,.9)";
     ctx.font = `${Math.round(h*0.09)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(opts?.emptyText || "Add entries.", Math.round(w*0.04), Math.round(h*0.22));
-    return;
+    return [];
   }
 
-  const vals=series.map(s=>s.y);
+  const valid = series.filter(s=> Number.isFinite(s.y));
+  if(valid.length < 2){
+    ctx.fillStyle="rgba(143,163,184,.9)";
+    ctx.font = `${Math.round(h*0.09)}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.fillText(opts?.emptyText || "Log some data.", Math.round(w*0.04), Math.round(h*0.22));
+    return [];
+  }
+
+  const vals=valid.map(s=>s.y);
   let min=Math.min(...vals), max=Math.max(...vals);
   if(max-min < 0.5){ max += 0.25; min -= 0.25; }
 
@@ -905,23 +992,54 @@ function drawLine(canvasId, series, opts){
   function X(i){ return x0 + (x1-x0)*(i/(series.length-1)); }
   function Y(v){ return y1 - (y1-y0)*((v-min)/(max-min)); }
 
-  // line
+  // line (supports gaps when y is null)
   ctx.strokeStyle="rgba(201,162,77,.95)";
   ctx.lineWidth=Math.max(3, Math.round(w*0.004));
   ctx.lineJoin="round"; ctx.lineCap="round";
   ctx.beginPath();
+  let started=false;
   series.forEach((p,i)=>{
+    if(!Number.isFinite(p.y)){ started=false; return; }
     const x=X(i), y=Y(p.y);
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    if(!started){ ctx.moveTo(x,y); started=true; }
+    else ctx.lineTo(x,y);
   });
   ctx.stroke();
 
-  // last point
-  const last=series[series.length-1];
-  ctx.fillStyle="rgba(58,160,255,.95)";
-  ctx.beginPath();
-  ctx.arc(X(series.length-1), Y(last.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
-  ctx.fill();
+  // markers + capture points (only for valid points)
+  const pts = [];
+  series.forEach((p,i)=>{
+    if(!Number.isFinite(p.y)) return;
+    pts.push({ x:X(i), y:Y(p.y), data:p });
+  });
+
+  if(opts?.markers){
+    const fs = Math.max(14, Math.round(h*0.10));
+    ctx.font = `${fs}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
+    pts.forEach((pt)=>{
+      const d=pt.data || {};
+      const hasOk = (d.ok === true || d.ok === false);
+      if(!hasOk) return; // leave marker blank until compliance has been tracked
+      const isOk = d.ok;
+      const mark = isOk ? "*" : "!";
+      ctx.fillStyle = isOk ? "rgba(61,220,151,.95)" : "rgba(255,107,107,.95)";
+      ctx.fillText(mark, pt.x, pt.y - Math.max(12, Math.round(h*0.05)));
+    });
+    ctx.textAlign="left";
+    ctx.textBaseline="alphabetic";
+  }
+
+  // last point dot (last valid point)
+  const lastValid = [...series].reverse().find(p=>Number.isFinite(p.y));
+  if(lastValid){
+    const lastIdx = series.lastIndexOf(lastValid);
+    ctx.fillStyle="rgba(58,160,255,.95)";
+    ctx.beginPath();
+    ctx.arc(X(lastIdx), Y(lastValid.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
+    ctx.fill();
+  }
 
   // title
   if(opts?.title){
@@ -929,7 +1047,10 @@ function drawLine(canvasId, series, opts){
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(opts.title, x0, y0 - Math.round(h*0.04));
   }
+
+  return pts;
 }
+
 function drawWeekBars(canvasId){
   const canvas=document.getElementById(canvasId);
   if(!canvas) return;
@@ -992,14 +1113,35 @@ function buildWeeklyComplianceSeries(weeksBack=8){
   for(let w=weeksBack-1; w>=0; w--){
     const wkStart=new Date(thisMon); wkStart.setDate(thisMon.getDate()-w*7);
     let ok=0;
+    let trackedDays=0;
     for(let i=0;i<7;i++){
       const d=new Date(wkStart); d.setDate(wkStart.getDate()+i);
-      if(dayCompliant(todayISO(d))) ok++;
+      const iso=todayISO(d);
+      const tracked = !!walkLogForDay(iso) || entriesForDay(iso).length>0;
+      if(tracked) trackedDays++;
+      if(tracked && dayCompliant(iso)) ok++;
     }
-    out.push({ y:(ok/7)*100, label: todayISO(wkStart) });
+    const pct = trackedDays===0 ? null : (ok/7)*100; // % of full week (7 days) that were compliant
+    out.push({ y: pct, label: todayISO(wkStart), ok: (pct===null ? null : (pct>=90)), okDays: ok, trackedDays });
   }
   return out;
 }
+
+
+function buildDailyComplianceSeries(daysBack=21){
+  const out=[];
+  for(let i=daysBack-1;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const iso=todayISO(d);
+
+    const tracked = !!walkLogForDay(iso) || entriesForDay(iso).length>0;
+    const ok = tracked ? dayCompliant(iso) : null;
+
+    out.push({ y: (ok===null ? null : (ok ? 100 : 0)), label: iso, ok, tracked });
+  }
+  return out;
+}
+
 
 /* ===== macro bars coloring ===== */
 function barColorByPct(pct){
@@ -1092,12 +1234,24 @@ function renderMacroPage(){
     `${Math.round(t.kcal)} / ${Math.round(a.kcal)}`;
 }
 function renderCompliance(){
-  document.getElementById("todayCompliance").textContent = todayComplianceText();
-
   const iso=todayISO();
+  const todayLine = document.getElementById("todayCompliance");
+  if(todayLine) todayLine.textContent = todayComplianceText();
+
   const reason = (state.reasons && state.reasons[iso]) ? state.reasons[iso] : "";
-  document.getElementById("reasonBadge").textContent = reason ? "saved" : "—";
-  document.getElementById("reasonText").value = reason || "";
+
+  const sel = document.getElementById("complianceSel");
+  const wrap = document.getElementById("reasonWrap");
+  const ta = document.getElementById("reasonText");
+
+  if(sel){
+    // Do NOT assume "Yes" by default. Only set to "No" if a reason is saved.
+    sel.value = reason ? "no" : "";
+  }
+  if(ta) ta.value = reason || "";
+  if(wrap){
+    wrap.style.display = (sel && sel.value === "no") ? "" : "none";
+  }
 }
 function renderFoodsDropdowns(){
   const pSel=document.getElementById("foodSelProtein");
@@ -1154,49 +1308,121 @@ function renderTodayFoodLog(){
     bindTap(btn, ()=>{ deleteEntry(btn.getAttribute("data-del-entry")); });
   });
 }
-function renderWalkHistory(){
-  const out=document.getElementById("walkHistory");
-  const logs=state.walkLogs.slice().sort((a,b)=>b.day.localeCompare(a.day));
-  if(logs.length===0){ out.innerHTML=`<div class="small">No walk logs yet.</div>`; return; }
-  out.innerHTML = `
-    <table>
-      <thead><tr><th>Date</th><th class="right">Miles</th><th class="right">Min</th><th class="right"></th></tr></thead>
-      <tbody>
-        ${logs.slice(0,20).map(w=>`
-          <tr>
-            <td>${w.day}</td>
-            <td class="right mono">${round(w.miles,1)}</td>
-            <td class="right mono">${Math.round(w.minutes)}</td>
-            <td class="right"><button class="danger" type="button" data-del-walk="${w.day}">Delete</button></td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
-  out.querySelectorAll("[data-del-walk]").forEach(btn=>{
-    bindTap(btn, ()=>{ deleteWalk(btn.getAttribute("data-del-walk")); });
+function renderWalkCalendar(){
+  const sel=document.getElementById("walkMonthSel");
+  const dow=document.getElementById("walkCalDow");
+  const cal=document.getElementById("walkCal");
+  if(!sel||!cal||!dow) return;
+
+  if(!state.ui) state.ui={};
+  const currentYM = ymFromISO(todayISO());
+  const months = new Set(state.walkLogs.map(w=>ymFromISO(w.day)));
+  months.add(currentYM);
+  const list=[...months].filter(Boolean).sort((a,b)=>b.localeCompare(a));
+
+  sel.innerHTML = list.map(ym=>`<option value="${ym}">${monthLabel(ym)}</option>`).join("");
+  const chosen = (state.ui.walkMonth && list.includes(state.ui.walkMonth)) ? state.ui.walkMonth : currentYM;
+  state.ui.walkMonth = chosen;
+  sel.value = chosen;
+
+  renderDowGrid(dow);
+
+  const cells = buildMonthGrid(chosen);
+  const byDay = {};
+  state.walkLogs.forEach(w=>{ byDay[w.day]=w; });
+
+  cal.innerHTML = cells.map(c=>{
+    const wl = byDay[c.iso];
+    const has = !!wl;
+    const miles = has ? round(wl.miles,1) : "";
+    const mins  = has ? Math.round(wl.minutes||0) : "";
+    return `
+      <div class="calCell ${c.inMonth?"":"off"}" data-walk-iso="${c.iso}">
+        ${has ? `<button class="calDel" type="button" data-del-walk="${c.iso}">✕</button>` : ""}
+        <div class="calDay">${c.day}</div>
+        ${has ? `<div class="calVal mono">${miles} mi</div><div class="calSub mono">${mins} min</div>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  // cell tap loads date into form
+  cal.querySelectorAll("[data-walk-iso]").forEach(cell=>{
+    cell.addEventListener("click", (e)=>{
+      const iso = cell.getAttribute("data-walk-iso");
+      const wl = byDay[iso] || null;
+      const dEl=document.getElementById("walkDate");
+      const mEl=document.getElementById("walkMiles");
+      const minEl=document.getElementById("walkMinutes");
+      if(dEl) dEl.value = iso;
+      if(mEl) mEl.value = wl ? (wl.miles ?? "") : "";
+      if(minEl) minEl.value = wl ? (wl.minutes ?? "") : "";
+      toast("Walk loaded", iso);
+    });
+  });
+
+  // delete buttons
+  cal.querySelectorAll("[data-del-walk]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      deleteWalk(btn.getAttribute("data-del-walk"));
+    });
   });
 }
-function renderWeightList(){
-  const out=document.getElementById("weightList");
-  const rows=state.weights.slice().sort((a,b)=>b.day.localeCompare(a.day));
-  if(rows.length===0){ out.innerHTML=`<div class="small">No weight entries yet.</div>`; return; }
-  out.innerHTML = `
-    <table>
-      <thead><tr><th>Date</th><th class="right">Weight (lb)</th><th class="right"></th></tr></thead>
-      <tbody>
-        ${rows.slice(0,30).map(w=>`
-          <tr>
-            <td>${w.day}</td>
-            <td class="right mono">${round(w.lb,1)}</td>
-            <td class="right"><button class="danger" type="button" data-del-weight="${w.day}">Delete</button></td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
-  out.querySelectorAll("[data-del-weight]").forEach(btn=>{
-    bindTap(btn, ()=>{ deleteWeight(btn.getAttribute("data-del-weight")); });
+function renderWeightCalendar(){
+  const sel=document.getElementById("weightMonthSel");
+  const dow=document.getElementById("weightCalDow");
+  const cal=document.getElementById("weightCal");
+  if(!sel||!cal||!dow) return;
+
+  if(!state.ui) state.ui={};
+  const currentYM = ymFromISO(todayISO());
+  const months = new Set(state.weights.map(w=>ymFromISO(w.day)));
+  months.add(currentYM);
+  const list=[...months].filter(Boolean).sort((a,b)=>b.localeCompare(a));
+
+  sel.innerHTML = list.map(ym=>`<option value="${ym}">${monthLabel(ym)}</option>`).join("");
+  const chosen = (state.ui.weightMonth && list.includes(state.ui.weightMonth)) ? state.ui.weightMonth : currentYM;
+  state.ui.weightMonth = chosen;
+  sel.value = chosen;
+
+  renderDowGrid(dow);
+
+  const cells = buildMonthGrid(chosen);
+  const byDay = {};
+  state.weights.forEach(w=>{ byDay[w.day]=w; });
+
+  cal.innerHTML = cells.map(c=>{
+    const we = byDay[c.iso];
+    const has = !!we;
+    const lb = has ? round(we.lb,1) : "";
+    return `
+      <div class="calCell ${c.inMonth?"":"off"}" data-weight-iso="${c.iso}">
+        ${has ? `<button class="calDel" type="button" data-del-weight="${c.iso}">✕</button>` : ""}
+        <div class="calDay">${c.day}</div>
+        ${has ? `<div class="calVal mono">${lb} lb</div>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  // cell tap loads date into form
+  cal.querySelectorAll("[data-weight-iso]").forEach(cell=>{
+    cell.addEventListener("click", (e)=>{
+      const iso = cell.getAttribute("data-weight-iso");
+      const we = byDay[iso] || null;
+      const dEl=document.getElementById("wDate");
+      const lbEl=document.getElementById("wLb");
+      if(dEl) dEl.value = iso;
+      if(lbEl) lbEl.value = we ? (we.lb ?? "") : "";
+      toast("Weight loaded", iso);
+    });
+  });
+
+  // delete buttons
+  cal.querySelectorAll("[data-del-weight]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      deleteWeight(btn.getAttribute("data-del-weight"));
+    });
   });
 }
 function renderSetup(){
@@ -1221,12 +1447,18 @@ function renderSetup(){
   document.getElementById("custC").value = state.nutrition.custom.c;
   document.getElementById("custF").value = state.nutrition.custom.f;
 
-  // tuning
-  document.getElementById("tuneMode").value = state.nutrition.overrides.mode || "carbs";
-  document.getElementById("carbOverride").value = state.nutrition.overrides.carbs ?? "";
-  document.getElementById("fatOverride").value = state.nutrition.overrides.fat ?? "";
+  // balance (carbs ⇄ fat)
+  const bal = parseNum(state.nutrition.overrides.cfBalance ?? 0);
+  const balEl = document.getElementById("cfBalance");
+  if(balEl) balEl.value = String(clamp(bal, -150, 150));
+  const labelEl = document.getElementById("cfBalanceLabel");
+  if(labelEl) labelEl.textContent = `${bal>0?"+":""}${Math.round(bal)}g`;
 
-  // reminder
+  const tNow = macroTargets();
+  const lineEl = document.getElementById("cfTargetsLine");
+  if(lineEl) lineEl.textContent = `Carbs ${Math.round(tNow.cG)}g • Fat ${Math.round(tNow.fG)}g`;
+
+// reminder
   document.getElementById("remEnabled").checked = !!state.nutrition.reminder.enabled;
   document.getElementById("remHour").value = state.nutrition.reminder.hour;
   document.getElementById("remMin").value = state.nutrition.reminder.minute;
@@ -1253,8 +1485,13 @@ function renderCharts(){
   drawLine("weightChart", buildWeightSeries(90), { title:"Weight", emptyText:"Add 2+ weight entries." });
   drawLine("weightChart2", buildWeightSeries(90), { title:"Weight", emptyText:"Add 2+ weight entries." });
   drawWeekBars("walkWeekBars");
-  drawLine("weeklyComplianceChart", buildWeeklyComplianceSeries(8), { title:"Weekly Compliance %", emptyText:"Log some days." });
+
+  const mode = state.ui?.complianceView || "weekly";
+  const series = (mode === "daily") ? buildDailyComplianceSeries(21) : buildWeeklyComplianceSeries(8);
+  const title = (mode === "daily") ? "Daily Compliance (last 21 days)" : "Weekly Compliance % (last 8 weeks)";
+  compliancePts = drawLine("weeklyComplianceChart", series, { title, emptyText:"Log some days.", markers:true, okThreshold:90 });
 }
+
 function renderAll(){
   renderHeader();
   renderWalkTargets();
@@ -1263,8 +1500,8 @@ function renderAll(){
   renderCompliance();
   renderFoodsDropdowns();
   renderTodayFoodLog();
-  renderWalkHistory();
-  renderWeightList();
+  renderWalkCalendar();
+  renderWeightCalendar();
   renderCharts();
   maybeFireReminder();
   // show tune status
@@ -1300,6 +1537,60 @@ function wireAll(){
     bindTap(btn, ()=> setActiveTab(btn.dataset.tab));
   });
 
+  // compliance view selector (dashboard)
+  const compSel = document.getElementById("compViewSel");
+  if(compSel){
+    compSel.value = (state.ui?.complianceView || "weekly");
+    compSel.addEventListener("change", ()=>{
+      state.ui = state.ui || { complianceView:"weekly" };
+      state.ui.complianceView = compSel.value;
+      saveState();
+    });
+  }
+
+  // compliance chart tooltip (tap/click nearest point)
+  const compCanvas = document.getElementById("weeklyComplianceChart");
+  if(compCanvas){
+    const handler = (ev)=>{
+      const rect = compCanvas.getBoundingClientRect();
+      const x = (ev.touches && ev.touches[0]) ? ev.touches[0].clientX : ev.clientX;
+      const cx = (x - rect.left) * (window.devicePixelRatio || 1);
+
+      if(!compliancePts || compliancePts.length===0) return;
+      let best = compliancePts[0], bestDx = Math.abs(compliancePts[0].x - cx);
+      for(const p of compliancePts){
+        const dx = Math.abs(p.x - cx);
+        if(dx < bestDx){ bestDx = dx; best = p; }
+      }
+      const d = best.data || {};
+      const mode = state.ui?.complianceView || "weekly";
+
+      if(mode === "daily"){
+        const iso = d.label;
+        const wOK = walkCompliant(iso);
+        const mOK = macroCompliant(iso);
+        if(d.ok===null){
+        toast("No compliance data", `${iso} • Log walk and/or food entries to track.`);
+      }else{
+        const ok = d.ok;
+        toast(ok ? "Compliant *" : "Not compliant !", `${iso} • Walk ${wOK?"OK":"NO"} • Macros ${mOK?"OK":"NO"}`);
+      }
+      }else{
+        const wk = d.label;
+        if(!Number.isFinite(d.y)){
+        toast("No compliance data", `${wk} week • Log some days to track.`);
+      }else{
+        const okDays = (typeof d.okDays === "number") ? d.okDays : Math.round((d.y/100)*7);
+        const pct = Math.round(d.y);
+        const ok = pct >= 90;
+        toast(ok ? "Compliant *" : "Not compliant !", `${wk} week • ${okDays}/7 days • ${pct}%`);
+      }
+      }
+    };
+    compCanvas.addEventListener("click", handler);
+    compCanvas.addEventListener("touchstart", (e)=>{ handler(e); }, { passive:true });
+  }
+
   // dashboard
   bindTap("btnGoSetup", ()=> setActiveTab("setup"));
   bindTap("btnGoMacros", ()=> setActiveTab("macros"));
@@ -1319,6 +1610,26 @@ function wireAll(){
     document.getElementById("wDate").value = todayISO();
     document.getElementById("wLb").value = "";
   });
+
+  // compliance dropdown (dashboard)
+  const compYN = document.getElementById("complianceSel");
+  const reasonWrap = document.getElementById("reasonWrap");
+  if(compYN){
+    compYN.addEventListener("change", ()=>{
+      const v = compYN.value;
+      if(reasonWrap) reasonWrap.style.display = (v === "no") ? "" : "none";
+      if(v === "yes"){
+        // choosing Yes clears any saved reason for today
+        const iso = todayISO();
+        if(state.reasons && state.reasons[iso]){
+          delete state.reasons[iso];
+          saveState();
+        }else{
+          renderCompliance();
+        }
+      }
+    });
+  }
 
   // reasons
   bindTap("saveReason", ()=>{
@@ -1433,30 +1744,53 @@ function wireAll(){
     document.getElementById("walkShareLabel").textContent = `${document.getElementById("walkShare").value}%`;
   });
   document.getElementById("autoTargets").addEventListener("change", toggleAutoTargetsUI);
-  ["protPerLb","fatPerLb","custP","custC","custF","carbOverride","fatOverride","tuneMode"].forEach(id=>{
+  ["protPerLb","fatPerLb","custP","custC","custF","cfBalance"].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.addEventListener("input", renderMacroPreview);
-    if(el && id==="tuneMode") el.addEventListener("change", renderMacroPreview);
   });
 
-  bindTap("applyTune", ()=>{
-    state.nutrition.overrides.mode = document.getElementById("tuneMode").value;
-    const c = (document.getElementById("carbOverride").value||"").trim();
-    const f = (document.getElementById("fatOverride").value||"").trim();
-    state.nutrition.overrides.carbs = c ? parseNum(c) : null;
-    state.nutrition.overrides.fat = f ? parseNum(f) : null;
+  // carbs ⇄ fat balance (daily)
+  const BAL_CARBS_CENTER = 200;
+  const BAL_FAT_CENTER   = 69;
+
+  const updateBalance = (delta)=>{
+    delta = clamp(parseNum(delta), -150, 150); // 1g steps, wider range
+    state.nutrition.overrides.cfBalance = delta;
+
+    // Keep PROTEIN + TOTAL CALORIES constant; trade carbs ⇄ fat around the center point.
+    // Calories baseline = (protein * 4) + (200g carbs * 4) + (69g fat * 9)
+    const baseP = baseMacroTargets().pG;
+    const kcalFixed = (baseP*4) + (BAL_CARBS_CENTER*4) + (BAL_FAT_CENTER*9);
+
+    const C = Math.max(0, BAL_CARBS_CENTER + delta);
+    const F = Math.max(0, (kcalFixed - (baseP*4) - (C*4)) / 9);
+
+    const lab=document.getElementById("cfBalanceLabel");
+    if(lab) lab.textContent = `${delta>0?"+":""}${Math.round(delta)}g`;
+
+    const line=document.getElementById("cfTargetsLine");
+    if(line) line.textContent = `Carbs ${Math.round(C)}g • Fat ${Math.round(F)}g`;
+
+    // Re-render macro preview/targets elsewhere
+    renderMacroPreview();
+  };
+
+  const balEl=document.getElementById("cfBalance");
+  if(balEl){
+    balEl.addEventListener("input", ()=>{
+      updateBalance(balEl.value);
+      saveState();
+    });
+  }
+
+  bindTap("resetBalance", ()=>{
+    if(balEl) balEl.value="0";
+    updateBalance(0);
     saveState();
-    toast("Tune applied", "Targets updated.");
-  });
-  bindTap("resetTune", ()=>{
-    state.nutrition.overrides = { carbs:null, fat:null, mode: state.nutrition.overrides.mode || "carbs" };
-    document.getElementById("carbOverride").value="";
-    document.getElementById("fatOverride").value="";
-    saveState();
-    toast("Tune reset", "Overrides cleared.");
+    toast("Balance reset", "Carbs back to 200g (fat auto-adjusted).");
   });
 
-  bindTap("testReminder", ()=> toast("WalkCut reminder", "Test reminder ✅"));
+bindTap("testReminder", ()=> toast("WalkCut reminder", "Test reminder ✅"));
 
   bindTap("saveSetup", ()=>{
     state.profile.age = clamp(parseInt(document.getElementById("pAge").value||"44",10)||44, 18, 90);
@@ -1474,7 +1808,7 @@ function wireAll(){
 
     state.nutrition.custom = {
       p: clamp(parseNum(document.getElementById("custP").value||"180"), 50, 350),
-      c: clamp(parseNum(document.getElementById("custC").value||"180"), 0, 500),
+      c: clamp(parseNum(document.getElementById("custC").value||"200"), 0, 500),
       f: clamp(parseNum(document.getElementById("custF").value||"60"), 10, 200)
     };
 
@@ -1499,6 +1833,27 @@ function wireAll(){
       setActiveTab("dash");
     }
   });
+
+  // month selectors (calendar views)
+  const wms = document.getElementById("weightMonthSel");
+  if(wms){
+    wms.addEventListener("change", ()=>{
+      state.ui = state.ui || {};
+      state.ui.weightMonth = wms.value;
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+      renderWeightCalendar();
+    });
+  }
+  const kms = document.getElementById("walkMonthSel");
+  if(kms){
+    kms.addEventListener("change", ()=>{
+      state.ui = state.ui || {};
+      state.ui.walkMonth = kms.value;
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+      renderWalkCalendar();
+    });
+  }
+
 }
 
 /* ===== init ===== */
