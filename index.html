@@ -6,37 +6,32 @@
   <meta name="theme-color" content="#0B1B2B" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
   <title>WalkCut</title>
 
-  <!-- Single-file iOS icon (simple armored-vehicle silhouette SVG, no extra files required) -->
+  <!-- Single-file iOS icon (inline SVG) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='20%25' r='80%25'%3E%3Cstop offset='0' stop-color='%233aa0ff' stop-opacity='.25'/%3E%3Cstop offset='1' stop-color='%230B1B2B'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23g)'/%3E%3Crect x='10' y='10' width='160' height='160' rx='30' fill='%230b1118' opacity='.55'/%3E%3Cpath d='M40 104h86l8 12H32l8-12Zm8-20h70l6 12H42l6-12Zm10-16h44l8 8H50l8-8Zm38-6 18 10H80l16-10Zm-57 56h94v10H39v-10Zm8 16h10v8H47v-8Zm18 0h10v8H65v-8Zm18 0h10v8H83v-8Zm18 0h10v8h-10v-8Zm18 0h10v8h-10v-8Z' fill='%23C9A24D'/%3E%3Ctext x='90' y='52' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial' font-size='18' fill='%23EAF0F6'%3EWALKCUT%3C/text%3E%3C/svg%3E" />
 
   <style>
     :root{
-      /* Highlander-style palette */
       --navy:#0B1B2B;
       --bg:#0b1118;
       --card:#121a24;
-      --card2:#0f1722;
       --text:#e8eef6;
       --muted:#8FA3B8;
-      --line:rgba(201,162,77,.22);      /* brass line */
+      --line:rgba(201,162,77,.22);
       --good:#3ddc97;
       --warn:#ffcc66;
       --bad:#ff6b6b;
-      --accent:#C9A24D;                 /* brass accent */
-      --blue:#3aa0ff;                   /* secondary accent */
+      --accent:#C9A24D; /* Highlander brass */
+      --blue:#3aa0ff;
       --shadow: 0 14px 34px rgba(0,0,0,.45);
       --r:16px;
       --pad:14px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
-
     body{
       margin:0;
       font-family:var(--sans);
@@ -47,7 +42,6 @@
         var(--bg);
       color:var(--text);
     }
-
     header{
       position:sticky; top:0; z-index:10;
       backdrop-filter: blur(14px);
@@ -55,22 +49,16 @@
       border-bottom: 1px solid rgba(201,162,77,.18);
       padding: 12px 14px 10px;
     }
-
-    header .top{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-
+    header .top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
     h1{
       font-size:18px; margin:0; letter-spacing:.35px;
       display:flex; align-items:center; gap:10px;
     }
-
     .brandDot{
       width:10px;height:10px;border-radius:999px;
       background: linear-gradient(180deg, rgba(201,162,77,1), rgba(58,160,255,.9));
       box-shadow: 0 0 0 3px rgba(201,162,77,.16);
     }
-
     .pill{
       font-size:12px; color:rgba(201,162,77,.95);
       border:1px solid rgba(201,162,77,.22);
@@ -78,15 +66,12 @@
       padding:5px 10px; border-radius:999px;
       white-space:nowrap;
     }
-
     main{padding: 12px 14px 94px; max-width: 860px; margin: 0 auto;}
-
     .grid{display:grid; gap:12px;}
     @media(min-width:720px){
       .grid.two{grid-template-columns:1fr 1fr}
       .grid.three{grid-template-columns:1fr 1fr 1fr}
     }
-
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
       border: 1px solid rgba(201,162,77,.18);
@@ -94,17 +79,13 @@
       padding: var(--pad);
       box-shadow: var(--shadow);
     }
-
     .card h2{
       font-size:13px; margin:0 0 10px;
       color: rgba(201,162,77,.95);
-      font-weight:750; letter-spacing:.35px;
-      text-transform: none;
+      font-weight:800; letter-spacing:.35px;
     }
-
     .row{display:flex; gap:10px; align-items:center; justify-content:space-between}
     .kpi{display:flex; gap:10px; flex-wrap:wrap;}
-
     .kpi .box{
       flex:1 1 120px;
       background: rgba(0,0,0,.20);
@@ -113,46 +94,36 @@
       padding: 10px 12px;
       min-width: 120px;
     }
-
     .kpi .label{font-size:12px; color:var(--muted); margin-bottom:4px}
-    .kpi .value{font-size:18px; font-weight:800; font-family:var(--mono)}
-
+    .kpi .value{font-size:18px; font-weight:850; font-family:var(--mono)}
     .small{font-size:12px; color:var(--muted)}
     .muted{color:var(--muted)}
     .mono{font-family:var(--mono)}
-
     .btnbar{display:flex; gap:10px; flex-wrap:wrap}
-
     button, .btn{
       -webkit-tap-highlight-color: transparent;
-      appearance:none;
-      border:none;
+      appearance:none; border:none;
       background: linear-gradient(180deg, rgba(201,162,77,.22), rgba(201,162,77,.12));
       color: var(--text);
       border: 1px solid rgba(201,162,77,.30);
       padding: 10px 12px;
       border-radius: 12px;
-      font-weight: 750;
+      font-weight: 800;
       letter-spacing:.25px;
       cursor:pointer;
-
       touch-action: manipulation;
       user-select:none;
     }
-
     button.secondary{
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.10);
       color: var(--text);
     }
-
     button.danger{
       background: rgba(255,107,107,.12);
       border: 1px solid rgba(255,107,107,.32);
     }
-
     button:active{transform: translateY(1px)}
-
     input, select{
       width:100%;
       padding: 10px 12px;
@@ -163,10 +134,8 @@
       font-size: 14px;
       outline:none;
     }
-
     input::placeholder{color: rgba(143,163,184,.75)}
     label{font-size:12px; color:var(--muted); display:block; margin: 10px 0 6px}
-
     .tabs{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       display:flex; justify-content:space-around;
@@ -176,27 +145,23 @@
       border-top: 1px solid rgba(201,162,77,.16);
       gap:8px;
     }
-
     .tab{
       flex:1;
       text-align:center;
       padding: 9px 6px;
       border-radius: 12px;
       color: rgba(232,238,246,.78);
-      font-weight:800;
+      font-weight:900;
       font-size:12px;
-
       background: rgba(255,255,255,.02);
       border: 1px solid rgba(255,255,255,.08);
     }
-
     .tab.active{
       color: var(--text);
       background: rgba(201,162,77,.14);
       border: 1px solid rgba(201,162,77,.22);
       box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
     }
-
     .progress{
       height:10px;
       border-radius:999px;
@@ -204,26 +169,21 @@
       border:1px solid rgba(255,255,255,.08);
       overflow:hidden;
     }
-
     .progress > div{
       height:100%;
       width:0%;
       background: linear-gradient(90deg, rgba(61,220,151,.92), rgba(201,162,77,.85));
     }
-
     table{width:100%; border-collapse:collapse}
     td,th{padding:10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); font-size:13px}
-    th{color:var(--muted); text-align:left; font-weight:750}
+    th{color:var(--muted); text-align:left; font-weight:800}
     .right{text-align:right}
-
     .badge{
       display:inline-block; padding:4px 8px; border-radius:999px;
       font-size:12px; border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06); color: var(--muted);
     }
-
     .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
-
     canvas{
       width:100%;
       height:220px;
@@ -231,7 +191,6 @@
       border:1px solid rgba(201,162,77,.16);
       border-radius: 12px;
     }
-
     .hint{
       border-left: 3px solid rgba(201,162,77,.65);
       padding: 10px 12px;
@@ -242,29 +201,55 @@
       line-height: 1.35;
     }
 
-    /* --- Macro Bar Graphs (Eaten vs Target) --- */
-    .macroBars{display:grid; gap:10px}
-    .macroRow{display:grid; grid-template-columns: 92px 1fr; gap:10px; align-items:center}
-    .macroName{font-size:12px; color:var(--muted); font-weight:850; letter-spacing:.2px}
-    .macroMeta{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-top:6px}
-    .macroMeta .mono{font-size:12px}
-    .macroMeta .small{font-size:12px}
-    .macroTrack{
+    /* Scanner */
+    .scannerWrap{
+      border:1px solid rgba(201,162,77,.16);
+      border-radius:12px;
+      overflow:hidden;
+      background: rgba(0,0,0,.18);
+    }
+    #scannerViewport{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16/10;
+      background: rgba(0,0,0,.25);
+    }
+    #scannerViewport video, #scannerViewport canvas{
+      width:100% !important;
+      height:100% !important;
+      border-radius:0 !important;
+      border:none !important;
+      background: transparent !important;
+    }
+    .scanOverlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
+    }
+    .scanBox{
+      width:70%;
+      height:45%;
+      border-radius:14px;
+      border:2px solid rgba(58,160,255,.65);
+      box-shadow: 0 0 0 999px rgba(0,0,0,.35) inset;
+    }
+
+    /* Macro bars */
+    .barRow{margin:10px 0 12px}
+    .barTop{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px}
+    .barLabel{font-size:12px; color:var(--muted); font-weight:800}
+    .barNums{font-size:12px; color:rgba(232,238,246,.85); font-family:var(--mono)}
+    .barTrack{
       height:12px;
       border-radius:999px;
       background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.08);
       overflow:hidden;
     }
-    .macroFill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      transition: width .18s ease;
-    }
-    .macroFill.blue{background: rgba(58,160,255,.92)}
-    .macroFill.green{background: rgba(61,220,151,.92)}
-    .macroFill.red{background: rgba(255,107,107,.92)}
+    .barFill{height:100%; width:0%;}
+    .fillBlue{background: linear-gradient(90deg, rgba(58,160,255,.85), rgba(58,160,255,.55));}
+    .fillGreen{background: linear-gradient(90deg, rgba(61,220,151,.9), rgba(201,162,77,.55));}
+    .fillRed{background: linear-gradient(90deg, rgba(255,107,107,.9), rgba(255,107,107,.55));}
   </style>
 </head>
 
@@ -290,14 +275,41 @@
       <div class="progress" aria-label="walk progress"><div id="walkProgressBar"></div></div>
       <div class="divider"></div>
       <div class="btnbar">
-        <button id="btnQuickLogWalk" type="button">Quick log walk</button>
-        <button class="secondary" id="btnGoSetup" type="button">Edit plan</button>
+        <button id="btnQuickLogWalk">Quick log walk</button>
+        <button class="secondary" id="btnGoSetup">Edit plan</button>
       </div>
     </div>
 
     <div class="card">
-      <h2>Macros Today (Eaten vs Target)</h2>
-      <div class="macroBars" id="macroBarsDash"></div>
+      <h2>Macros Today (grams + bars)</h2>
+      <div class="kpi" id="macroKPIs"></div>
+
+      <div class="divider"></div>
+
+      <div class="barRow">
+        <div class="barTop">
+          <div class="barLabel">Protein</div>
+          <div class="barNums mono" id="barPnums">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barP"></div></div>
+      </div>
+
+      <div class="barRow">
+        <div class="barTop">
+          <div class="barLabel">Carbs</div>
+          <div class="barNums mono" id="barCnums">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barC"></div></div>
+      </div>
+
+      <div class="barRow" style="margin-bottom:0">
+        <div class="barTop">
+          <div class="barLabel">Fat</div>
+          <div class="barNums mono" id="barFnums">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barF"></div></div>
+      </div>
+
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories</div>
@@ -305,8 +317,8 @@
       </div>
       <div class="divider"></div>
       <div class="btnbar">
-        <button id="btnQuickAddFood" type="button">Add food entry</button>
-        <button class="secondary" id="btnGoMacros" type="button">View macros</button>
+        <button id="btnQuickAddFood">Add food entry</button>
+        <button class="secondary" id="btnGoMacros">View macros</button>
       </div>
     </div>
 
@@ -315,8 +327,8 @@
       <canvas id="weightChart" width="900" height="320"></canvas>
       <div class="divider"></div>
       <div class="btnbar">
-        <button id="btnLogWeight" type="button">Log weight</button>
-        <button class="secondary" id="btnGoWeight" type="button">View weight</button>
+        <button id="btnLogWeight">Log weight</button>
+        <button class="secondary" id="btnGoWeight">View weight</button>
       </div>
     </div>
 
@@ -325,7 +337,7 @@
       <canvas id="walkChart" width="900" height="320"></canvas>
       <div class="divider"></div>
       <div class="btnbar">
-        <button class="secondary" id="btnGoWalkFromDash" type="button">View walk</button>
+        <button class="secondary" id="btnGoWalkFromDash">View walk</button>
       </div>
     </div>
 
@@ -339,9 +351,9 @@
     <div class="card">
       <h2>iPhone-only notes</h2>
       <div class="hint">
-        • This is a single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
-        • iOS web apps can’t reliably read Apple Health steps like native apps.<br>
-        • Macro unit can be toggled (oz or grams). Foods store macros per 1 oz of food.
+        • Camera scanning works best after you first open in Safari and allow Camera once.<br>
+        • This is a “Home Screen app” (Safari web app). Data is stored locally (localStorage).<br>
+        • Barcode lookup uses Open Food Facts (free public database). Not every product exists.
       </div>
     </div>
   </section>
@@ -363,8 +375,8 @@
         </div>
       </div>
       <div class="btnbar" style="margin-top:12px">
-        <button id="saveWalk" type="button">Save</button>
-        <button class="secondary" id="backFromWalk" type="button">Back</button>
+        <button id="saveWalk">Save</button>
+        <button class="secondary" id="backFromWalk">Back</button>
       </div>
       <div class="divider"></div>
       <div class="small muted">Tip: If you only know minutes, enter minutes and leave miles blank. Miles will be estimated from your pace.</div>
@@ -379,17 +391,101 @@
   <!-- MACROS -->
   <section id="view-macros" class="grid" style="display:none">
     <div class="card">
-      <h2>Today Macros (Eaten vs Target)</h2>
-      <div class="macroBars" id="macroBarsMacros"></div>
+      <h2>Today Macros (grams tracked)</h2>
+      <div class="kpi" id="macroKPIs2"></div>
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories (target / eaten)</div>
         <div class="small mono" id="calorieLine2">—</div>
       </div>
+
       <div class="divider"></div>
+
+      <div class="barRow">
+        <div class="barTop">
+          <div class="barLabel">Protein</div>
+          <div class="barNums mono" id="barPnums2">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barP2"></div></div>
+      </div>
+
+      <div class="barRow">
+        <div class="barTop">
+          <div class="barLabel">Carbs</div>
+          <div class="barNums mono" id="barCnums2">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barC2"></div></div>
+      </div>
+
+      <div class="barRow" style="margin-bottom:0">
+        <div class="barTop">
+          <div class="barLabel">Fat</div>
+          <div class="barNums mono" id="barFnums2">—</div>
+        </div>
+        <div class="barTrack"><div class="barFill fillBlue" id="barF2"></div></div>
+      </div>
+
+      <div class="divider"></div>
+
       <div class="btnbar">
-        <button id="btnAddEntry2" type="button">Add Entry</button>
-        <button class="secondary" id="btnAddFood2" type="button">Add Food</button>
+        <button id="btnAddEntry2">Add Entry</button>
+        <button class="secondary" id="btnAddFood2">Add Food</button>
+      </div>
+    </div>
+
+    <!-- SCAN + MANUAL + SERVING DETECTION -->
+    <div class="card">
+      <h2>Scan barcode or manual UPC</h2>
+
+      <div class="btnbar" style="margin-bottom:10px">
+        <button id="btnStartScan">Start scan</button>
+        <button class="secondary" id="btnStopScan">Stop</button>
+      </div>
+
+      <div class="scannerWrap" id="scannerWrap" style="display:none">
+        <div id="scannerViewport">
+          <div class="scanOverlay"><div class="scanBox"></div></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <label>Manual barcode (UPC/EAN)</label>
+      <input inputmode="numeric" placeholder="Type barcode digits" id="manualBarcode">
+      <div class="btnbar" style="margin-top:10px">
+        <button id="btnLookupManual">Lookup</button>
+        <button class="secondary" id="btnClearLookup">Clear</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div id="lookupResult" class="small muted">No lookup yet.</div>
+
+      <div id="servingBox" style="display:none; margin-top:10px">
+        <div class="divider"></div>
+        <div class="grid two">
+          <div>
+            <label>Serving size (detected)</label>
+            <input id="servingDetected" disabled>
+            <div class="small muted">From Open Food Facts if available.</div>
+          </div>
+          <div>
+            <label>How many servings eaten?</label>
+            <input inputmode="decimal" id="servingsCount" placeholder="e.g., 1">
+            <div class="small muted">Or leave blank and use oz below.</div>
+          </div>
+        </div>
+
+        <label>Ounces eaten (fallback)</label>
+        <input inputmode="decimal" id="lookupOz" placeholder="e.g., 6">
+
+        <div class="btnbar" style="margin-top:10px">
+          <button id="btnAddLookupAsFood">Save food</button>
+          <button class="secondary" id="btnLogLookupEntry">Log entry</button>
+        </div>
+        <div class="small muted" style="margin-top:8px">
+          “Save food” stores macros per 1 oz food (grams of macros per oz food). “Log entry” creates today’s entry using servings or oz.
+        </div>
       </div>
     </div>
 
@@ -410,11 +506,11 @@
       <input inputmode="decimal" placeholder="e.g., 6" id="entryOz">
 
       <div class="btnbar" style="margin-top:12px">
-        <button id="saveEntry" type="button">Save Entry</button>
-        <button class="secondary" id="clearEntry" type="button">Clear</button>
+        <button id="saveEntry">Save Entry</button>
+        <button class="secondary" id="clearEntry">Clear</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Foods store macros per 1 oz of that food (grams of macro). Entries multiply by ounces eaten.</div>
+      <div class="small muted">Foods store macros per 1 oz food (grams of macro). Entries multiply by ounces eaten.</div>
     </div>
 
     <div class="card">
@@ -422,16 +518,20 @@
       <div id="todayFoodLog"></div>
     </div>
 
+    <!-- Foods list is collapsed behind dropdown (still accessible) -->
     <div class="card">
-      <h2>Foods (macros per 1 oz food)</h2>
-      <div class="btnbar" style="margin-bottom:10px">
-        <button id="btnShowAddFood" type="button">Add Food</button>
+      <h2>Foods</h2>
+      <div class="row">
+        <div class="small muted">View/edit foods list</div>
+        <button class="secondary" id="btnToggleFoodsList">Show</button>
       </div>
-      <div id="foodsList"></div>
+      <div id="foodsListWrap" style="display:none; margin-top:10px">
+        <div id="foodsList"></div>
+      </div>
     </div>
 
     <div class="card" id="addFoodCard" style="display:none">
-      <h2>Add Food</h2>
+      <h2>Add Food (manual)</h2>
       <label>Name</label>
       <input placeholder="e.g., Chicken breast (cooked)" id="foodName">
 
@@ -445,8 +545,8 @@
       <input inputmode="decimal" placeholder="e.g., 1.0" id="foodF">
 
       <div class="btnbar" style="margin-top:12px">
-        <button id="saveFood" type="button">Save Food</button>
-        <button class="secondary" id="hideAddFood" type="button">Close</button>
+        <button id="saveFood">Save Food</button>
+        <button class="secondary" id="hideAddFood">Close</button>
       </div>
     </div>
   </section>
@@ -460,8 +560,8 @@
       <label>Weight (lb)</label>
       <input inputmode="decimal" placeholder="e.g., 225.0" id="wLb">
       <div class="btnbar" style="margin-top:12px">
-        <button id="saveWeight" type="button">Save</button>
-        <button class="secondary" id="backFromWeight" type="button">Back</button>
+        <button id="saveWeight">Save</button>
+        <button class="secondary" id="backFromWeight">Back</button>
       </div>
     </div>
 
@@ -532,12 +632,6 @@
 
     <div class="card">
       <h2>Nutrition Plan</h2>
-      <label>Macro display unit</label>
-      <select id="macroUnit">
-        <option value="oz" selected>Ounces (oz)</option>
-        <option value="g">Grams (g)</option>
-      </select>
-
       <label><input type="checkbox" id="autoTargets" checked> Auto macro targets</label>
       <div class="grid two" id="autoTargetsBox">
         <div>
@@ -574,7 +668,7 @@
     <div class="card">
       <h2>Reminder (7:00 PM)</h2>
       <div class="hint">
-        iPhone Home Screen web apps can show notifications only if you allow them. This reminder triggers when the app is opened near the reminder time.
+        Home Screen web apps can show notifications only if allowed. This reminder triggers when the app is opened near the reminder time.
       </div>
       <label><input type="checkbox" id="remEnabled"> Enable reminder</label>
       <div class="grid two">
@@ -588,17 +682,17 @@
         </div>
       </div>
       <div class="btnbar" style="margin-top:12px">
-        <button id="btnEnableNotifs" type="button">Allow notifications</button>
-        <button class="secondary" id="testNotif" type="button">Test reminder</button>
+        <button id="btnEnableNotifs">Allow notifications</button>
+        <button class="secondary" id="testNotif">Test reminder</button>
       </div>
     </div>
 
     <div class="card">
       <h2>Save</h2>
       <div class="btnbar">
-        <button id="saveSetup" type="button">Save Setup</button>
-        <button class="secondary" id="backFromSetup" type="button">Back</button>
-        <button class="danger" id="resetAll" type="button">Reset all data</button>
+        <button id="saveSetup">Save Setup</button>
+        <button class="secondary" id="backFromSetup">Back</button>
+        <button class="danger" id="resetAll">Reset all data</button>
       </div>
       <div class="divider"></div>
       <div class="small muted">Reset wipes everything stored on this iPhone for WalkCut.</div>
@@ -615,16 +709,19 @@
   <button class="tab" type="button" data-tab="setup">Setup</button>
 </nav>
 
+<!-- Quagga2 for barcode scanning (fast + reliable on iPhone Safari when HTTPS) -->
+<script src="https://unpkg.com/@ericblade/quagga2@1.8.2/dist/quagga.min.js"></script>
+
 <script>
 /* -------------------------------------------------
    WalkCut — single HTML app (Highlander-themed)
-   - Reliable iOS tab switching (button + touchstart)
-   - Trends: Weight, Walk (daily miles), Weekly On-Target
-   - Macro Bars: Eaten vs Target (Blue/Green/Red)
-   - Data stored in localStorage
+   Adds:
+   ✅ Manual barcode entry (fallback)
+   ✅ Serving size detection (Open Food Facts)
+   ✅ Faster scanning settings (Quagga2 tuned)
 -------------------------------------------------- */
 
-const LS_KEY = "walkcut_v1";
+const LS_KEY = "walkcut_v2";
 
 /* ---------- Utilities ---------- */
 function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
@@ -641,19 +738,18 @@ function parseNum(v){
   return Number.isFinite(n) ? n : 0;
 }
 function caloriesFromMacros(pG,cG,fG){ return (pG*4)+(cG*4)+(fG*9); }
-function gramsPerUnit(unit){ return unit==="oz" ? 28.349523125 : 1.0; }
-function fmtUnit(unit){ return unit==="oz" ? "oz" : "g"; }
 function escapeHtml(s){
   return (""+s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 }
 function capitalize(s){ return (""+s).charAt(0).toUpperCase() + (""+s).slice(1); }
+
+const OZ_TO_G = 28.349523125;
 
 /* ---------- Default State ---------- */
 const defaults = {
   profile: { age: 44, heightIn: 73, weightLb: 225, goalLossLb: 30 },
   plan: { lossRateLbWk: 1.0, paceMph: 3.5, walkShare: 0.70 },
   nutrition: {
-    macroUnit: "oz",          // display unit for P/C/F
     autoTargets: true,
     protPerLbGoal: 0.8,
     fatPerLbGoal: 0.30,
@@ -661,10 +757,10 @@ const defaults = {
     reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
   },
   foods: [
-    // macros PER 1 oz of FOOD, stored as grams for each macro
-    { id: uid(), name: "Chicken breast (cooked)", p: 8.8, c: 0.0, f: 1.0 },
-    { id: uid(), name: "Rice (cooked)", p: 0.9, c: 8.9, f: 0.1 },
-    { id: uid(), name: "Greek yogurt (plain)", p: 2.8, c: 1.5, f: 0.1 }
+    // macros PER 1 oz FOOD, stored as grams for each macro
+    { id: uid(), name: "Chicken breast (cooked)", p: 8.8, c: 0.0, f: 1.0, barcode:"" },
+    { id: uid(), name: "Rice (cooked)", p: 0.9, c: 8.9, f: 0.1, barcode:"" },
+    { id: uid(), name: "Greek yogurt (plain)", p: 2.8, c: 1.5, f: 0.1, barcode:"" }
   ],
   foodEntries: [],
   walkLogs: [],
@@ -689,13 +785,10 @@ function loadState(){
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return structuredClone(defaults);
     const s = JSON.parse(raw);
-
     const merged = structuredClone(defaults);
     deepMerge(merged, s);
-
     if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = structuredClone(defaults.foods);
-    merged.foods = merged.foods.map(f => ({...f, id: f.id || uid()}));
-
+    merged.foods = merged.foods.map(f => ({...f, id: f.id || uid(), barcode: f.barcode || ""}));
     return merged;
   }catch(e){
     return structuredClone(defaults);
@@ -761,63 +854,44 @@ function macroConsumed(dayISO){
     const food = state.foods.find(f=>f.id===e.foodId);
     if(!food) continue;
     const oz = e.oz;
-    pG += food.p * oz;
-    cG += food.c * oz;
-    fG += food.f * oz;
+    pG += (food.p || 0) * oz;
+    cG += (food.c || 0) * oz;
+    fG += (food.f || 0) * oz;
   }
   return { pG, cG, fG, kcal: caloriesFromMacros(pG,cG,fG) };
 }
 
-/* ---------- Macro Bars (Eaten vs Target) ---------- */
-const MACRO_TOL = 0.05; // Green when within ±5% of target (change to 0.10 for ±10%)
-
-function macroBarRow(label, eaten, target, unitLabel){
-  const pct = target > 0 ? (eaten / target) : 0;
-  const pctClamped = clamp(pct * 100, 0, 160);
-
-  const under = pct < (1 - MACRO_TOL);
-  const over  = pct > (1 + MACRO_TOL);
-  const within = !under && !over;
-
-  const colorClass = over ? "red" : (within ? "green" : "blue");
-
-  const row = document.createElement("div");
-  row.className = "macroRow";
-  row.innerHTML = `
-    <div class="macroName">${label}</div>
-    <div>
-      <div class="macroTrack">
-        <div class="macroFill ${colorClass}" style="width:${Math.min(100,pctClamped)}%"></div>
-      </div>
-      <div class="macroMeta">
-        <div class="mono">${round(eaten,1)} / ${round(target,1)} ${unitLabel}</div>
-        <div class="small">${Math.round(pct*100)}%</div>
-      </div>
-    </div>
-  `;
-  return row;
+/* ---------- Macro bars (Blue under / Green within / Red over) ---------- */
+function barState(consumed, target){
+  // Green if within 90%..110%
+  if(target <= 0) return { cls:"fillBlue", pct:0 };
+  const pct = (consumed/target)*100;
+  if(pct < 90) return { cls:"fillBlue", pct: clamp(pct,0,160) };
+  if(pct <= 110) return { cls:"fillGreen", pct: clamp(pct,0,160) };
+  return { cls:"fillRed", pct: clamp(pct,0,160) };
 }
-
-function renderMacroBars(containerId){
-  const box = document.getElementById(containerId);
-  if(!box) return;
-
-  const unit = state.nutrition.macroUnit;
-  const mt = macroTargets();
-  const mc = macroConsumed(todayISO());
-
-  const tP = mt.pG / gramsPerUnit(unit);
-  const tC = mt.cG / gramsPerUnit(unit);
-  const tF = mt.fG / gramsPerUnit(unit);
-
-  const eP = mc.pG / gramsPerUnit(unit);
-  const eC = mc.cG / gramsPerUnit(unit);
-  const eF = mc.fG / gramsPerUnit(unit);
-
-  box.innerHTML = "";
-  box.appendChild(macroBarRow("Protein", eP, tP, fmtUnit(unit)));
-  box.appendChild(macroBarRow("Carbs",   eC, tC, fmtUnit(unit)));
-  box.appendChild(macroBarRow("Fat",     eF, tF, fmtUnit(unit)));
+function applyMacroBars(mt, mc){
+  const ids = [
+    ["barP","barPnums","barP2","barPnums2", mc.pG, mt.pG, "g"],
+    ["barC","barCnums","barC2","barCnums2", mc.cG, mt.cG, "g"],
+    ["barF","barFnums","barF2","barFnums2", mc.fG, mt.fG, "g"]
+  ];
+  for(const [b1,n1,b2,n2,cons,tar,unit] of ids){
+    const s = barState(cons, tar);
+    const el1 = document.getElementById(b1);
+    const el2 = document.getElementById(b2);
+    const t1 = document.getElementById(n1);
+    const t2 = document.getElementById(n2);
+    [el1,el2].forEach(el=>{
+      if(!el) return;
+      el.classList.remove("fillBlue","fillGreen","fillRed");
+      el.classList.add(s.cls);
+      el.style.width = `${Math.min(100,s.pct)}%`;
+    });
+    const text = `${Math.round(cons)} / ${Math.round(tar)} ${unit}`;
+    if(t1) t1.textContent = text;
+    if(t2) t2.textContent = text;
+  }
 }
 
 /* ---------- Macro “On-Target” ---------- */
@@ -841,7 +915,6 @@ function computeStreaks(){
 
     const wl = walkLogForDay(iso);
     const walkOK = wl && (wl.miles >= t.miles*0.90);
-
     const macroOK = isMacroDayOnTarget(iso);
 
     if(i===0){
@@ -853,7 +926,6 @@ function computeStreaks(){
     }
     if(i>14 && walkStreak<i && macroStreak<i) break;
   }
-
   return { walkStreak, macroStreak };
 }
 
@@ -876,7 +948,6 @@ function maybeFireReminder(){
   const minsNow = now.getHours()*60 + now.getMinutes();
   const minsTarget = clamp(parseInt(r.hour,10)||19,0,23)*60 + clamp(parseInt(r.minute,10)||0,0,59);
 
-  // fire if app opened within 30 minutes AFTER target, once per day
   if(minsNow >= minsTarget && minsNow <= minsTarget + 30){
     if(r.lastFired !== iso){
       new Notification("WalkCut", { body: "Time to hit your walk + macros goals." });
@@ -898,7 +969,6 @@ function resizeCanvasForHiDPI(canvas){
   }
   return { w: canvas.width, h: canvas.height, dpr };
 }
-
 function drawSimpleLineChart(canvasId, series, opts){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -925,7 +995,6 @@ function drawSimpleLineChart(canvasId, series, opts){
   const pad = Math.round(w*0.07);
   const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
 
-  // grid
   ctx.strokeStyle = "rgba(255,255,255,.10)";
   ctx.lineWidth = Math.max(1, Math.round(w*0.0015));
   for(let i=0;i<=4;i++){
@@ -933,7 +1002,6 @@ function drawSimpleLineChart(canvasId, series, opts){
     ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
   }
 
-  // labels
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
   ctx.fillText(`${round(max,1)}${unit}`, x0, y0 - Math.round(h*0.02));
@@ -942,7 +1010,6 @@ function drawSimpleLineChart(canvasId, series, opts){
   function x(i){ return x0 + (x1-x0) * (i/(series.length-1)); }
   function y(v){ return y1 - (y1-y0) * ((v-min)/(max-min)); }
 
-  // line
   ctx.strokeStyle = "rgba(201,162,77,.95)";
   ctx.lineWidth = Math.max(3, Math.round(w*0.004));
   ctx.lineJoin = "round";
@@ -955,31 +1022,26 @@ function drawSimpleLineChart(canvasId, series, opts){
   });
   ctx.stroke();
 
-  // last point
   const last = series[series.length-1];
   ctx.fillStyle = "rgba(58,160,255,.95)";
   ctx.beginPath();
   ctx.arc(x(series.length-1), y(last.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
   ctx.fill();
 
-  // title
   if(title){
     ctx.fillStyle = "rgba(232,238,246,.95)";
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(title, x0, y0 - Math.round(h*0.04));
   }
 
-  // last label
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
   const lastLabel = last.label ? ` • ${last.label}` : "";
   ctx.fillText(`${round(last.y,1)}${unit}${lastLabel}`, x0, h - Math.round(h*0.03));
 }
-
-/* series builders */
 function startOfWeekMonday(d){
   const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const day = (x.getDay() + 6) % 7; // Mon=0 ... Sun=6
+  const day = (x.getDay() + 6) % 7;
   x.setDate(x.getDate() - day);
   return x;
 }
@@ -1059,15 +1121,26 @@ function renderMacrosCards(){
   const mt = macroTargets();
   const mc = macroConsumed(todayISO());
 
-  // Macro bars (eaten vs target)
-  renderMacroBars("macroBarsDash");
-  renderMacroBars("macroBarsMacros");
+  const kpi1 = document.getElementById("macroKPIs");
+  const kpi2 = document.getElementById("macroKPIs2");
+  kpi1.innerHTML = ""; kpi2.innerHTML = "";
 
-  // Calories lines
+  // Dashboard KPIs: remaining grams (simple)
+  kpi1.appendChild(kpiBox("P remain (g)", Math.max(0, Math.round(mt.pG - mc.pG))));
+  kpi1.appendChild(kpiBox("C remain (g)", Math.max(0, Math.round(mt.cG - mc.cG))));
+  kpi1.appendChild(kpiBox("F remain (g)", Math.max(0, Math.round(mt.fG - mc.fG))));
+
+  // Macros view KPIs: target/eaten (protein focus)
+  kpi2.appendChild(kpiBox("Target P (g)", Math.round(mt.pG)));
+  kpi2.appendChild(kpiBox("Eaten P (g)", Math.round(mc.pG)));
+  kpi2.appendChild(kpiBox("Remain P (g)", Math.max(0, Math.round(mt.pG - mc.pG))));
+
   document.getElementById("calorieLine").textContent =
     `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
   document.getElementById("calorieLine2").textContent =
     `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
+
+  applyMacroBars(mt, mc);
 }
 
 function renderFoodSelect(){
@@ -1082,7 +1155,6 @@ function renderFoodSelect(){
 }
 
 function renderFoodsList(){
-  const unit = state.nutrition.macroUnit;
   const out = document.getElementById("foodsList");
   out.innerHTML = "";
   if(state.foods.length===0){
@@ -1090,23 +1162,20 @@ function renderFoodsList(){
     return;
   }
   out.innerHTML = state.foods.map(f=>{
-    const p = f.p / gramsPerUnit(unit);
-    const c = f.c / gramsPerUnit(unit);
-    const fat = f.f / gramsPerUnit(unit);
-    const kcal = caloriesFromMacros(f.p,f.c,f.f);
+    const kcal = caloriesFromMacros(f.p||0,f.c||0,f.f||0);
+    const bc = f.barcode ? ` • barcode ${escapeHtml(f.barcode)}` : "";
     return `
       <div class="card" style="margin:10px 0; box-shadow:none; background:rgba(0,0,0,.12)">
         <div class="row">
           <div>
-            <div style="font-weight:850">${escapeHtml(f.name)}</div>
-            <div class="small muted">per 1 oz food → P ${round(p,2)} ${fmtUnit(unit)} • C ${round(c,2)} ${fmtUnit(unit)} • F ${round(fat,2)} ${fmtUnit(unit)} • ${Math.round(kcal)} kcal</div>
+            <div style="font-weight:900">${escapeHtml(f.name)}</div>
+            <div class="small muted">per 1 oz food → P ${round(f.p||0,2)} g • C ${round(f.c||0,2)} g • F ${round(f.f||0,2)} g • ${Math.round(kcal)} kcal${bc}</div>
           </div>
-          <button class="danger" data-del-food="${f.id}" type="button">Delete</button>
+          <button class="danger" data-del-food="${f.id}">Delete</button>
         </div>
       </div>
     `;
   }).join("");
-
   out.querySelectorAll("[data-del-food]").forEach(btn=>{
     btn.onclick = () => deleteFood(btn.getAttribute("data-del-food"));
   });
@@ -1126,17 +1195,15 @@ function renderTodayFoodLog(){
     return `
       <div class="row" style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08)">
         <div>
-          <div style="font-weight:850">${escapeHtml(name)}</div>
-          <div class="small muted">${capitalize(e.meal)}</div>
+          <div style="font-weight:900">${escapeHtml(name)}</div>
+          <div class="small muted">${capitalize(e.meal)} • ${round(e.oz,1)} oz</div>
         </div>
         <div class="row" style="gap:8px">
-          <span class="badge mono">${round(e.oz,1)} oz</span>
-          <button class="danger" data-del-entry="${e.id}" type="button">Delete</button>
+          <button class="danger" data-del-entry="${e.id}">Delete</button>
         </div>
       </div>
     `;
   }).join("");
-
   out.querySelectorAll("[data-del-entry]").forEach(btn=>{
     btn.onclick = () => deleteEntry(btn.getAttribute("data-del-entry"));
   });
@@ -1158,7 +1225,7 @@ function renderWalkHistory(){
             <td>${w.day}</td>
             <td class="right mono">${round(w.miles,1)}</td>
             <td class="right mono">${Math.round(w.minutes)}</td>
-            <td class="right"><button class="danger" data-del-walk="${w.day}" type="button">Delete</button></td>
+            <td class="right"><button class="danger" data-del-walk="${w.day}">Delete</button></td>
           </tr>
         `).join("")}
       </tbody>
@@ -1184,7 +1251,7 @@ function renderWeightList(){
           <tr>
             <td>${w.day}</td>
             <td class="right mono">${round(w.lb,1)}</td>
-            <td class="right"><button class="danger" data-del-weight="${w.day}" type="button">Delete</button></td>
+            <td class="right"><button class="danger" data-del-weight="${w.day}">Delete</button></td>
           </tr>
         `).join("")}
       </tbody>
@@ -1196,21 +1263,17 @@ function renderWeightList(){
 }
 
 function renderSetup(){
-  // profile
   document.getElementById("pAge").value = state.profile.age;
   document.getElementById("pHeight").value = state.profile.heightIn;
   document.getElementById("pWeight").value = state.profile.weightLb;
   document.getElementById("pGoalLoss").value = state.profile.goalLossLb;
 
-  // plan
   document.getElementById("lossRate").value = String(state.plan.lossRateLbWk);
   document.getElementById("pace").value = String(state.plan.paceMph);
   const ws = String(Math.round(state.plan.walkShare*100/5)*5);
   document.getElementById("walkShare").value = ws;
   document.getElementById("walkShareLabel").textContent = `${ws}%`;
 
-  // nutrition
-  document.getElementById("macroUnit").value = state.nutrition.macroUnit;
   document.getElementById("autoTargets").checked = !!state.nutrition.autoTargets;
   document.getElementById("protPerLb").value = state.nutrition.protPerLbGoal;
   document.getElementById("fatPerLb").value = state.nutrition.fatPerLbGoal;
@@ -1218,7 +1281,6 @@ function renderSetup(){
   document.getElementById("custC").value = state.nutrition.custom.c;
   document.getElementById("custF").value = state.nutrition.custom.f;
 
-  // reminder
   document.getElementById("remEnabled").checked = !!state.nutrition.reminder.enabled;
   document.getElementById("remHour").value = state.nutrition.reminder.hour;
   document.getElementById("remMin").value = state.nutrition.reminder.minute;
@@ -1229,12 +1291,8 @@ function renderSetup(){
 
 function renderMacroPreview(){
   const mt = macroTargets();
-  const unit = state.nutrition.macroUnit;
-  const pDisp = mt.pG / gramsPerUnit(unit);
-  const cDisp = mt.cG / gramsPerUnit(unit);
-  const fDisp = mt.fG / gramsPerUnit(unit);
   document.getElementById("macroPreview").textContent =
-    `Targets preview: P ${round(pDisp,1)} ${fmtUnit(unit)} • C ${round(cDisp,1)} ${fmtUnit(unit)} • F ${round(fDisp,1)} ${fmtUnit(unit)} • ${Math.round(mt.kcal)} kcal`;
+    `Targets preview: P ${Math.round(mt.pG)} g • C ${Math.round(mt.cG)} g • F ${Math.round(mt.fG)} g • ${Math.round(mt.kcal)} kcal`;
 }
 
 function renderCharts(){
@@ -1272,7 +1330,7 @@ function renderAll(){
   renderCharts();
 }
 
-/* ---------- Actions ---------- */
+/* ---------- CRUD ---------- */
 function deleteFood(id){
   state.foods = state.foods.filter(f=>f.id!==id);
   state.foodEntries = state.foodEntries.filter(e=>e.foodId!==id);
@@ -1299,7 +1357,6 @@ const viewMap = {
   weight: "view-weight",
   setup: "view-setup"
 };
-
 function setActiveTab(name){
   document.querySelectorAll(".tab").forEach(t=>{
     t.classList.toggle("active", t.dataset.tab === name);
@@ -1307,19 +1364,13 @@ function setActiveTab(name){
   document.querySelectorAll("main section").forEach(s=> s.style.display = "none");
   const id = viewMap[name] || viewMap.dash;
   document.getElementById(id).style.display = "";
-
-  // render + reminder check
   renderAll();
   maybeFireReminder();
 }
-
 function bindTabs(){
   document.querySelectorAll(".tab").forEach(btn=>{
     const go = () => setActiveTab(btn.dataset.tab);
-
     btn.addEventListener("click", go);
-
-    // iOS/Home Screen: touchstart makes tab taps reliable
     btn.addEventListener("touchstart", (e)=>{
       e.preventDefault();
       go();
@@ -1327,7 +1378,7 @@ function bindTabs(){
   });
 }
 
-/* ---------- Wire up UI ---------- */
+/* ---------- Setup toggles ---------- */
 function toggleAutoTargetsUI(){
   const on = document.getElementById("autoTargets").checked;
   document.getElementById("autoTargetsBox").style.display = on ? "" : "none";
@@ -1335,6 +1386,233 @@ function toggleAutoTargetsUI(){
   renderMacroPreview();
 }
 
+/* ---------- Barcode + Open Food Facts Lookup ---------- */
+let lookupCache = null;  // holds last lookup info
+function normalizeBarcode(s){
+  return (""+s).replace(/\D/g,"").trim();
+}
+function offUrl(code){
+  // Using global endpoint; GitHub Pages HTTPS required
+  return `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json`;
+}
+function gramsFromServingString(servingSize){
+  // Best-effort parse: "30g", "2 tbsp (30g)", "1 bar 50 g"
+  if(!servingSize) return 0;
+  const m = (""+servingSize).match(/([\d.]+)\s*g/i);
+  if(m) return parseFloat(m[1]) || 0;
+  return 0;
+}
+function safeNutrient(n){
+  const x = Number(n);
+  return Number.isFinite(x) ? x : 0;
+}
+function perOzFromPer100g(per100g){
+  // grams of macro per 100g food -> per 1 oz food
+  return (safeNutrient(per100g)/100) * OZ_TO_G;
+}
+async function lookupBarcode(code){
+  const c = normalizeBarcode(code);
+  const out = document.getElementById("lookupResult");
+  const servingBox = document.getElementById("servingBox");
+  servingBox.style.display = "none";
+  lookupCache = null;
+
+  if(!c){
+    out.innerHTML = `<span class="bad">Enter a barcode.</span>`;
+    return null;
+  }
+
+  out.textContent = "Looking up barcode…";
+  try{
+    const res = await fetch(offUrl(c), { cache:"no-store" });
+    if(!res.ok) throw new Error("Network error");
+    const data = await res.json();
+
+    if(!data || data.status !== 1 || !data.product){
+      out.innerHTML = `<span class="warn">Not found in Open Food Facts.</span> You can still add it manually below.`;
+      return null;
+    }
+
+    const p = data.product;
+    const name = (p.product_name || p.product_name_en || p.generic_name || "Unknown product").trim();
+    const serving = (p.serving_size || "").trim();
+
+    // Open Food Facts nutriments are commonly per 100g
+    const n = p.nutriments || {};
+    const protein100 = safeNutrient(n.proteins_100g);
+    const carbs100   = safeNutrient(n.carbohydrates_100g);
+    const fat100     = safeNutrient(n.fat_100g);
+
+    const pPerOz = perOzFromPer100g(protein100);
+    const cPerOz = perOzFromPer100g(carbs100);
+    const fPerOz = perOzFromPer100g(fat100);
+
+    // serving grams if available
+    const servingG = gramsFromServingString(serving);
+
+    lookupCache = {
+      barcode: c,
+      name,
+      servingText: serving || "—",
+      servingG: servingG || 0,
+      pPerOz, cPerOz, fPerOz,
+      source: "Open Food Facts"
+    };
+
+    out.innerHTML =
+      `<div><strong>${escapeHtml(name)}</strong></div>
+       <div class="small muted">Barcode: <span class="mono">${escapeHtml(c)}</span> • Source: Open Food Facts</div>
+       <div class="small muted">Per 1 oz food → P ${round(pPerOz,2)} g • C ${round(cPerOz,2)} g • F ${round(fPerOz,2)} g</div>`;
+
+    document.getElementById("servingDetected").value = lookupCache.servingText + (lookupCache.servingG ? ` (~${round(lookupCache.servingG,0)} g)` : "");
+    document.getElementById("servingsCount").value = "";
+    document.getElementById("lookupOz").value = "";
+
+    servingBox.style.display = "";
+    return lookupCache;
+  }catch(e){
+    out.innerHTML = `<span class="bad">Lookup failed.</span> Check connection or try manual add.`;
+    return null;
+  }
+}
+
+function upsertFoodFromLookup(cache){
+  if(!cache) return null;
+
+  // If food with same barcode exists, update it
+  const existing = state.foods.find(f => (f.barcode || "") === cache.barcode);
+  if(existing){
+    existing.name = cache.name;
+    existing.p = cache.pPerOz;
+    existing.c = cache.cPerOz;
+    existing.f = cache.fPerOz;
+    saveState();
+    return existing.id;
+  }
+
+  const rec = {
+    id: uid(),
+    name: cache.name,
+    p: cache.pPerOz,
+    c: cache.cPerOz,
+    f: cache.fPerOz,
+    barcode: cache.barcode
+  };
+  state.foods.unshift(rec);
+  saveState();
+  return rec.id;
+}
+
+function ouncesFromLookupServingOrOz(){
+  const servings = parseNum(document.getElementById("servingsCount").value);
+  const oz = parseNum(document.getElementById("lookupOz").value);
+
+  if(servings > 0 && lookupCache && lookupCache.servingG > 0){
+    const gramsEaten = servings * lookupCache.servingG;
+    return gramsEaten / OZ_TO_G;
+  }
+  if(oz > 0) return oz;
+  return 0;
+}
+
+/* ---------- Faster scanning (Quagga2 tuned) ---------- */
+let scanning = false;
+let lastScanTs = 0;
+
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function showScanner(show){
+  document.getElementById("scannerWrap").style.display = show ? "" : "none";
+}
+
+async function startScan(){
+  if(scanning) return;
+  if(!window.Quagga){
+    alert("Scanner library not loaded.");
+    return;
+  }
+
+  // iOS: must be in a user-gesture context; this is called from button click/touch.
+  showScanner(true);
+
+  const viewport = document.getElementById("scannerViewport");
+
+  // Speed tips:
+  // - prefer lower resolution stream (fast decode)
+  // - use locate=true
+  // - restrict readers to common food codes
+  // - stop quickly after first good read
+  const constraints = {
+    facingMode: "environment",
+    width: { ideal: 960 },
+    height: { ideal: 540 }
+  };
+
+  scanning = true;
+
+  try{
+    await new Promise((resolve, reject)=>{
+      Quagga.init({
+        inputStream: {
+          type: "LiveStream",
+          target: viewport,
+          constraints
+        },
+        locator: {
+          patchSize: "medium",
+          halfSample: true
+        },
+        locate: true,
+        numOfWorkers: (isIOS() ? 0 : 2),
+        decoder: {
+          readers: ["ean_reader","ean_8_reader","upc_reader","upc_e_reader","code_128_reader"]
+        }
+      }, (err)=>{
+        if(err) return reject(err);
+        resolve();
+      });
+    });
+
+    Quagga.onDetected(onDetected);
+    Quagga.start();
+  }catch(e){
+    scanning = false;
+    showScanner(false);
+    alert("Camera scan failed. If you denied camera permission: Settings → Safari → Camera → Allow.");
+  }
+}
+
+function stopScan(){
+  if(!scanning) return;
+  scanning = false;
+  try{
+    Quagga.offDetected(onDetected);
+    Quagga.stop();
+  }catch(e){}
+  showScanner(false);
+}
+
+async function onDetected(res){
+  // throttle duplicates (iPhone can spam callbacks)
+  const now = Date.now();
+  if(now - lastScanTs < 1200) return;
+  lastScanTs = now;
+
+  const code = res?.codeResult?.code || "";
+  const norm = normalizeBarcode(code);
+  if(!norm || norm.length < 8) return;
+
+  // stop fast (speed + battery)
+  stopScan();
+
+  // auto-fill and lookup
+  document.getElementById("manualBarcode").value = norm;
+  await lookupBarcode(norm);
+}
+
+/* ---------- Wire up UI ---------- */
 function wireButtons(){
   // dashboard
   document.getElementById("btnGoSetup").onclick = ()=> setActiveTab("setup");
@@ -1349,9 +1627,7 @@ function wireButtons(){
     document.getElementById("walkMiles").value = existing ? existing.miles : "";
     document.getElementById("walkMinutes").value = existing ? existing.minutes : "";
   };
-
   document.getElementById("btnQuickAddFood").onclick = ()=> setActiveTab("macros");
-
   document.getElementById("btnLogWeight").onclick = ()=>{
     setActiveTab("weight");
     document.getElementById("wDate").value = todayISO();
@@ -1378,22 +1654,32 @@ function wireButtons(){
     alert("Saved walk.");
   };
 
-  // macros view
-  document.getElementById("btnShowAddFood").onclick = ()=> { document.getElementById("addFoodCard").style.display = ""; };
-  document.getElementById("hideAddFood").onclick = ()=> { document.getElementById("addFoodCard").style.display = "none"; };
-  document.getElementById("btnAddFood2").onclick = ()=>{
+  // macros: add food card
+  document.getElementById("btnAddFood2").onclick = ()=> {
     document.getElementById("addFoodCard").style.display = "";
     window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
   };
   document.getElementById("btnAddEntry2").onclick = ()=> { document.getElementById("entryOz").focus(); };
+  document.getElementById("btnShowAddFood").onclick = ()=> { document.getElementById("addFoodCard").style.display = ""; };
+  document.getElementById("hideAddFood").onclick = ()=> { document.getElementById("addFoodCard").style.display = "none"; };
 
+  // foods list collapse
+  document.getElementById("btnToggleFoodsList").onclick = ()=>{
+    const wrap = document.getElementById("foodsListWrap");
+    const btn = document.getElementById("btnToggleFoodsList");
+    const show = wrap.style.display === "none";
+    wrap.style.display = show ? "" : "none";
+    btn.textContent = show ? "Hide" : "Show";
+  };
+
+  // manual food save
   document.getElementById("saveFood").onclick = ()=>{
     const name = (document.getElementById("foodName").value||"").trim();
     const p = parseNum(document.getElementById("foodP").value);
     const c = parseNum(document.getElementById("foodC").value);
     const f = parseNum(document.getElementById("foodF").value);
     if(!name) return alert("Enter a food name.");
-    state.foods.unshift({ id: uid(), name, p, c, f });
+    state.foods.unshift({ id: uid(), name, p, c, f, barcode:"" });
     document.getElementById("foodName").value="";
     document.getElementById("foodP").value="";
     document.getElementById("foodC").value="";
@@ -1403,6 +1689,7 @@ function wireButtons(){
     alert("Saved food.");
   };
 
+  // add entry
   document.getElementById("saveEntry").onclick = ()=>{
     const foodId = document.getElementById("foodSel").value;
     const meal = document.getElementById("mealSel").value;
@@ -1415,8 +1702,46 @@ function wireButtons(){
     saveState();
     alert("Saved entry.");
   };
-
   document.getElementById("clearEntry").onclick = ()=> { document.getElementById("entryOz").value=""; };
+
+  // scanner buttons
+  document.getElementById("btnStartScan").onclick = ()=> startScan();
+  document.getElementById("btnStopScan").onclick = ()=> stopScan();
+
+  // manual lookup
+  document.getElementById("btnLookupManual").onclick = async ()=>{
+    const code = document.getElementById("manualBarcode").value;
+    await lookupBarcode(code);
+  };
+  document.getElementById("btnClearLookup").onclick = ()=>{
+    stopScan();
+    lookupCache = null;
+    document.getElementById("manualBarcode").value = "";
+    document.getElementById("lookupResult").textContent = "No lookup yet.";
+    document.getElementById("servingBox").style.display = "none";
+  };
+
+  // save scanned food
+  document.getElementById("btnAddLookupAsFood").onclick = ()=>{
+    if(!lookupCache) return alert("Lookup a barcode first.");
+    upsertFoodFromLookup(lookupCache);
+    alert("Saved food from barcode.");
+  };
+
+  // log entry from scanned food (servings or oz)
+  document.getElementById("btnLogLookupEntry").onclick = ()=>{
+    if(!lookupCache) return alert("Lookup a barcode first.");
+    const foodId = upsertFoodFromLookup(lookupCache);
+
+    const oz = ouncesFromLookupServingOrOz();
+    if(oz <= 0) return alert("Enter servings (requires detected grams) OR enter ounces eaten.");
+
+    const meal = document.getElementById("mealSel").value || "snack";
+    state.foodEntries.push({ id: uid(), day: todayISO(), meal, foodId, oz, ts: Date.now() });
+    state.foodEntries.sort((a,b)=> (b.day.localeCompare(a.day)) || ((b.ts||0)-(a.ts||0)));
+    saveState();
+    alert("Logged entry from barcode.");
+  };
 
   // weight view
   document.getElementById("backFromWeight").onclick = ()=> setActiveTab("dash");
@@ -1433,15 +1758,11 @@ function wireButtons(){
     alert("Saved weight.");
   };
 
-  // setup dynamic controls
-  document.getElementById("walkShare").oninput = ()=>{
+  // setup
+  document.getElementById("walkShare").oninput = ()=> {
     document.getElementById("walkShareLabel").textContent = `${document.getElementById("walkShare").value}%`;
   };
   document.getElementById("autoTargets").onchange = ()=> toggleAutoTargetsUI();
-  document.getElementById("macroUnit").onchange = ()=>{
-    state.nutrition.macroUnit = document.getElementById("macroUnit").value;
-    saveState();
-  };
   document.getElementById("protPerLb").oninput = document.getElementById("fatPerLb").oninput = ()=> renderMacroPreview();
   document.getElementById("custP").oninput = document.getElementById("custC").oninput = document.getElementById("custF").oninput = ()=> renderMacroPreview();
 
@@ -1455,11 +1776,9 @@ function wireButtons(){
     state.plan.paceMph = clamp(parseNum(document.getElementById("pace").value||"3.5"), 2.0, 6.0);
     state.plan.walkShare = clamp(parseNum(document.getElementById("walkShare").value||"70")/100, 0, 1);
 
-    state.nutrition.macroUnit = document.getElementById("macroUnit").value;
     state.nutrition.autoTargets = !!document.getElementById("autoTargets").checked;
     state.nutrition.protPerLbGoal = clamp(parseNum(document.getElementById("protPerLb").value||"0.8"), 0.4, 1.4);
     state.nutrition.fatPerLbGoal = clamp(parseNum(document.getElementById("fatPerLb").value||"0.30"), 0.15, 0.6);
-
     state.nutrition.custom = {
       p: clamp(parseNum(document.getElementById("custP").value||"180"), 50, 350),
       c: clamp(parseNum(document.getElementById("custC").value||"180"), 0, 500),
@@ -1501,27 +1820,18 @@ function wireButtons(){
 
 /* ---------- Init ---------- */
 (function init(){
-  // set date inputs
   document.getElementById("walkDate").value = todayISO();
   document.getElementById("wDate").value = todayISO();
 
-  // setup fields
   renderSetup();
-
-  // bind nav tabs (fixes iPhone/Home Screen taps)
   bindTabs();
-
-  // wire all buttons once
   wireButtons();
 
-  // start on dashboard
   setActiveTab("dash");
 
-  // periodic reminder check while app open
   setInterval(maybeFireReminder, 60*1000);
-
-  // redraw charts on resize/orientation
   window.addEventListener("resize", ()=> renderCharts());
+  window.addEventListener("orientationchange", ()=> renderCharts());
 })();
 </script>
 </body>
