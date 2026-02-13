@@ -9,7 +9,7 @@
 
   <title>WalkCut</title>
 
-  <!-- Single-file iOS icon (inline SVG) -->
+  <!-- Single-file iOS icon (simple armored-vehicle silhouette SVG, embedded) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='20%25' r='80%25'%3E%3Cstop offset='0' stop-color='%233aa0ff' stop-opacity='.25'/%3E%3Cstop offset='1' stop-color='%230B1B2B'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23g)'/%3E%3Crect x='10' y='10' width='160' height='160' rx='30' fill='%230b1118' opacity='.55'/%3E%3Cpath d='M40 104h86l8 12H32l8-12Zm8-20h70l6 12H42l6-12Zm10-16h44l8 8H50l8-8Zm38-6 18 10H80l16-10Zm-57 56h94v10H39v-10Zm8 16h10v8H47v-8Zm18 0h10v8H65v-8Zm18 0h10v8H83v-8Zm18 0h10v8h-10v-8Zm18 0h10v8h-10v-8Z' fill='%23C9A24D'/%3E%3Ctext x='90' y='52' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial' font-size='18' fill='%23EAF0F6'%3EWALKCUT%3C/text%3E%3C/svg%3E" />
 
   <style>
@@ -17,6 +17,7 @@
       /* Highlander-style palette */
       --navy:#0B1B2B;
       --bg:#0b1118;
+      --card:#121a24;
       --text:#e8eef6;
       --muted:#8FA3B8;
       --good:#3ddc97;
@@ -49,9 +50,7 @@
       border-bottom: 1px solid rgba(201,162,77,.18);
       padding: 12px 14px 10px;
     }
-    header .top{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
+    header .top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
     h1{
       font-size:18px; margin:0; letter-spacing:.35px;
       display:flex; align-items:center; gap:10px;
@@ -68,13 +67,9 @@
       padding:5px 10px; border-radius:999px;
       white-space:nowrap;
     }
-
     main{padding: 12px 14px 94px; max-width: 860px; margin: 0 auto;}
     .grid{display:grid; gap:12px;}
-    @media(min-width:720px){
-      .grid.two{grid-template-columns:1fr 1fr}
-      .grid.three{grid-template-columns:1fr 1fr 1fr}
-    }
+    @media(min-width:720px){ .grid.two{grid-template-columns:1fr 1fr} .grid.three{grid-template-columns:1fr 1fr 1fr} }
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
       border: 1px solid rgba(201,162,77,.18);
@@ -103,7 +98,6 @@
     .muted{color:var(--muted)}
     .mono{font-family:var(--mono)}
     .btnbar{display:flex; gap:10px; flex-wrap:wrap}
-
     button{
       -webkit-tap-highlight-color: transparent;
       appearance:none;
@@ -122,7 +116,6 @@
     button.secondary{
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.10);
-      color: var(--text);
     }
     button.danger{
       background: rgba(255,107,107,.12);
@@ -141,7 +134,6 @@
     }
     input::placeholder{color: rgba(143,163,184,.75)}
     label{font-size:12px; color:var(--muted); display:block; margin: 10px 0 6px}
-
     .tabs{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       display:flex; justify-content:space-around;
@@ -168,8 +160,6 @@
       border: 1px solid rgba(201,162,77,.22);
       box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
     }
-
-    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
     .progress{
       height:10px;
       border-radius:999px;
@@ -191,6 +181,7 @@
       font-size:12px; border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06); color: var(--muted);
     }
+    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
     canvas{
       width:100%;
       height:220px;
@@ -208,30 +199,23 @@
       line-height: 1.35;
     }
 
-    /* Toast */
-    .toastWrap{
-      position:fixed; left:0; right:0; bottom:86px; z-index:9999;
-      display:flex; justify-content:center; pointer-events:none;
-      padding: 0 14px;
-    }
-    .toast{
-      pointer-events:none;
-      max-width: 560px;
-      background: rgba(0,0,0,.72);
-      border: 1px solid rgba(201,162,77,.22);
-      color: var(--text);
+    /* lightweight in-app toast */
+    #toast{
+      position:fixed;
+      left:14px; right:14px;
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      z-index:9999;
+      display:none;
+      padding:12px 14px;
       border-radius: 14px;
-      padding: 10px 12px;
+      background: rgba(11,27,43,.92);
+      border: 1px solid rgba(201,162,77,.22);
       box-shadow: 0 18px 40px rgba(0,0,0,.45);
-      font-size: 13px;
-      transform: translateY(10px);
-      opacity: 0;
-      transition: opacity .18s ease, transform .18s ease;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: .15px;
     }
-    .toast.show{
-      opacity: 1;
-      transform: translateY(0);
-    }
+    #toast .sub{display:block; margin-top:4px; font-weight:600; color: var(--muted); font-size:12px}
   </style>
 </head>
 
@@ -279,11 +263,36 @@
 
     <div class="card">
       <h2>Weight Trend</h2>
-      <canvas id="weightChart" width="900" height="320"></canvas>
+      <canvas id="weightChart"></canvas>
       <div class="divider"></div>
       <div class="btnbar">
         <button id="btnLogWeight" type="button">Log weight</button>
         <button class="secondary" id="btnGoWeight" type="button">View weight</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Walking Trend (Daily Miles)</h2>
+      <canvas id="walkChart"></canvas>
+      <div class="divider"></div>
+      <div class="btnbar">
+        <button class="secondary" id="btnGoWalkFromDash" type="button">View walk</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Weekly On-Target Score</h2>
+      <canvas id="weeklyMacrosChart"></canvas>
+      <div class="divider"></div>
+      <div class="small muted">Mon–Sun % days on-target (Protein ≥90% target AND Calories 70–110%).</div>
+    </div>
+
+    <div class="card">
+      <h2>iPhone-only notes</h2>
+      <div class="hint">
+        • This is a single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
+        • iOS web apps can’t reliably read Apple Health steps like native apps.<br>
+        • Daily reminder is in-app only: it shows when the app is open near your chosen time.
       </div>
     </div>
   </section>
@@ -409,7 +418,7 @@
 
     <div class="card">
       <h2>Trend</h2>
-      <canvas id="weightChart2" width="900" height="320"></canvas>
+      <canvas id="weightChart2"></canvas>
       <div class="divider"></div>
       <div class="small muted">Chart shows your last ~90 entries (or fewer).</div>
     </div>
@@ -518,7 +527,6 @@
       <div class="hint">
         This is an in-app daily reminder: if you open WalkCut near your selected time, it will remind you once per day.
       </div>
-
       <label><input type="checkbox" id="remEnabled"> Enable reminder</label>
       <div class="grid two">
         <div>
@@ -530,11 +538,8 @@
           <input inputmode="numeric" id="remMin" placeholder="0">
         </div>
       </div>
-
       <div class="btnbar" style="margin-top:12px">
-        <!-- Keep IDs for compatibility, but behavior is now in-app reminder -->
-        <button id="btnEnableNotifs" type="button">Enable reminder</button>
-        <button class="secondary" id="testNotif" type="button">Test reminder</button>
+        <button id="testReminder" type="button">Test reminder</button>
       </div>
     </div>
 
@@ -551,6 +556,8 @@
   </section>
 </main>
 
+<div id="toast" role="status" aria-live="polite"></div>
+
 <!-- Tabs are BUTTONS (fixes iPhone/Home Screen tap issues) -->
 <nav class="tabs" aria-label="navigation">
   <button class="tab active" type="button" data-tab="dash">Dashboard</button>
@@ -560,20 +567,21 @@
   <button class="tab" type="button" data-tab="setup">Setup</button>
 </nav>
 
-<div class="toastWrap" aria-live="polite" aria-atomic="true">
-  <div class="toast" id="toast"></div>
-</div>
-
 <script>
 /* -------------------------------------------------
    WalkCut — single HTML app (Highlander-themed)
-   FIXES INCLUDED:
-   ✅ Reliable taps on iPhone/Home Screen (fastTap)
-   ✅ Save Setup / Back / Reset buttons fixed
-   ✅ Daily Reminder fixed (in-app reminder based on time)
+   FIXES:
+   - iOS/Home Screen reliability: no structuredClone crash, better tap binding
+   - Reminder is in-app only (no push/Notification API)
 -------------------------------------------------- */
 
 const LS_KEY = "walkcut_v1";
+
+/* ===== Safe clone for older iOS ===== */
+function safeClone(obj){
+  if (typeof structuredClone === "function") return structuredClone(obj);
+  return JSON.parse(JSON.stringify(obj));
+}
 
 /* ---------- Utilities ---------- */
 function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
@@ -597,25 +605,15 @@ function escapeHtml(s){
 }
 function capitalize(s){ return (""+s).charAt(0).toUpperCase() + (""+s).slice(1); }
 
-/* FAST, RELIABLE BUTTON HANDLER FOR iOS HOME SCREEN */
-function fastTap(el, handler){
-  if(!el || typeof handler !== "function") return;
-  el.addEventListener("click", (e)=> handler(e), {passive:true});
-  el.addEventListener("touchstart", (e)=>{
-    e.preventDefault();
-    handler(e);
-  }, {passive:false});
-}
-
-/* ---------- Toast (in-app reminder UI) ---------- */
+/* ---------- Toast ---------- */
 let toastTimer = null;
-function showToast(msg){
-  const t = document.getElementById("toast");
-  if(!t) return;
-  t.textContent = msg;
-  t.classList.add("show");
+function toast(msg, sub=""){
+  const el = document.getElementById("toast");
+  if(!el) return;
+  el.innerHTML = `${escapeHtml(msg)}${sub ? `<span class="sub">${escapeHtml(sub)}</span>` : ""}`;
+  el.style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> t.classList.remove("show"), 2600);
+  toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 4500);
 }
 
 /* ---------- Default State ---------- */
@@ -627,7 +625,7 @@ const defaults = {
     autoTargets: true,
     protPerLbGoal: 0.8,
     fatPerLbGoal: 0.30,
-    custom: { p:180, c:180, f:60 }, // grams
+    custom: { p:180, c:180, f:60 },
     reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
   },
   foods: [
@@ -656,17 +654,23 @@ function deepMerge(target, src){
 function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return structuredClone(defaults);
+    if(!raw) return safeClone(defaults);
+
     const s = JSON.parse(raw);
-    const merged = structuredClone(defaults);
+    const merged = safeClone(defaults);
     deepMerge(merged, s);
-    if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = structuredClone(defaults.foods);
+
+    if(!Array.isArray(merged.foods) || merged.foods.length===0) merged.foods = safeClone(defaults.foods);
     merged.foods = merged.foods.map(f => ({...f, id: f.id || uid()}));
-    // ensure reminder structure exists
-    if(!merged.nutrition.reminder) merged.nutrition.reminder = structuredClone(defaults.nutrition.reminder);
+
+    // ensure reminder object exists
+    if(!merged.nutrition) merged.nutrition = safeClone(defaults.nutrition);
+    if(!merged.nutrition.reminder) merged.nutrition.reminder = safeClone(defaults.nutrition.reminder);
+
     return merged;
   }catch(e){
-    return structuredClone(defaults);
+    // If localStorage contains bad JSON, reset
+    return safeClone(defaults);
   }
 }
 function saveState(){
@@ -675,9 +679,7 @@ function saveState(){
 }
 
 /* ---------- Calculations ---------- */
-function stepsPerMile(heightIn){
-  return clamp(2100 + (73 - heightIn) * 15, 1700, 2600);
-}
+function stepsPerMile(heightIn){ return clamp(2100 + (73 - heightIn) * 15, 1700, 2600); }
 function kcalPerMile(weightLb, paceMph){
   const baseByPace = paceMph <= 3.05 ? 118 : (paceMph <= 3.75 ? 150 : 170);
   return baseByPace * (weightLb / 225.0);
@@ -722,7 +724,6 @@ function macroTargets(){
 
 function entriesForDay(dayISO){ return state.foodEntries.filter(e => e.day === dayISO); }
 function walkLogForDay(dayISO){ return state.walkLogs.find(w => w.day === dayISO) || null; }
-
 function macroConsumed(dayISO){
   let pG=0,cG=0,fG=0;
   for(const e of entriesForDay(dayISO)){
@@ -736,7 +737,7 @@ function macroConsumed(dayISO){
   return { pG, cG, fG, kcal: caloriesFromMacros(pG,cG,fG) };
 }
 
-/* ---------- Streaks ---------- */
+/* ---------- Macro “On-Target” ---------- */
 function isMacroDayOnTarget(dayISO){
   const mt = macroTargets();
   const mc = macroConsumed(dayISO);
@@ -744,9 +745,12 @@ function isMacroDayOnTarget(dayISO){
   const calOK = (mc.kcal >= mt.kcal * 0.70) && (mc.kcal <= mt.kcal * 1.10);
   return proteinOK && calOK;
 }
+
+/* ---------- Streaks ---------- */
 function computeStreaks(){
   const t = walkTargets();
-  let walkStreak=0, macroStreak=0;
+  let walkStreak = 0;
+  let macroStreak = 0;
 
   for(let i=0;i<365;i++){
     const d = new Date(); d.setDate(d.getDate()-i);
@@ -754,6 +758,7 @@ function computeStreaks(){
 
     const wl = walkLogForDay(iso);
     const walkOK = wl && (wl.miles >= t.miles*0.90);
+
     const macroOK = isMacroDayOnTarget(iso);
 
     if(i===0){
@@ -768,37 +773,30 @@ function computeStreaks(){
   return { walkStreak, macroStreak };
 }
 
-/* ---------- Daily Reminder (in-app) ---------- */
-function maybeFireReminder(forceTest=false){
-  const r = state.nutrition.reminder;
+/* ---------- In-app Reminder (NO push notifications) ---------- */
+function maybeFireReminder(){
+  const r = state.nutrition?.reminder;
   if(!r || !r.enabled) return;
 
   const now = new Date();
   const iso = todayISO(now);
 
+  const minsNow = now.getHours()*60 + now.getMinutes();
   const hour = clamp(parseInt(r.hour,10)||19,0,23);
   const minute = clamp(parseInt(r.minute,10)||0,0,59);
   const minsTarget = hour*60 + minute;
-  const minsNow = now.getHours()*60 + now.getMinutes();
 
-  // fire if app opened within 30 minutes AFTER target, once per day
-  const inWindow = minsNow >= minsTarget && minsNow <= minsTarget + 30;
-
-  if(forceTest){
-    showToast(`Reminder test ✅ (${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")})`);
-    try{ navigator.vibrate && navigator.vibrate([50,60,50]); }catch(_){}
-    return;
-  }
-
-  if(inWindow && r.lastFired !== iso){
-    r.lastFired = iso;
-    saveState();
-    showToast("WalkCut reminder: time to hit your walk + macros goals.");
-    try{ navigator.vibrate && navigator.vibrate([70,80,70]); }catch(_){}
+  // fire if app open within 30 minutes AFTER target, once per day
+  if(minsNow >= minsTarget && minsNow <= minsTarget + 30){
+    if(r.lastFired !== iso){
+      toast("WalkCut reminder", "Time to hit your walk + macros goals.");
+      r.lastFired = iso;
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
   }
 }
 
-/* ---------- Charts (simple) ---------- */
+/* ---------- Charts ---------- */
 function resizeCanvasForHiDPI(canvas){
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -810,6 +808,7 @@ function resizeCanvasForHiDPI(canvas){
   }
   return { w: canvas.width, h: canvas.height };
 }
+
 function drawSimpleLineChart(canvasId, series, opts){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -836,6 +835,7 @@ function drawSimpleLineChart(canvasId, series, opts){
   const pad = Math.round(w*0.07);
   const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
 
+  // grid
   ctx.strokeStyle = "rgba(255,255,255,.10)";
   ctx.lineWidth = Math.max(1, Math.round(w*0.0015));
   for(let i=0;i<=4;i++){
@@ -843,6 +843,7 @@ function drawSimpleLineChart(canvasId, series, opts){
     ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
   }
 
+  // labels
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
   ctx.fillText(`${round(max,1)}${unit}`, x0, y0 - Math.round(h*0.02));
@@ -851,6 +852,7 @@ function drawSimpleLineChart(canvasId, series, opts){
   function x(i){ return x0 + (x1-x0) * (i/(series.length-1)); }
   function y(v){ return y1 - (y1-y0) * ((v-min)/(max-min)); }
 
+  // line
   ctx.strokeStyle = "rgba(201,162,77,.95)";
   ctx.lineWidth = Math.max(3, Math.round(w*0.004));
   ctx.lineJoin = "round";
@@ -863,26 +865,66 @@ function drawSimpleLineChart(canvasId, series, opts){
   });
   ctx.stroke();
 
+  // last point
   const last = series[series.length-1];
   ctx.fillStyle = "rgba(58,160,255,.95)";
   ctx.beginPath();
   ctx.arc(x(series.length-1), y(last.y), Math.max(5, Math.round(w*0.007)), 0, Math.PI*2);
   ctx.fill();
 
+  // title
   if(title){
     ctx.fillStyle = "rgba(232,238,246,.95)";
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(title, x0, y0 - Math.round(h*0.04));
   }
 
+  // last label
   ctx.fillStyle = "rgba(143,163,184,.95)";
   ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
-  ctx.fillText(`${round(last.y,1)}${unit} • ${last.label || ""}`, x0, h - Math.round(h*0.03));
+  const lastLabel = last.label ? ` • ${last.label}` : "";
+  ctx.fillText(`${round(last.y,1)}${unit}${lastLabel}`, x0, h - Math.round(h*0.03));
 }
 
+function startOfWeekMonday(d){
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const day = (x.getDay() + 6) % 7;
+  x.setDate(x.getDate() - day);
+  return x;
+}
+function buildWalkDailySeries(daysBack=30){
+  const out=[];
+  for(let i=daysBack-1;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const iso=todayISO(d);
+    const wl=walkLogForDay(iso);
+    out.push({ y: wl ? wl.miles : 0, label: iso });
+  }
+  return out;
+}
 function buildWeightSeries(maxPoints=90){
   const data = state.weights.slice().sort((a,b)=> a.day.localeCompare(b.day)).slice(-maxPoints);
   return data.map(d=>({ y: d.lb, label: d.day }));
+}
+function buildWeeklyOnTargetScoreSeries(weeksBack=8){
+  const out=[];
+  const now=new Date();
+  const thisMon=startOfWeekMonday(now);
+
+  for(let w=weeksBack-1; w>=0; w--){
+    const weekStart=new Date(thisMon);
+    weekStart.setDate(weekStart.getDate() - (w*7));
+
+    let ok=0;
+    for(let i=0;i<7;i++){
+      const d=new Date(weekStart);
+      d.setDate(d.getDate()+i);
+      const iso=todayISO(d);
+      if(isMacroDayOnTarget(iso)) ok++;
+    }
+    out.push({ y: (ok/7)*100, label: todayISO(weekStart) });
+  }
+  return out;
 }
 
 /* ---------- DOM helpers ---------- */
@@ -984,7 +1026,7 @@ function renderFoodsList(){
   }).join("");
 
   out.querySelectorAll("[data-del-food]").forEach(btn=>{
-    fastTap(btn, ()=> deleteFood(btn.getAttribute("data-del-food")));
+    bindTap(btn, () => deleteFood(btn.getAttribute("data-del-food")));
   });
 }
 function renderTodayFoodLog(){
@@ -1013,7 +1055,7 @@ function renderTodayFoodLog(){
   }).join("");
 
   out.querySelectorAll("[data-del-entry]").forEach(btn=>{
-    fastTap(btn, ()=> deleteEntry(btn.getAttribute("data-del-entry")));
+    bindTap(btn, () => deleteEntry(btn.getAttribute("data-del-entry")));
   });
 }
 function renderWalkHistory(){
@@ -1025,7 +1067,7 @@ function renderWalkHistory(){
   }
   out.innerHTML = `
     <table>
-      <thead><tr><th>Date</th><th class="right">Miles</th><th class="right">Min</th><th class="right"> </th></tr></thead>
+      <thead><tr><th>Date</th><th class="right">Miles</th><th class="right">Min</th><th class="right"></th></tr></thead>
       <tbody>
         ${logs.slice(0,14).map(w=>`
           <tr>
@@ -1039,7 +1081,7 @@ function renderWalkHistory(){
     </table>
   `;
   out.querySelectorAll("[data-del-walk]").forEach(btn=>{
-    fastTap(btn, ()=> deleteWalk(btn.getAttribute("data-del-walk")));
+    bindTap(btn, () => deleteWalk(btn.getAttribute("data-del-walk")));
   });
 }
 function renderWeightList(){
@@ -1051,7 +1093,7 @@ function renderWeightList(){
   }
   out.innerHTML = `
     <table>
-      <thead><tr><th>Date</th><th class="right">Weight (lb)</th><th class="right"> </th></tr></thead>
+      <thead><tr><th>Date</th><th class="right">Weight (lb)</th><th class="right"></th></tr></thead>
       <tbody>
         ${rows.slice(0,30).map(w=>`
           <tr>
@@ -1064,24 +1106,22 @@ function renderWeightList(){
     </table>
   `;
   out.querySelectorAll("[data-del-weight]").forEach(btn=>{
-    fastTap(btn, ()=> deleteWeight(btn.getAttribute("data-del-weight")));
+    bindTap(btn, () => deleteWeight(btn.getAttribute("data-del-weight")));
   });
 }
 function renderSetup(){
-  // profile
   document.getElementById("pAge").value = state.profile.age;
   document.getElementById("pHeight").value = state.profile.heightIn;
   document.getElementById("pWeight").value = state.profile.weightLb;
   document.getElementById("pGoalLoss").value = state.profile.goalLossLb;
 
-  // plan
   document.getElementById("lossRate").value = String(state.plan.lossRateLbWk);
   document.getElementById("pace").value = String(state.plan.paceMph);
+
   const ws = String(Math.round(state.plan.walkShare*100/5)*5);
   document.getElementById("walkShare").value = ws;
   document.getElementById("walkShareLabel").textContent = `${ws}%`;
 
-  // nutrition
   document.getElementById("macroUnit").value = state.nutrition.macroUnit;
   document.getElementById("autoTargets").checked = !!state.nutrition.autoTargets;
   document.getElementById("protPerLb").value = state.nutrition.protPerLbGoal;
@@ -1090,12 +1130,11 @@ function renderSetup(){
   document.getElementById("custC").value = state.nutrition.custom.c;
   document.getElementById("custF").value = state.nutrition.custom.f;
 
-  // reminder
   document.getElementById("remEnabled").checked = !!state.nutrition.reminder.enabled;
   document.getElementById("remHour").value = state.nutrition.reminder.hour;
   document.getElementById("remMin").value = state.nutrition.reminder.minute;
 
-  toggleAutoTargetsUI(false);
+  toggleAutoTargetsUI();
   renderMacroPreview();
 }
 function renderMacroPreview(){
@@ -1108,16 +1147,10 @@ function renderMacroPreview(){
     `Targets preview: P ${round(pDisp,1)} ${fmtUnit(unit)} • C ${round(cDisp,1)} ${fmtUnit(unit)} • F ${round(fDisp,1)} ${fmtUnit(unit)} • ${Math.round(mt.kcal)} kcal`;
 }
 function renderCharts(){
-  drawSimpleLineChart("weightChart", buildWeightSeries(90), {
-    title:"Weight Trend",
-    unit:" lb",
-    emptyText:"Add 2+ weight entries to see a trend."
-  });
-  drawSimpleLineChart("weightChart2", buildWeightSeries(90), {
-    title:"Weight Trend",
-    unit:" lb",
-    emptyText:"Add 2+ weight entries to see a trend."
-  });
+  drawSimpleLineChart("weightChart", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
+  drawSimpleLineChart("weightChart2", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
+  drawSimpleLineChart("walkChart", buildWalkDailySeries(30), { title:"Daily Miles (Last 30 Days)", unit:" mi", emptyText:"Log 2+ walks to see a trend." });
+  drawSimpleLineChart("weeklyMacrosChart", buildWeeklyOnTargetScoreSeries(8), { title:"Weekly On-Target Score (Last 8 Weeks)", unit:"%", emptyText:"Log food for multiple days to see weekly scores." });
 }
 function renderAll(){
   renderHeader();
@@ -1137,56 +1170,53 @@ function deleteFood(id){
   state.foodEntries = state.foodEntries.filter(e=>e.foodId!==id);
   saveState();
 }
-function deleteEntry(id){
-  state.foodEntries = state.foodEntries.filter(e=>e.id!==id);
-  saveState();
-}
-function deleteWalk(day){
-  state.walkLogs = state.walkLogs.filter(w=>w.day!==day);
-  saveState();
-}
-function deleteWeight(day){
-  state.weights = state.weights.filter(w=>w.day!==day);
-  saveState();
-}
+function deleteEntry(id){ state.foodEntries = state.foodEntries.filter(e=>e.id!==id); saveState(); }
+function deleteWalk(day){ state.walkLogs = state.walkLogs.filter(w=>w.day!==day); saveState(); }
+function deleteWeight(day){ state.weights = state.weights.filter(w=>w.day!==day); saveState(); }
 
 /* ---------- View switching ---------- */
 const viewMap = { dash:"view-dash", walk:"view-walk", macros:"view-macros", weight:"view-weight", setup:"view-setup" };
 
 function setActiveTab(name){
-  document.querySelectorAll(".tab").forEach(t=>{
-    t.classList.toggle("active", t.dataset.tab === name);
-  });
-  document.querySelectorAll("main section").forEach(s=> s.style.display = "none");
-  const id = viewMap[name] || viewMap.dash;
-  document.getElementById(id).style.display = "";
-
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+  document.querySelectorAll("main section").forEach(s => s.style.display = "none");
+  document.getElementById(viewMap[name] || viewMap.dash).style.display = "";
   renderAll();
-  maybeFireReminder(false);
+  maybeFireReminder();
 }
 
-function bindTabs(){
-  document.querySelectorAll(".tab").forEach(btn=>{
-    fastTap(btn, ()=> setActiveTab(btn.dataset.tab));
-  });
+/* ===== Reliable tap binding (click + touchstart) ===== */
+function bindTap(elOrId, fn){
+  const el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
+  if(!el) return;
+  const go = (e) => { if(e) e.preventDefault(); fn(); };
+
+  el.addEventListener("click", go);
+  el.addEventListener("touchstart", go, { passive:false });
 }
 
-/* ---------- Setup toggles ---------- */
-function toggleAutoTargetsUI(doPreview=true){
+/* ---------- Setup dynamic controls ---------- */
+function toggleAutoTargetsUI(){
   const on = document.getElementById("autoTargets").checked;
   document.getElementById("autoTargetsBox").style.display = on ? "" : "none";
   document.getElementById("customTargetsBox").style.display = on ? "none" : "";
-  if(doPreview) renderMacroPreview();
+  renderMacroPreview();
 }
 
-/* ---------- Wire buttons (ALL via fastTap) ---------- */
-function wireButtons(){
-  // dashboard
-  fastTap(document.getElementById("btnGoSetup"), ()=> setActiveTab("setup"));
-  fastTap(document.getElementById("btnGoMacros"), ()=> setActiveTab("macros"));
-  fastTap(document.getElementById("btnGoWeight"), ()=> setActiveTab("weight"));
+/* ---------- Wire UI ---------- */
+function wireAll(){
+  // Tabs
+  document.querySelectorAll(".tab").forEach(btn=>{
+    bindTap(btn, () => setActiveTab(btn.dataset.tab));
+  });
 
-  fastTap(document.getElementById("btnQuickLogWalk"), ()=>{
+  // Dashboard
+  bindTap("btnGoSetup", () => setActiveTab("setup"));
+  bindTap("btnGoMacros", () => setActiveTab("macros"));
+  bindTap("btnGoWeight", () => setActiveTab("weight"));
+  bindTap("btnGoWalkFromDash", () => setActiveTab("walk"));
+
+  bindTap("btnQuickLogWalk", () => {
     setActiveTab("walk");
     document.getElementById("walkDate").value = todayISO();
     const existing = walkLogForDay(todayISO());
@@ -1194,49 +1224,48 @@ function wireButtons(){
     document.getElementById("walkMinutes").value = existing ? existing.minutes : "";
   });
 
-  fastTap(document.getElementById("btnQuickAddFood"), ()=> setActiveTab("macros"));
+  bindTap("btnQuickAddFood", () => setActiveTab("macros"));
 
-  fastTap(document.getElementById("btnLogWeight"), ()=>{
+  bindTap("btnLogWeight", () => {
     setActiveTab("weight");
     document.getElementById("wDate").value = todayISO();
     document.getElementById("wLb").value = "";
   });
 
-  // walk view
-  fastTap(document.getElementById("backFromWalk"), ()=> setActiveTab("dash"));
-  fastTap(document.getElementById("saveWalk"), ()=>{
+  // Walk
+  bindTap("backFromWalk", () => setActiveTab("dash"));
+  bindTap("saveWalk", () => {
     const day = document.getElementById("walkDate").value || todayISO();
     let miles = parseNum(document.getElementById("walkMiles").value);
     let minutes = parseNum(document.getElementById("walkMinutes").value);
 
     if(miles<=0 && minutes>0) miles = (minutes/60) * state.plan.paceMph;
     if(minutes<=0 && miles>0) minutes = (miles / state.plan.paceMph) * 60;
-
-    if(miles<=0 && minutes<=0) return showToast("Enter miles and/or minutes.");
+    if(miles<=0 && minutes<=0) return toast("Missing walk info", "Enter miles and/or minutes.");
 
     const idx = state.walkLogs.findIndex(w=>w.day===day);
     const rec = { day, miles, minutes: Math.round(minutes) };
     if(idx>=0) state.walkLogs[idx]=rec; else state.walkLogs.push(rec);
     state.walkLogs.sort((a,b)=> b.day.localeCompare(a.day));
     saveState();
-    showToast("Saved walk ✅");
+    toast("Saved walk", `${round(miles,1)} mi • ${Math.round(minutes)} min`);
   });
 
-  // macros view
-  fastTap(document.getElementById("btnShowAddFood"), ()=> { document.getElementById("addFoodCard").style.display = ""; });
-  fastTap(document.getElementById("hideAddFood"), ()=> { document.getElementById("addFoodCard").style.display = "none"; });
-  fastTap(document.getElementById("btnAddFood2"), ()=>{
+  // Macros
+  bindTap("btnShowAddFood", () => { document.getElementById("addFoodCard").style.display = ""; });
+  bindTap("hideAddFood", () => { document.getElementById("addFoodCard").style.display = "none"; });
+  bindTap("btnAddFood2", () => {
     document.getElementById("addFoodCard").style.display = "";
     window.scrollTo({top: document.body.scrollHeight, behavior:"smooth"});
   });
-  fastTap(document.getElementById("btnAddEntry2"), ()=> { document.getElementById("entryOz").focus(); });
+  bindTap("btnAddEntry2", () => document.getElementById("entryOz").focus());
 
-  fastTap(document.getElementById("saveFood"), ()=>{
+  bindTap("saveFood", () => {
     const name = (document.getElementById("foodName").value||"").trim();
     const p = parseNum(document.getElementById("foodP").value);
     const c = parseNum(document.getElementById("foodC").value);
     const f = parseNum(document.getElementById("foodF").value);
-    if(!name) return showToast("Enter a food name.");
+    if(!name) return toast("Missing food name", "Enter a food name.");
     state.foods.unshift({ id: uid(), name, p, c, f });
     document.getElementById("foodName").value="";
     document.getElementById("foodP").value="";
@@ -1244,56 +1273,61 @@ function wireButtons(){
     document.getElementById("foodF").value="";
     document.getElementById("addFoodCard").style.display="none";
     saveState();
-    showToast("Saved food ✅");
+    toast("Saved food", name);
   });
 
-  fastTap(document.getElementById("saveEntry"), ()=>{
+  bindTap("saveEntry", () => {
     const foodId = document.getElementById("foodSel").value;
     const meal = document.getElementById("mealSel").value;
     const oz = parseNum(document.getElementById("entryOz").value);
-    if(!foodId) return showToast("Pick a food.");
-    if(oz<=0) return showToast("Enter ounces (e.g., 6).");
+    if(!foodId) return toast("Pick a food", "Select a food from the dropdown.");
+    if(oz<=0) return toast("Missing ounces", "Enter ounces (e.g., 6).");
+
     state.foodEntries.push({ id: uid(), day: todayISO(), meal, foodId, oz, ts: Date.now() });
     state.foodEntries.sort((a,b)=> (b.day.localeCompare(a.day)) || ((b.ts||0)-(a.ts||0)));
     document.getElementById("entryOz").value = "";
     saveState();
-    showToast("Saved entry ✅");
+    toast("Saved entry", `${round(oz,1)} oz • ${capitalize(meal)}`);
   });
 
-  fastTap(document.getElementById("clearEntry"), ()=> { document.getElementById("entryOz").value=""; });
+  bindTap("clearEntry", () => { document.getElementById("entryOz").value=""; });
 
-  // weight view
-  fastTap(document.getElementById("backFromWeight"), ()=> setActiveTab("dash"));
-  fastTap(document.getElementById("saveWeight"), ()=>{
+  // Weight
+  bindTap("backFromWeight", () => setActiveTab("dash"));
+  bindTap("saveWeight", () => {
     const day = document.getElementById("wDate").value || todayISO();
     const lb = parseNum(document.getElementById("wLb").value);
-    if(lb<=0) return showToast("Enter weight in lb.");
+    if(lb<=0) return toast("Missing weight", "Enter weight in lb.");
+
     const idx = state.weights.findIndex(w=>w.day===day);
     const rec = { day, lb };
     if(idx>=0) state.weights[idx]=rec; else state.weights.push(rec);
     state.weights.sort((a,b)=> b.day.localeCompare(a.day));
     document.getElementById("wLb").value="";
     saveState();
-    showToast("Saved weight ✅");
+    toast("Saved weight", `${round(lb,1)} lb`);
   });
 
-  // setup dynamic controls
+  // Setup - live controls
   document.getElementById("walkShare").addEventListener("input", ()=>{
     document.getElementById("walkShareLabel").textContent = `${document.getElementById("walkShare").value}%`;
-  }, {passive:true});
+  });
+  document.getElementById("autoTargets").addEventListener("change", toggleAutoTargetsUI);
 
-  document.getElementById("autoTargets").addEventListener("change", ()=> toggleAutoTargetsUI(true), {passive:true});
   document.getElementById("macroUnit").addEventListener("change", ()=>{
     state.nutrition.macroUnit = document.getElementById("macroUnit").value;
     saveState();
-  }, {passive:true});
-
-  ["protPerLb","fatPerLb","custP","custC","custF"].forEach(id=>{
-    document.getElementById(id).addEventListener("input", ()=> renderMacroPreview(), {passive:true});
   });
 
-  // ✅ Save Setup (fixed)
-  fastTap(document.getElementById("saveSetup"), ()=>{
+  ["protPerLb","fatPerLb","custP","custC","custF"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", renderMacroPreview);
+  });
+
+  // Reminder test
+  bindTap("testReminder", () => toast("WalkCut reminder", "Test reminder ✅"));
+
+  // Save setup / back / reset
+  bindTap("saveSetup", () => {
     state.profile.age = clamp(parseInt(document.getElementById("pAge").value||"44",10)||44, 18, 90);
     state.profile.heightIn = clamp(parseInt(document.getElementById("pHeight").value||"73",10)||73, 48, 90);
     state.profile.weightLb = clamp(parseNum(document.getElementById("pWeight").value||"225"), 90, 600);
@@ -1314,78 +1348,48 @@ function wireButtons(){
       f: clamp(parseNum(document.getElementById("custF").value||"60"), 10, 200)
     };
 
-    // reminder fields saved here too
     state.nutrition.reminder.enabled = !!document.getElementById("remEnabled").checked;
     state.nutrition.reminder.hour = clamp(parseInt(document.getElementById("remHour").value||"19",10)||19, 0, 23);
     state.nutrition.reminder.minute = clamp(parseInt(document.getElementById("remMin").value||"0",10)||0, 0, 59);
 
     saveState();
-    showToast("Saved setup ✅");
+    toast("Saved setup", "Your plan + reminder time were saved.");
     setActiveTab("dash");
   });
 
-  // ✅ Back button (fixed)
-  fastTap(document.getElementById("backFromSetup"), ()=> setActiveTab("dash"));
+  bindTap("backFromSetup", () => setActiveTab("dash"));
 
-  // ✅ Reset all data (fixed)
-  fastTap(document.getElementById("resetAll"), ()=>{
+  bindTap("resetAll", () => {
     if(confirm("Reset ALL WalkCut data on this iPhone?")){
       localStorage.removeItem(LS_KEY);
       state = loadState();
       renderSetup();
       renderAll();
-      showToast("Reset complete ✅");
+      toast("Reset complete", "All WalkCut data was cleared.");
       setActiveTab("dash");
     }
-  });
-
-  // ✅ Enable reminder button (fixed) — saves reminder settings immediately
-  fastTap(document.getElementById("btnEnableNotifs"), ()=>{
-    const enabled = !!document.getElementById("remEnabled").checked;
-    const hour = clamp(parseInt(document.getElementById("remHour").value||"19",10)||19, 0, 23);
-    const minute = clamp(parseInt(document.getElementById("remMin").value||"0",10)||0, 0, 59);
-
-    state.nutrition.reminder.enabled = enabled;
-    state.nutrition.reminder.hour = hour;
-    state.nutrition.reminder.minute = minute;
-    // don't change lastFired here
-    saveState();
-
-    showToast(enabled
-      ? `Reminder enabled ✅ (${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")})`
-      : "Reminder disabled.");
-  });
-
-  // ✅ Test reminder button (fixed)
-  fastTap(document.getElementById("testNotif"), ()=>{
-    const hour = clamp(parseInt(document.getElementById("remHour").value||"19",10)||19, 0, 23);
-    const minute = clamp(parseInt(document.getElementById("remMin").value||"0",10)||0, 0, 59);
-    // set temporary state to show correct time even if not saved yet
-    state.nutrition.reminder.hour = hour;
-    state.nutrition.reminder.minute = minute;
-    maybeFireReminder(true);
   });
 }
 
 /* ---------- Init ---------- */
 (function init(){
+  // Initialize date inputs
   document.getElementById("walkDate").value = todayISO();
   document.getElementById("wDate").value = todayISO();
 
+  // Setup fields
   renderSetup();
-  bindTabs();
-  wireButtons();
+
+  // Wire everything once (fixes “buttons dead”)
+  wireAll();
+
+  // Start view
   setActiveTab("dash");
 
-  // check reminder once a minute while open
-  setInterval(()=> maybeFireReminder(false), 60*1000);
+  // Reminder check while open
+  setInterval(maybeFireReminder, 60*1000);
 
-  // also check when app returns to foreground (Home Screen app behavior)
-  document.addEventListener("visibilitychange", ()=>{
-    if(!document.hidden) maybeFireReminder(false);
-  });
-
-  // redraw charts on resize/orientation
+  // Redraw charts on resize/orientation
   window.addEventListener("resize", ()=> renderCharts());
 })();
 </script>
