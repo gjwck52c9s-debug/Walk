@@ -9,28 +9,21 @@
 
   <title>WalkCut</title>
 
-  <!-- Embedded iOS icon (armored-vehicle silhouette SVG) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cdefs%3E%3CradialGradient id='g' cx='30%25' cy='20%25' r='80%25'%3E%3Cstop offset='0' stop-color='%233aa0ff' stop-opacity='.25'/%3E%3Cstop offset='1' stop-color='%230B1B2B'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='36' fill='url(%23g)'/%3E%3Crect x='10' y='10' width='160' height='160' rx='30' fill='%230b1118' opacity='.55'/%3E%3Cpath d='M40 104h86l8 12H32l8-12Zm8-20h70l6 12H42l6-12Zm10-16h44l8 8H50l8-8Zm38-6 18 10H80l16-10Zm-57 56h94v10H39v-10Zm8 16h10v8H47v-8Zm18 0h10v8H65v-8Zm18 0h10v8H83v-8Zm18 0h10v8h-10v-8Zm18 0h10v8h-10v-8Z' fill='%23C9A24D'/%3E%3Ctext x='90' y='52' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial' font-size='18' fill='%23EAF0F6'%3EWALKCUT%3C/text%3E%3C/svg%3E" />
 
   <style>
     :root{
       --navy:#0B1B2B;
       --bg:#0b1118;
-      --card:#121a24;
       --text:#e8eef6;
       --muted:#8FA3B8;
-
-      --good:#3ddc97; /* green */
-      --warn:#ffcc66; /* amber */
-      --bad:#ff6b6b;  /* red */
-      --accent:#C9A24D; /* brass */
-      --blue:#3aa0ff;   /* blue */
-
+      --accent:#C9A24D;
+      --blue:#3aa0ff;
       --shadow: 0 14px 34px rgba(0,0,0,.45);
       --r:16px;
       --pad:14px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      --sans: -apple-system, BlinkMacSystemFont, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -68,11 +61,9 @@
       padding:5px 10px; border-radius:999px;
       white-space:nowrap;
     }
-
     main{padding: 12px 14px 94px; max-width: 860px; margin: 0 auto;}
     .grid{display:grid; gap:12px;}
     @media(min-width:720px){ .grid.two{grid-template-columns:1fr 1fr} .grid.three{grid-template-columns:1fr 1fr 1fr} }
-
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
       border: 1px solid rgba(201,162,77,.18);
@@ -101,7 +92,6 @@
     .muted{color:var(--muted)}
     .mono{font-family:var(--mono)}
     .btnbar{display:flex; gap:10px; flex-wrap:wrap}
-
     button{
       -webkit-tap-highlight-color: transparent;
       appearance:none;
@@ -126,7 +116,6 @@
       border: 1px solid rgba(255,107,107,.32);
     }
     button:active{transform: translateY(1px)}
-
     input, select{
       width:100%;
       padding: 10px 12px;
@@ -137,9 +126,7 @@
       font-size: 14px;
       outline:none;
     }
-    input::placeholder{color: rgba(143,163,184,.75)}
     label{font-size:12px; color:var(--muted); display:block; margin: 10px 0 6px}
-
     .tabs{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       display:flex; justify-content:space-around;
@@ -166,28 +153,6 @@
       border: 1px solid rgba(201,162,77,.22);
       box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
     }
-
-    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
-
-    canvas{
-      width:100%;
-      height:220px;
-      background: rgba(0,0,0,.16);
-      border:1px solid rgba(201,162,77,.16);
-      border-radius: 12px;
-    }
-
-    .hint{
-      border-left: 3px solid rgba(201,162,77,.65);
-      padding: 10px 12px;
-      background: rgba(201,162,77,.07);
-      border-radius: 12px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    /* progress */
     .progress{
       height:10px;
       border-radius:999px;
@@ -200,31 +165,32 @@
       width:0%;
       background: linear-gradient(90deg, rgba(61,220,151,.92), rgba(201,162,77,.85));
     }
-
-    /* macro bars */
-    .macroBars{display:grid; gap:10px; margin-top:10px}
-    .mrow{display:grid; gap:6px}
-    .mrowTop{display:flex; justify-content:space-between; gap:10px; align-items:center}
-    .mname{font-size:12px; color:var(--muted); font-weight:750}
-    .mval{font-size:12px; color:rgba(232,238,246,.92); font-family:var(--mono)}
-    .bar{height:12px; border-radius:999px; background: rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.08); overflow:hidden}
-    .bar > div{height:100%; width:0%;}
-    .bar.under > div{background: rgba(58,160,255,.85);}
-    .bar.within > div{background: rgba(61,220,151,.88);}
-    .bar.over > div{background: rgba(255,107,107,.88);}
-
     table{width:100%; border-collapse:collapse}
     td,th{padding:10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); font-size:13px}
     th{color:var(--muted); text-align:left; font-weight:750}
     .right{text-align:right}
-
     .badge{
       display:inline-block; padding:4px 8px; border-radius:999px;
       font-size:12px; border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06); color: var(--muted);
     }
-
-    /* toast */
+    .divider{height:1px; background: rgba(255,255,255,.10); margin: 12px 0}
+    canvas{
+      width:100%;
+      height:220px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(201,162,77,.16);
+      border-radius: 12px;
+    }
+    .hint{
+      border-left: 3px solid rgba(201,162,77,.65);
+      padding: 10px 12px;
+      background: rgba(201,162,77,.07);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
     #toast{
       position:fixed;
       left:14px; right:14px;
@@ -247,12 +213,7 @@
 <body>
 <header>
   <div class="top">
-    <h1>
-      <span class="brandDot"></span>
-      WalkCut
-      <span class="pill" id="todayPill"></span>
-      <span class="pill" id="verPill"></span>
-    </h1>
+    <h1><span class="brandDot"></span>WalkCut <span class="pill" id="todayPill"></span></h1>
     <span class="pill" id="streakPill">Streaks: —</span>
   </div>
 </header>
@@ -292,21 +253,19 @@
     </div>
 
     <div class="card">
+      <h2>Weekly Walks (Last 7 Days)</h2>
+      <canvas id="weeklyWalkBars"></canvas>
+      <div class="divider"></div>
+      <div class="small muted">Bars show miles per day (Sun–Sat rolling).</div>
+    </div>
+
+    <div class="card">
       <h2>Weight Trend</h2>
       <canvas id="weightChart"></canvas>
       <div class="divider"></div>
       <div class="btnbar">
         <button id="btnLogWeight" type="button">Log weight</button>
         <button class="secondary" id="btnGoWeight" type="button">View weight</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Walking Trend (Daily Miles)</h2>
-      <canvas id="walkChart"></canvas>
-      <div class="divider"></div>
-      <div class="btnbar">
-        <button class="secondary" id="btnGoWalkFromDash" type="button">View walk</button>
       </div>
     </div>
 
@@ -320,15 +279,25 @@
     <div class="card">
       <h2>iPhone-only notes</h2>
       <div class="hint">
-        • Single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
-        • Daily reminder is in-app only: it shows when the app is open near your chosen time.<br>
-        • Tip: Use <span class="mono">?reset=1</span> one time to wipe app data on this device.
+        • This is a single-file “Home Screen app”. Data is stored on your device (localStorage).<br>
+        • iOS web apps can’t reliably read Apple Health steps like native apps.<br>
+        • Daily reminder is in-app only: it shows when the app is open near your chosen time.
       </div>
     </div>
   </section>
 
-  <!-- WALK -->
+  <!-- WALK LOG -->
   <section id="view-walk" class="grid" style="display:none">
+    <div class="card">
+      <h2>Today vs Goal</h2>
+      <canvas id="todayVsGoalBars"></canvas>
+      <div class="divider"></div>
+      <div class="row">
+        <div class="small">Progress</div>
+        <div class="small mono" id="todayVsGoalText">—</div>
+      </div>
+    </div>
+
     <div class="card">
       <h2>Log Walking</h2>
       <label>Date</label>
@@ -360,33 +329,8 @@
   <!-- MACROS -->
   <section id="view-macros" class="grid" style="display:none">
     <div class="card">
-      <h2>Today Macros</h2>
+      <h2>Macros Today</h2>
       <div class="kpi" id="macroKPIs2"></div>
-
-      <div class="macroBars" aria-label="macro bars">
-        <div class="mrow">
-          <div class="mrowTop">
-            <div class="mname">Protein (g)</div>
-            <div class="mval" id="barLabelP">—</div>
-          </div>
-          <div class="bar" id="barP"><div></div></div>
-        </div>
-        <div class="mrow">
-          <div class="mrowTop">
-            <div class="mname">Carbs (g)</div>
-            <div class="mval" id="barLabelC">—</div>
-          </div>
-          <div class="bar" id="barC"><div></div></div>
-        </div>
-        <div class="mrow">
-          <div class="mrowTop">
-            <div class="mname">Fat (g)</div>
-            <div class="mval" id="barLabelF">—</div>
-          </div>
-          <div class="bar" id="barF"><div></div></div>
-        </div>
-      </div>
-
       <div class="divider"></div>
       <div class="row">
         <div class="small">Calories (target / eaten)</div>
@@ -420,7 +364,9 @@
         <button class="secondary" id="clearEntry" type="button">Clear</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Foods store macros per 1 oz of that food (macros recorded in grams). Entries multiply by ounces eaten.</div>
+      <div class="small muted">
+        Foods store macros per <b>4 oz</b> of that food (grams of macro). Entries scale by (oz eaten / 4).
+      </div>
     </div>
 
     <div class="card">
@@ -429,10 +375,9 @@
     </div>
 
     <div class="card">
-      <h2>Foods (macros per 1 oz food)</h2>
+      <h2>Foods (macros per 4 oz food)</h2>
       <div class="btnbar" style="margin-bottom:10px">
         <button id="btnShowAddFood" type="button">Add Food</button>
-        <button class="secondary" id="btnToggleFoods" type="button">Hide/Show list</button>
       </div>
       <div id="foodsList"></div>
     </div>
@@ -442,14 +387,14 @@
       <label>Name</label>
       <input placeholder="e.g., Chicken breast (cooked)" id="foodName">
 
-      <label>Protein grams per 1 oz food</label>
-      <input inputmode="decimal" placeholder="e.g., 8.8" id="foodP">
+      <label>Protein grams per 4 oz food</label>
+      <input inputmode="decimal" placeholder="e.g., 35.2" id="foodP">
 
-      <label>Carb grams per 1 oz food</label>
+      <label>Carb grams per 4 oz food</label>
       <input inputmode="decimal" placeholder="e.g., 0" id="foodC">
 
-      <label>Fat grams per 1 oz food</label>
-      <input inputmode="decimal" placeholder="e.g., 1.0" id="foodF">
+      <label>Fat grams per 4 oz food</label>
+      <input inputmode="decimal" placeholder="e.g., 4.0" id="foodF">
 
       <div class="btnbar" style="margin-top:12px">
         <button id="saveFood" type="button">Save Food</button>
@@ -539,17 +484,12 @@
 
     <div class="card">
       <h2>Nutrition Plan</h2>
-      <label>Macro display unit (KPIs only)</label>
-      <select id="macroUnit">
-        <option value="oz" selected>Ounces (oz)</option>
-        <option value="g">Grams (g)</option>
-      </select>
 
       <label><input type="checkbox" id="autoTargets" checked> Auto macro targets</label>
       <div class="grid two" id="autoTargetsBox">
         <div>
           <label>Protein per lb of goal weight</label>
-          <input inputmode="decimal" id="protPerLb" placeholder="0.8">
+          <input inputmode="decimal" id="protPerLb" placeholder="1.01">
         </div>
         <div>
           <label>Fat per lb of goal weight</label>
@@ -581,7 +521,7 @@
     <div class="card">
       <h2>Daily Reminder</h2>
       <div class="hint">
-        In-app reminder only: if you open WalkCut near your selected time, it reminds you once per day.
+        This is an in-app daily reminder: if you open WalkCut near your selected time, it will remind you once per day.
       </div>
       <label><input type="checkbox" id="remEnabled"> Enable reminder</label>
       <div class="grid two">
@@ -607,7 +547,7 @@
         <button class="danger" id="resetAll" type="button">Reset all data</button>
       </div>
       <div class="divider"></div>
-      <div class="small muted">Reset wipes everything stored on this device for WalkCut.</div>
+      <div class="small muted">Reset wipes everything stored on this iPhone for WalkCut.</div>
     </div>
   </section>
 </main>
@@ -623,40 +563,15 @@
 </nav>
 
 <script>
-/* -------------------------------------------------
-   WalkCut — single HTML app (Highlander-themed)
-   Button fixes:
-   - Uses Pointer Events when available (iOS Safari supports them now)
-   - No click/touch double-fire bugs
-   - No Notification API (in-app reminder only)
-   Extras:
-   - ?reset=1 wipes local data ONCE (then cleans URL)
-   - Macro bars: blue under, green within, red over (grams)
--------------------------------------------------- */
+const LS_KEY = "walkcut_v2_4oz";
 
-const LS_KEY = "walkcut_v1";
-const APP_VER = "v1.2.0";
-
-/* ---------- One-time URL reset: /Walk/?reset=1 ---------- */
-(function maybeForceReset(){
-  try{
-    const params = new URLSearchParams(location.search);
-    if(params.get("reset") === "1"){
-      localStorage.removeItem(LS_KEY);
-      params.delete("reset");
-      const clean = location.pathname + (params.toString() ? "?" + params.toString() : "") + location.hash;
-      history.replaceState({}, "", clean);
-    }
-  }catch(e){}
-})();
-
-/* ---------- Safe clone for older iOS ---------- */
+/* Safe clone for older iOS */
 function safeClone(obj){
   if (typeof structuredClone === "function") return structuredClone(obj);
   return JSON.parse(JSON.stringify(obj));
 }
 
-/* ---------- Utilities ---------- */
+/* Utils */
 function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 function round(n, d=1){ const p=Math.pow(10,d); return Math.round(n*p)/p; }
@@ -671,14 +586,12 @@ function parseNum(v){
   return Number.isFinite(n) ? n : 0;
 }
 function caloriesFromMacros(pG,cG,fG){ return (pG*4)+(cG*4)+(fG*9); }
-function gramsPerUnit(unit){ return unit==="oz" ? 28.349523125 : 1.0; }
-function fmtUnit(unit){ return unit==="oz" ? "oz" : "g"; }
 function escapeHtml(s){
   return (""+s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 }
 function capitalize(s){ return (""+s).charAt(0).toUpperCase() + (""+s).slice(1); }
 
-/* ---------- Toast ---------- */
+/* Toast */
 let toastTimer = null;
 function toast(msg, sub=""){
   const el = document.getElementById("toast");
@@ -689,32 +602,40 @@ function toast(msg, sub=""){
   toastTimer = setTimeout(()=>{ el.style.display = "none"; }, 4500);
 }
 
-/* ---------- Default State ---------- */
+/* ===== Reliable tap binding (click + touchstart) ===== */
+function bindTap(elOrId, fn){
+  const el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
+  if(!el) return;
+  const go = (e) => { if(e) e.preventDefault(); fn(); };
+  el.addEventListener("click", go);
+  el.addEventListener("touchstart", go, { passive:false });
+}
+
+/* Defaults */
 const defaults = {
   profile: { age: 44, heightIn: 73, weightLb: 225, goalLossLb: 30 },
   plan: { lossRateLbWk: 1.0, paceMph: 3.5, walkShare: 0.70 },
   nutrition: {
-    macroUnit: "oz",
     autoTargets: true,
-    protPerLbGoal: 0.8,
+    protPerLbGoal: 1.01,          // ✅ defaulted
     fatPerLbGoal: 0.30,
     custom: { p:180, c:180, f:60 },
     reminder: { enabled:false, hour:19, minute:0, lastFired:"" }
   },
+  // ✅ foods are PER 4 OZ (macros in grams)
   foods: [
-    // per 1 oz FOOD (macros in grams)
-    { id: uid(), name: "Chicken breast (cooked)", p: 8.8, c: 0.0, f: 1.0 },
-    { id: uid(), name: "Rice (cooked)", p: 0.9, c: 8.9, f: 0.1 },
-    { id: uid(), name: "Greek yogurt (plain)", p: 2.8, c: 1.5, f: 0.1 }
+    { id: uid(), name: "Chicken breast (cooked)", p: 35.2, c: 0.0, f: 4.0 },
+    { id: uid(), name: "Rice (cooked)", p: 3.6, c: 35.6, f: 0.4 },
+    { id: uid(), name: "Greek yogurt (plain)", p: 11.2, c: 6.0, f: 0.4 }
   ],
-  foodEntries: [],
+  foodEntries: [], // entries store oz eaten
   walkLogs: [],
   weights: []
 };
 
 let state = loadState();
 
-/* ---------- Persistence ---------- */
+/* Persistence */
 function deepMerge(target, src){
   for(const k in src){
     if(src[k] && typeof src[k]==="object" && !Array.isArray(src[k])){
@@ -729,6 +650,7 @@ function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return safeClone(defaults);
+
     const s = JSON.parse(raw);
     const merged = safeClone(defaults);
     deepMerge(merged, s);
@@ -749,7 +671,7 @@ function saveState(){
   renderAll();
 }
 
-/* ---------- Calculations ---------- */
+/* Calculations */
 function stepsPerMile(heightIn){ return clamp(2100 + (73 - heightIn) * 15, 1700, 2600); }
 function kcalPerMile(weightLb, paceMph){
   const baseByPace = paceMph <= 3.05 ? 118 : (paceMph <= 3.75 ? 150 : 170);
@@ -763,8 +685,7 @@ function walkTargets(){
   const miles = walkKcal / Math.max(1, kpm);
   const minutes = (miles / plan.paceMph) * 60;
   const steps = miles * stepsPerMile(p.heightIn);
-  const weeks = Math.ceil((p.goalLossLb * 3500) / Math.max(1, dailyDeficit) / 7);
-  return { dailyDeficit, walkKcal, kpm, miles, minutes, steps, weeks };
+  return { dailyDeficit, walkKcal, kpm, miles, minutes, steps };
 }
 function tdeeEstimate(){
   const p = state.profile;
@@ -795,20 +716,21 @@ function macroTargets(){
 
 function entriesForDay(dayISO){ return state.foodEntries.filter(e => e.day === dayISO); }
 function walkLogForDay(dayISO){ return state.walkLogs.find(w => w.day === dayISO) || null; }
+
+/* ✅ Foods are per 4 oz; entries scale by (oz/4) */
 function macroConsumed(dayISO){
   let pG=0,cG=0,fG=0;
   for(const e of entriesForDay(dayISO)){
     const food = state.foods.find(f=>f.id===e.foodId);
     if(!food) continue;
-    const oz = e.oz;
-    pG += food.p * oz;
-    cG += food.c * oz;
-    fG += food.f * oz;
+    const factor = (e.oz || 0) / 4.0;
+    pG += food.p * factor;
+    cG += food.c * factor;
+    fG += food.f * factor;
   }
   return { pG, cG, fG, kcal: caloriesFromMacros(pG,cG,fG) };
 }
 
-/* ---------- Macro “On-Target” ---------- */
 function isMacroDayOnTarget(dayISO){
   const mt = macroTargets();
   const mc = macroConsumed(dayISO);
@@ -817,7 +739,7 @@ function isMacroDayOnTarget(dayISO){
   return proteinOK && calOK;
 }
 
-/* ---------- Streaks ---------- */
+/* Streaks */
 function computeStreaks(){
   const t = walkTargets();
   let walkStreak = 0;
@@ -843,7 +765,7 @@ function computeStreaks(){
   return { walkStreak, macroStreak };
 }
 
-/* ---------- In-app Reminder (NO push notifications) ---------- */
+/* In-app reminder (no push) */
 function maybeFireReminder(){
   const r = state.nutrition?.reminder;
   if(!r || !r.enabled) return;
@@ -856,7 +778,6 @@ function maybeFireReminder(){
   const minute = clamp(parseInt(r.minute,10)||0,0,59);
   const minsTarget = hour*60 + minute;
 
-  // within 30 minutes AFTER target, once per day
   if(minsNow >= minsTarget && minsNow <= minsTarget + 30){
     if(r.lastFired !== iso){
       toast("WalkCut reminder", "Time to hit your walk + macros goals.");
@@ -866,7 +787,7 @@ function maybeFireReminder(){
   }
 }
 
-/* ---------- Charts ---------- */
+/* Canvas helpers */
 function resizeCanvasForHiDPI(canvas){
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -876,9 +797,10 @@ function resizeCanvasForHiDPI(canvas){
     canvas.width = needW;
     canvas.height = needH;
   }
-  return { w: canvas.width, h: canvas.height };
+  return { w: canvas.width, h: canvas.height, dpr };
 }
 
+/* Simple line chart (weight + on-target) */
 function drawSimpleLineChart(canvasId, series, opts){
   const canvas = document.getElementById(canvasId);
   if(!canvas) return;
@@ -943,11 +865,73 @@ function drawSimpleLineChart(canvasId, series, opts){
     ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
     ctx.fillText(title, x0, y0 - Math.round(h*0.04));
   }
+}
 
-  ctx.fillStyle = "rgba(143,163,184,.95)";
-  ctx.font = `${Math.round(h*0.055)}px ${getComputedStyle(document.body).fontFamily}`;
-  const lastLabel = last.label ? ` • ${last.label}` : "";
-  ctx.fillText(`${round(last.y,1)}${unit}${lastLabel}`, x0, h - Math.round(h*0.03));
+/* ✅ Bar chart */
+function drawBarChart(canvasId, labels, values, opts){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const { w, h } = resizeCanvasForHiDPI(canvas);
+
+  const title = opts?.title || "";
+  const unit = opts?.unit || "";
+  const emptyText = opts?.emptyText || "No data yet.";
+
+  ctx.clearRect(0,0,w,h);
+
+  if(!values || values.length===0){
+    ctx.fillStyle = "rgba(143,163,184,.9)";
+    ctx.font = `${Math.round(h*0.09)}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.fillText(emptyText, Math.round(w*0.04), Math.round(h*0.22));
+    return;
+  }
+
+  const maxV = Math.max(0.0001, ...values);
+  const pad = Math.round(w*0.07);
+  const x0 = pad, y0 = pad, x1 = w - pad, y1 = h - pad;
+
+  // grid
+  ctx.strokeStyle = "rgba(255,255,255,.10)";
+  ctx.lineWidth = Math.max(1, Math.round(w*0.0015));
+  for(let i=0;i<=4;i++){
+    const y = y0 + (y1-y0)*(i/4);
+    ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+  }
+
+  // title
+  if(title){
+    ctx.fillStyle = "rgba(232,238,246,.95)";
+    ctx.font = `${Math.round(h*0.07)}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.fillText(title, x0, y0 - Math.round(h*0.04));
+  }
+
+  // bars
+  const n = values.length;
+  const gap = Math.round(w*0.012);
+  const barW = Math.max(6, Math.floor((x1-x0 - gap*(n-1)) / n));
+  const baseY = y1;
+
+  for(let i=0;i<n;i++){
+    const v = values[i];
+    const bh = Math.max(0, Math.round((v/maxV) * (y1-y0)));
+    const bx = x0 + i*(barW+gap);
+    const by = baseY - bh;
+
+    ctx.fillStyle = "rgba(201,162,77,.90)";
+    ctx.fillRect(bx, by, barW, bh);
+
+    // value label
+    ctx.fillStyle = "rgba(232,238,246,.90)";
+    ctx.font = `${Math.round(h*0.05)}px ${getComputedStyle(document.body).fontFamily}`;
+    const t = `${round(v,1)}${unit}`;
+    ctx.fillText(t, bx, Math.max(y0+12, by-6));
+
+    // x label
+    ctx.fillStyle = "rgba(143,163,184,.95)";
+    ctx.font = `${Math.round(h*0.05)}px ${getComputedStyle(document.body).fontFamily}`;
+    ctx.fillText(labels[i]||"", bx, y1 + Math.round(h*0.07));
+  }
 }
 
 function startOfWeekMonday(d){
@@ -955,16 +939,6 @@ function startOfWeekMonday(d){
   const day = (x.getDay() + 6) % 7;
   x.setDate(x.getDate() - day);
   return x;
-}
-function buildWalkDailySeries(daysBack=30){
-  const out=[];
-  for(let i=daysBack-1;i>=0;i--){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const iso=todayISO(d);
-    const wl=walkLogForDay(iso);
-    out.push({ y: wl ? wl.miles : 0, label: iso });
-  }
-  return out;
 }
 function buildWeightSeries(maxPoints=90){
   const data = state.weights.slice().sort((a,b)=> a.day.localeCompare(b.day)).slice(-maxPoints);
@@ -991,7 +965,22 @@ function buildWeeklyOnTargetScoreSeries(weeksBack=8){
   return out;
 }
 
-/* ---------- DOM helpers ---------- */
+/* ✅ last 7 days walk bars */
+function buildLast7WalkBars(){
+  const labels = [];
+  const values = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const iso = todayISO(d);
+    const wl = walkLogForDay(iso);
+    const dayName = d.toLocaleDateString(undefined, { weekday:"short" });
+    labels.push(dayName);
+    values.push(wl ? wl.miles : 0);
+  }
+  return { labels, values };
+}
+
+/* DOM helper */
 function kpiBox(label, value){
   const d = document.createElement("div");
   d.className = "box";
@@ -999,40 +988,15 @@ function kpiBox(label, value){
   return d;
 }
 
-/* ---------- Macro bar helpers (grams) ---------- */
-function macroClass(pct){
-  // blue under, green within 95–105%, red over
-  if(pct > 1.05) return "over";
-  if(pct >= 0.95) return "within";
-  return "under";
-}
-function setMacroBar(elBarId, elLabelId, eatenG, targetG){
-  const bar = document.getElementById(elBarId);
-  const fill = bar?.querySelector("div");
-  const label = document.getElementById(elLabelId);
-  if(!bar || !fill || !label) return;
-
-  const pct = targetG > 0 ? (eatenG / targetG) : 0;
-  const widthPct = clamp(pct*100, 0, 130);
-
-  bar.classList.remove("under","within","over");
-  bar.classList.add(macroClass(pct));
-  fill.style.width = `${Math.min(100, widthPct)}%`;
-
-  label.textContent = `${Math.round(eatenG)} / ${Math.round(targetG)} g (${Math.round(pct*100)}%)`;
-}
-
-/* ---------- Rendering ---------- */
+/* Rendering */
 function renderHeader(){
   document.getElementById("todayPill").textContent =
     new Date().toLocaleDateString(undefined, { weekday:"short", month:"short", day:"numeric" });
-  document.getElementById("verPill").textContent = APP_VER;
 
   const s = computeStreaks();
   document.getElementById("streakPill").textContent =
     `Streaks: Walk ${s.walkStreak} • Macros ${s.macroStreak}`;
 }
-
 function renderWalkTargets(){
   const t = walkTargets();
   const el = document.getElementById("walkTargets");
@@ -1051,39 +1015,34 @@ function renderWalkTargets(){
     `${round(loggedMiles,1)} / ${round(t.miles,1)} mi (${Math.round(pct)}%)`;
 }
 
+/* ✅ Macros today (grams) on BOTH dashboard + macros page */
 function renderMacrosCards(){
-  const unit = state.nutrition.macroUnit;
   const mt = macroTargets();
   const mc = macroConsumed(todayISO());
 
-  // bars are ALWAYS grams
-  setMacroBar("barP","barLabelP", mc.pG, mt.pG);
-  setMacroBar("barC","barLabelC", mc.cG, mt.cG);
-  setMacroBar("barF","barLabelF", mc.fG, mt.fG);
-
-  // KPI tiles can be oz or grams (display preference)
-  const targetsDisp = { p: mt.pG / gramsPerUnit(unit), c: mt.cG / gramsPerUnit(unit), f: mt.fG / gramsPerUnit(unit) };
-  const consumedDisp = { p: mc.pG / gramsPerUnit(unit), c: mc.cG / gramsPerUnit(unit), f: mc.fG / gramsPerUnit(unit) };
-  const remainingDisp = {
-    p: Math.max(0, targetsDisp.p - consumedDisp.p),
-    c: Math.max(0, targetsDisp.c - consumedDisp.c),
-    f: Math.max(0, targetsDisp.f - consumedDisp.f)
+  const remainG = {
+    p: Math.max(0, mt.pG - mc.pG),
+    c: Math.max(0, mt.cG - mc.cG),
+    f: Math.max(0, mt.fG - mc.fG)
   };
 
-  const kpi1 = document.getElementById("macroKPIs");
+  // Dashboard
+  const kpiDash = document.getElementById("macroKPIs");
+  kpiDash.innerHTML = "";
+  kpiDash.appendChild(kpiBox("P (g)", round(remainG.p,0)));
+  kpiDash.appendChild(kpiBox("C (g)", round(remainG.c,0)));
+  kpiDash.appendChild(kpiBox("F (g)", round(remainG.f,0)));
+  document.getElementById("calorieLine").textContent =
+    `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
+
+  // Macros page
   const kpi2 = document.getElementById("macroKPIs2");
-  kpi1.innerHTML = ""; kpi2.innerHTML = "";
-
-  kpi1.appendChild(kpiBox(`P (${fmtUnit(unit)})`, round(remainingDisp.p,1)));
-  kpi1.appendChild(kpiBox(`C (${fmtUnit(unit)})`, round(remainingDisp.c,1)));
-  kpi1.appendChild(kpiBox(`F (${fmtUnit(unit)})`, round(remainingDisp.f,1)));
-
-  kpi2.appendChild(kpiBox(`Target P (${fmtUnit(unit)})`, round(targetsDisp.p,1)));
-  kpi2.appendChild(kpiBox(`Eaten P (${fmtUnit(unit)})`, round(consumedDisp.p,1)));
-  kpi2.appendChild(kpiBox(`Remain P (${fmtUnit(unit)})`, round(remainingDisp.p,1)));
-
-  document.getElementById("calorieLine").textContent = `${Math.round(mt.kcal)} target • ${Math.round(mc.kcal)} eaten`;
-  document.getElementById("calorieLine2").textContent = `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
+  kpi2.innerHTML = "";
+  kpi2.appendChild(kpiBox("Target P (g)", round(mt.pG,0)));
+  kpi2.appendChild(kpiBox("Eaten P (g)", round(mc.pG,0)));
+  kpi2.appendChild(kpiBox("Remain P (g)", round(remainG.p,0)));
+  document.getElementById("calorieLine2").textContent =
+    `${Math.round(mt.kcal)} / ${Math.round(mc.kcal)}`;
 }
 
 function renderFoodSelect(){
@@ -1096,9 +1055,7 @@ function renderFoodSelect(){
     sel.appendChild(opt);
   }
 }
-
 function renderFoodsList(){
-  const unit = state.nutrition.macroUnit;
   const out = document.getElementById("foodsList");
   out.innerHTML = "";
   if(state.foods.length===0){
@@ -1106,16 +1063,15 @@ function renderFoodsList(){
     return;
   }
   out.innerHTML = state.foods.map(f=>{
-    const p = f.p / gramsPerUnit(unit);
-    const c = f.c / gramsPerUnit(unit);
-    const fat = f.f / gramsPerUnit(unit);
     const kcal = caloriesFromMacros(f.p,f.c,f.f);
     return `
       <div class="card" style="margin:10px 0; box-shadow:none; background:rgba(0,0,0,.12)">
         <div class="row">
           <div>
             <div style="font-weight:850">${escapeHtml(f.name)}</div>
-            <div class="small muted">per 1 oz food → P ${round(p,2)} ${fmtUnit(unit)} • C ${round(c,2)} ${fmtUnit(unit)} • F ${round(fat,2)} ${fmtUnit(unit)} • ${Math.round(kcal)} kcal</div>
+            <div class="small muted">
+              per 4 oz → P ${round(f.p,1)} g • C ${round(f.c,1)} g • F ${round(f.f,1)} g • ${Math.round(kcal)} kcal
+            </div>
           </div>
           <button class="danger" type="button" data-del-food="${f.id}">Delete</button>
         </div>
@@ -1127,7 +1083,6 @@ function renderFoodsList(){
     bindTap(btn, () => deleteFood(btn.getAttribute("data-del-food")));
   });
 }
-
 function renderTodayFoodLog(){
   const out = document.getElementById("todayFoodLog");
   const iso = todayISO();
@@ -1139,14 +1094,16 @@ function renderTodayFoodLog(){
   out.innerHTML = entries.map(e=>{
     const food = state.foods.find(f=>f.id===e.foodId);
     const name = food ? food.name : "Unknown";
+    const factor = (e.oz||0)/4.0;
+    const p = food ? food.p*factor : 0;
+    const kcal = food ? caloriesFromMacros(food.p*factor, food.c*factor, food.f*factor) : 0;
     return `
       <div class="row" style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08)">
         <div>
           <div style="font-weight:850">${escapeHtml(name)}</div>
-          <div class="small muted">${capitalize(e.meal)}</div>
+          <div class="small muted">${capitalize(e.meal)} • ${round(e.oz,1)} oz • ~${Math.round(p)}g P • ~${Math.round(kcal)} kcal</div>
         </div>
         <div class="row" style="gap:8px">
-          <span class="badge mono">${round(e.oz,1)} oz</span>
           <button class="danger" type="button" data-del-entry="${e.id}">Delete</button>
         </div>
       </div>
@@ -1157,7 +1114,6 @@ function renderTodayFoodLog(){
     bindTap(btn, () => deleteEntry(btn.getAttribute("data-del-entry")));
   });
 }
-
 function renderWalkHistory(){
   const out = document.getElementById("walkHistory");
   const logs = state.walkLogs.slice().sort((a,b)=> (b.day.localeCompare(a.day)));
@@ -1184,7 +1140,6 @@ function renderWalkHistory(){
     bindTap(btn, () => deleteWalk(btn.getAttribute("data-del-walk")));
   });
 }
-
 function renderWeightList(){
   const out = document.getElementById("weightList");
   const rows = state.weights.slice().sort((a,b)=> b.day.localeCompare(a.day));
@@ -1224,7 +1179,6 @@ function renderSetup(){
   document.getElementById("walkShare").value = ws;
   document.getElementById("walkShareLabel").textContent = `${ws}%`;
 
-  document.getElementById("macroUnit").value = state.nutrition.macroUnit;
   document.getElementById("autoTargets").checked = !!state.nutrition.autoTargets;
   document.getElementById("protPerLb").value = state.nutrition.protPerLbGoal;
   document.getElementById("fatPerLb").value = state.nutrition.fatPerLbGoal;
@@ -1239,18 +1193,40 @@ function renderSetup(){
   toggleAutoTargetsUI();
   renderMacroPreview();
 }
-
 function renderMacroPreview(){
   const mt = macroTargets();
   document.getElementById("macroPreview").textContent =
-    `Targets preview: P ${Math.round(mt.pG)} g • C ${Math.round(mt.cG)} g • F ${Math.round(mt.fG)} g • ${Math.round(mt.kcal)} kcal`;
+    `Targets preview: P ${round(mt.pG,0)} g • C ${round(mt.cG,0)} g • F ${round(mt.fG,0)} g • ${Math.round(mt.kcal)} kcal`;
+}
+function toggleAutoTargetsUI(){
+  const on = document.getElementById("autoTargets").checked;
+  document.getElementById("autoTargetsBox").style.display = on ? "" : "none";
+  document.getElementById("customTargetsBox").style.display = on ? "none" : "";
+  renderMacroPreview();
 }
 
 function renderCharts(){
+  // weight charts
   drawSimpleLineChart("weightChart", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
   drawSimpleLineChart("weightChart2", buildWeightSeries(90), { title:"Weight Trend", unit:" lb", emptyText:"Add 2+ weight entries to see a trend." });
-  drawSimpleLineChart("walkChart", buildWalkDailySeries(30), { title:"Daily Miles (Last 30 Days)", unit:" mi", emptyText:"Log 2+ walks to see a trend." });
+
+  // on-target
   drawSimpleLineChart("weeklyMacrosChart", buildWeeklyOnTargetScoreSeries(8), { title:"Weekly On-Target Score (Last 8 Weeks)", unit:"%", emptyText:"Log food for multiple days to see weekly scores." });
+
+  // ✅ weekly walk bars
+  const wk = buildLast7WalkBars();
+  drawBarChart("weeklyWalkBars", wk.labels, wk.values, { title:"", unit:" mi", emptyText:"Log walks to see weekly bars." });
+
+  // ✅ today vs goal bars (walk tab)
+  const t = walkTargets();
+  const wl = walkLogForDay(todayISO());
+  const actual = wl ? wl.miles : 0;
+  const goal = t.miles;
+  drawBarChart("todayVsGoalBars", ["Today","Goal"], [actual, goal], { title:"", unit:" mi", emptyText:"" });
+
+  const pct = clamp((actual/Math.max(0.01,goal))*100, 0, 999);
+  const tvg = document.getElementById("todayVsGoalText");
+  if(tvg) tvg.textContent = `${round(actual,1)} / ${round(goal,1)} mi (${Math.round(pct)}%)`;
 }
 
 function renderAll(){
@@ -1265,7 +1241,7 @@ function renderAll(){
   renderCharts();
 }
 
-/* ---------- Actions ---------- */
+/* Actions */
 function deleteFood(id){
   state.foods = state.foods.filter(f=>f.id!==id);
   state.foodEntries = state.foodEntries.filter(e=>e.foodId!==id);
@@ -1275,9 +1251,8 @@ function deleteEntry(id){ state.foodEntries = state.foodEntries.filter(e=>e.id!=
 function deleteWalk(day){ state.walkLogs = state.walkLogs.filter(w=>w.day!==day); saveState(); }
 function deleteWeight(day){ state.weights = state.weights.filter(w=>w.day!==day); saveState(); }
 
-/* ---------- View switching ---------- */
+/* View switching */
 const viewMap = { dash:"view-dash", walk:"view-walk", macros:"view-macros", weight:"view-weight", setup:"view-setup" };
-
 function setActiveTab(name){
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
   document.querySelectorAll("main section").forEach(s => s.style.display = "none");
@@ -1286,37 +1261,7 @@ function setActiveTab(name){
   maybeFireReminder();
 }
 
-/* ---------- Reliable tap binding ---------- */
-function bindTap(elOrId, fn){
-  const el = typeof elOrId === "string" ? document.getElementById(elOrId) : elOrId;
-  if(!el) return;
-
-  let fired = false;
-  const go = (e) => {
-    // prevent double-fire (pointer + click)
-    if(fired) return;
-    fired = true;
-    setTimeout(()=>{ fired = false; }, 250);
-    try { fn(); } catch(err){ console.error(err); toast("Error", String(err)); }
-  };
-
-  if(window.PointerEvent){
-    el.addEventListener("pointerup", go);
-  }else{
-    el.addEventListener("touchend", (e)=>{ e.preventDefault(); go(e); }, { passive:false });
-    el.addEventListener("click", go);
-  }
-}
-
-/* ---------- Setup dynamic controls ---------- */
-function toggleAutoTargetsUI(){
-  const on = document.getElementById("autoTargets").checked;
-  document.getElementById("autoTargetsBox").style.display = on ? "" : "none";
-  document.getElementById("customTargetsBox").style.display = on ? "none" : "";
-  renderMacroPreview();
-}
-
-/* ---------- Wire UI ---------- */
+/* Wire UI */
 function wireAll(){
   // Tabs
   document.querySelectorAll(".tab").forEach(btn=>{
@@ -1327,7 +1272,6 @@ function wireAll(){
   bindTap("btnGoSetup", () => setActiveTab("setup"));
   bindTap("btnGoMacros", () => setActiveTab("macros"));
   bindTap("btnGoWeight", () => setActiveTab("weight"));
-  bindTap("btnGoWalkFromDash", () => setActiveTab("walk"));
 
   bindTap("btnQuickLogWalk", () => {
     setActiveTab("walk");
@@ -1373,20 +1317,13 @@ function wireAll(){
   });
   bindTap("btnAddEntry2", () => document.getElementById("entryOz").focus());
 
-  bindTap("btnToggleFoods", () => {
-    const el = document.getElementById("foodsList");
-    const isHidden = el.style.display === "none";
-    el.style.display = isHidden ? "" : "none";
-    toast(isHidden ? "Foods list shown" : "Foods list hidden");
-  });
-
   bindTap("saveFood", () => {
     const name = (document.getElementById("foodName").value||"").trim();
     const p = parseNum(document.getElementById("foodP").value);
     const c = parseNum(document.getElementById("foodC").value);
     const f = parseNum(document.getElementById("foodF").value);
     if(!name) return toast("Missing food name", "Enter a food name.");
-    state.foods.unshift({ id: uid(), name, p, c, f });
+    state.foods.unshift({ id: uid(), name, p, c, f }); // per 4 oz
     document.getElementById("foodName").value="";
     document.getElementById("foodP").value="";
     document.getElementById("foodC").value="";
@@ -1428,25 +1365,17 @@ function wireAll(){
     toast("Saved weight", `${round(lb,1)} lb`);
   });
 
-  // Setup live controls
+  // Setup controls
   document.getElementById("walkShare").addEventListener("input", ()=>{
     document.getElementById("walkShareLabel").textContent = `${document.getElementById("walkShare").value}%`;
   });
   document.getElementById("autoTargets").addEventListener("change", toggleAutoTargetsUI);
-
-  document.getElementById("macroUnit").addEventListener("change", ()=>{
-    state.nutrition.macroUnit = document.getElementById("macroUnit").value;
-    saveState();
-  });
-
   ["protPerLb","fatPerLb","custP","custC","custF"].forEach(id=>{
     document.getElementById(id).addEventListener("input", renderMacroPreview);
   });
 
-  // Reminder test
   bindTap("testReminder", () => toast("WalkCut reminder", "Test reminder ✅"));
 
-  // Save setup / back / reset
   bindTap("saveSetup", () => {
     state.profile.age = clamp(parseInt(document.getElementById("pAge").value||"44",10)||44, 18, 90);
     state.profile.heightIn = clamp(parseInt(document.getElementById("pHeight").value||"73",10)||73, 48, 90);
@@ -1457,10 +1386,9 @@ function wireAll(){
     state.plan.paceMph = clamp(parseNum(document.getElementById("pace").value||"3.5"), 2.0, 6.0);
     state.plan.walkShare = clamp(parseNum(document.getElementById("walkShare").value||"70")/100, 0, 1);
 
-    state.nutrition.macroUnit = document.getElementById("macroUnit").value;
     state.nutrition.autoTargets = !!document.getElementById("autoTargets").checked;
-    state.nutrition.protPerLbGoal = clamp(parseNum(document.getElementById("protPerLb").value||"0.8"), 0.4, 1.4);
-    state.nutrition.fatPerLbGoal = clamp(parseNum(document.getElementById("fatPerLb").value||"0.30"), 0.15, 0.6);
+    state.nutrition.protPerLbGoal = clamp(parseNum(document.getElementById("protPerLb").value||"1.01"), 0.4, 1.8);
+    state.nutrition.fatPerLbGoal = clamp(parseNum(document.getElementById("fatPerLb").value||"0.30"), 0.15, 0.9);
 
     state.nutrition.custom = {
       p: clamp(parseNum(document.getElementById("custP").value||"180"), 50, 350),
@@ -1491,25 +1419,16 @@ function wireAll(){
   });
 }
 
-/* ---------- Init ---------- */
+/* Init */
 (function init(){
-  // date inputs
   document.getElementById("walkDate").value = todayISO();
   document.getElementById("wDate").value = todayISO();
 
-  // fields
   renderSetup();
-
-  // wire once
   wireAll();
-
-  // start
   setActiveTab("dash");
 
-  // reminder check while open
   setInterval(maybeFireReminder, 60*1000);
-
-  // redraw charts on resize
   window.addEventListener("resize", ()=> renderCharts());
 })();
 </script>
